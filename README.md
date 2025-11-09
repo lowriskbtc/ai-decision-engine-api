@@ -253,7 +253,7 @@ Proprietary - All rights reserved
 
 - **Documentation**: See `/docs` endpoint
 - **Issues**: GitHub Issues
-- **Email**: support@aiweedcompany.com
+- **Email**: Aigentic@pm.me
 
 ---
 
