@@ -173,6 +173,26 @@ async def general_exception_handler(request: Request, exc: Exception):
     )
 
 
+@app.get("/")
+async def root():
+    """Root endpoint - redirects to API documentation"""
+    return {
+        "message": "AI Decision Engine API",
+        "version": "1.0.0",
+        "status": "operational",
+        "documentation": "/docs",
+        "health": "/health",
+        "endpoints": {
+            "health": "/health",
+            "docs": "/docs",
+            "redoc": "/redoc",
+            "evaluate_decision": "/decisions/evaluate",
+            "assess_risk": "/risk/assess",
+            "autonomy_level": "/autonomy/level"
+        }
+    }
+
+
 @app.get("/health")
 async def health_check():
     """Health check endpoint with detailed system status"""
