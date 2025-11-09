@@ -1,0 +1,221 @@
+{
+  "report_date": "2025-10-31T01:02:48.763493",
+  "project": "AI Weed Company",
+  "contract_address": "C7yr4quktmHV2ut89MM8AKvi6j6ZwLeW83NTysFCPZM2",
+  "x_account": "@first_ai_weed",
+  "progress": {
+    "error": "Could not load progress status"
+  },
+  "memory_stats": {
+    "total_events": 13,
+    "total_decisions": 6,
+    "total_outcomes": 0,
+    "total_learnings": 0
+  },
+  "system_state": {
+    "timestamp": "2025-10-30T23:33:11.767665",
+    "system_status": {
+      "phase": 1,
+      "status": "ACTIVE",
+      "metrics": {
+        "revenue": 0.0,
+        "capital_base": 0.0,
+        "active_streams": 0,
+        "growth_rate": 0.0,
+        "risk_score": 0.0,
+        "compliance_score": 100.0,
+        "decisions_made": 0,
+        "success_rate": 0.0
+      },
+      "recent_decisions": [
+        {
+          "id": "DEC_20251030233311",
+          "timestamp": "2025-10-30T23:33:11.765437",
+          "category": "STRATEGIC",
+          "risk_level": "LOW",
+          "description": "Income strategy evaluation",
+          "amount": 0,
+          "data": {
+            "category": "STRATEGIC",
+            "description": "Income strategy evaluation",
+            "amount": 0,
+            "strategies": [
+              {
+                "strategy": "API_SERVICES",
+                "attributes": {
+                  "roi_potential": "high",
+                  "risk": "low",
+                  "scalability": "very_high"
+                },
+                "score": 90,
+                "recommended_allocation": 0.0,
+                "risk_level": "LOW",
+                "recommendation": "RECOMMENDED"
+              },
+              {
+                "strategy": "SAAS_PRODUCT",
+                "attributes": {
+                  "roi_potential": "high",
+                  "risk": "low",
+                  "scalability": "high"
+                },
+                "score": 85,
+                "recommended_allocation": 0.0,
+                "risk_level": "LOW",
+                "recommendation": "RECOMMENDED"
+              },
+              {
+                "strategy": "E_COMMERCE",
+                "attributes": {
+                  "roi_potential": "medium",
+                  "risk": "low",
+                  "scalability": "high"
+                },
+                "score": 75,
+                "recommended_allocation": 0.0,
+                "risk_level": "LOW",
+                "recommendation": "RECOMMENDED"
+              },
+              {
+                "strategy": "AFFILIATE_MARKETING",
+                "attributes": {
+                  "roi_potential": "medium",
+                  "risk": "low",
+                  "scalability": "high"
+                },
+                "score": 75,
+                "recommended_allocation": 0.0,
+                "risk_level": "LOW",
+                "recommendation": "RECOMMENDED"
+              },
+              {
+                "strategy": "DEFI_YIELD",
+                "attributes": {
+                  "roi_potential": "medium",
+                  "risk": "medium",
+                  "scalability": "high"
+                },
+                "score": 65,
+                "recommended_allocation": 0.0,
+                "risk_level": "MEDIUM",
+                "recommendation": "CONSIDER"
+              },
+              {
+                "strategy": "CONTENT_CREATION",
+                "attributes": {
+                  "roi_potential": "medium",
+                  "risk": "low",
+                  "scalability": "medium"
+                },
+                "score": 65,
+                "recommended_allocation": 0.0,
+                "risk_level": "LOW",
+                "recommendation": "CONSIDER"
+              },
+              {
+                "strategy": "CONSULTING",
+                "attributes": {
+                  "roi_potential": "high",
+                  "risk": "low",
+                  "scalability": "low"
+                },
+                "score": 65,
+                "recommended_allocation": 0.0,
+                "risk_level": "LOW",
+                "recommendation": "CONSIDER"
+              },
+              {
+                "strategy": "CRYPTO_TRADING",
+                "attributes": {
+                  "roi_potential": "high",
+                  "risk": "high",
+                  "scalability": "medium"
+                },
+                "score": 55,
+                "recommended_allocation": 0.0,
+                "risk_level": "HIGH",
+                "recommendation": "CONSIDER"
+              }
+            ]
+          },
+          "status": "PENDING",
+          "action_required": "EXECUTE_IMMEDIATELY",
+          "memory_insights": {
+            "related_events": 0,
+            "similar_decisions": 0,
+            "relevant_learnings": 0,
+            "success_patterns": {
+              "successful_decisions": [],
+              "successful_strategies": [],
+              "optimal_timing": [],
+              "preferred_approaches": []
+            },
+            "recommendation": "No previous experience. Proceed with standard evaluation."
+          },
+          "ai_can_decide": false,
+          "autonomy_level": 77.4,
+          "logged_at": "2025-10-30T23:33:11.767665"
+        }
+      ]
+    },
+    "income_manager_status": {
+      "total_strategies": 4,
+      "active_strategies": 0,
+      "total_revenue": 0.0,
+      "strategies": [
+        {
+          "name": "API_SERVICES",
+          "status": "INACTIVE",
+          "capital_allocation": 0.0,
+          "total_revenue": 0.0,
+          "start_date": null,
+          "performance": []
+        },
+        {
+          "name": "SAAS_PRODUCT",
+          "status": "INACTIVE",
+          "capital_allocation": 0.0,
+          "total_revenue": 0.0,
+          "start_date": null,
+          "performance": []
+        },
+        {
+          "name": "E_COMMERCE",
+          "status": "INACTIVE",
+          "capital_allocation": 0.0,
+          "total_revenue": 0.0,
+          "start_date": null,
+          "performance": []
+        },
+        {
+          "name": "AFFILIATE_MARKETING",
+          "status": "INACTIVE",
+          "capital_allocation": 0.0,
+          "total_revenue": 0.0,
+          "start_date": null,
+          "performance": []
+        }
+      ]
+    }
+  },
+  "file_structure": {
+    "START_HERE.md": true,
+    "PROGRESS_STATUS.json": true,
+    "AI_Weed_Company_Master_Ops.md": true,
+    "api/main.py": true,
+    "api/api_specification.yaml": true,
+    "saas_landing/index.html": true,
+    "saas_landing/waitlist_backend.py": true
+  },
+  "summary": {
+    "status": "OPERATIONAL",
+    "strategies_active": 2,
+    "api_completion": "90%",
+    "saas_completion": "70%",
+    "next_actions": [
+      "Test API locally",
+      "Deploy landing page",
+      "Launch marketing"
+    ]
+  }
+}

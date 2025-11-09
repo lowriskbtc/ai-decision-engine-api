@@ -1,0 +1,70 @@
+========================================
+🚂 RAILWAY REPOSITORY SELECTION 🚂
+========================================
+
+## ON THE RAILWAY SCREEN:
+
+You're on "Deploy Repository" - here's what to do:
+
+---
+
+## IF YOUR REPO IS ON GITHUB:
+
+1. **Type your repository name** in the input field
+   - Format: `username/repository-name`
+   - Example: `your-username/ai-decision-engine`
+
+2. **Or** click "Configure GitHub App" first
+   - This lets Railway access your GitHub
+   - Then your repos will appear
+
+3. **Select your repository** from the list
+
+4. **Railway will auto-deploy!**
+
+---
+
+## IF YOUR REPO ISN'T ON GITHUB YET:
+
+You need to push to GitHub first:
+
+1. **Create repo on GitHub:**
+   - Go to github.com
+   - Click "New repository"
+   - Name it (e.g., "ai-decision-engine-api")
+   - Create it
+
+2. **Push your code:**
+   ```bash
+   git init
+   git add .
+   git commit -m "Initial commit"
+   git remote add origin https://github.com/your-username/your-repo.git
+   git push -u origin main
+   ```
+
+3. **Then come back to Railway** and select it
+
+---
+
+## QUICK CHECK:
+
+Run this to see if you have a GitHub remote:
+```bash
+git remote -v
+```
+
+If nothing shows, you need to push to GitHub first.
+
+---
+
+## NEXT STEPS:
+
+1. **If repo is on GitHub:** Type the name or configure GitHub App
+2. **If not on GitHub:** Push to GitHub first, then select on Railway
+3. **Railway will auto-detect** Python/FastAPI and deploy!
+
+---
+
+**Let me know if you need help pushing to GitHub!**
+

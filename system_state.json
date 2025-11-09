@@ -1,0 +1,186 @@
+{
+  "timestamp": "2025-10-30T23:33:11.767665",
+  "system_status": {
+    "phase": 1,
+    "status": "ACTIVE",
+    "metrics": {
+      "revenue": 0.0,
+      "capital_base": 0.0,
+      "active_streams": 0,
+      "growth_rate": 0.0,
+      "risk_score": 0.0,
+      "compliance_score": 100.0,
+      "decisions_made": 0,
+      "success_rate": 0.0
+    },
+    "recent_decisions": [
+      {
+        "id": "DEC_20251030233311",
+        "timestamp": "2025-10-30T23:33:11.765437",
+        "category": "STRATEGIC",
+        "risk_level": "LOW",
+        "description": "Income strategy evaluation",
+        "amount": 0,
+        "data": {
+          "category": "STRATEGIC",
+          "description": "Income strategy evaluation",
+          "amount": 0,
+          "strategies": [
+            {
+              "strategy": "API_SERVICES",
+              "attributes": {
+                "roi_potential": "high",
+                "risk": "low",
+                "scalability": "very_high"
+              },
+              "score": 90,
+              "recommended_allocation": 0.0,
+              "risk_level": "LOW",
+              "recommendation": "RECOMMENDED"
+            },
+            {
+              "strategy": "SAAS_PRODUCT",
+              "attributes": {
+                "roi_potential": "high",
+                "risk": "low",
+                "scalability": "high"
+              },
+              "score": 85,
+              "recommended_allocation": 0.0,
+              "risk_level": "LOW",
+              "recommendation": "RECOMMENDED"
+            },
+            {
+              "strategy": "E_COMMERCE",
+              "attributes": {
+                "roi_potential": "medium",
+                "risk": "low",
+                "scalability": "high"
+              },
+              "score": 75,
+              "recommended_allocation": 0.0,
+              "risk_level": "LOW",
+              "recommendation": "RECOMMENDED"
+            },
+            {
+              "strategy": "AFFILIATE_MARKETING",
+              "attributes": {
+                "roi_potential": "medium",
+                "risk": "low",
+                "scalability": "high"
+              },
+              "score": 75,
+              "recommended_allocation": 0.0,
+              "risk_level": "LOW",
+              "recommendation": "RECOMMENDED"
+            },
+            {
+              "strategy": "DEFI_YIELD",
+              "attributes": {
+                "roi_potential": "medium",
+                "risk": "medium",
+                "scalability": "high"
+              },
+              "score": 65,
+              "recommended_allocation": 0.0,
+              "risk_level": "MEDIUM",
+              "recommendation": "CONSIDER"
+            },
+            {
+              "strategy": "CONTENT_CREATION",
+              "attributes": {
+                "roi_potential": "medium",
+                "risk": "low",
+                "scalability": "medium"
+              },
+              "score": 65,
+              "recommended_allocation": 0.0,
+              "risk_level": "LOW",
+              "recommendation": "CONSIDER"
+            },
+            {
+              "strategy": "CONSULTING",
+              "attributes": {
+                "roi_potential": "high",
+                "risk": "low",
+                "scalability": "low"
+              },
+              "score": 65,
+              "recommended_allocation": 0.0,
+              "risk_level": "LOW",
+              "recommendation": "CONSIDER"
+            },
+            {
+              "strategy": "CRYPTO_TRADING",
+              "attributes": {
+                "roi_potential": "high",
+                "risk": "high",
+                "scalability": "medium"
+              },
+              "score": 55,
+              "recommended_allocation": 0.0,
+              "risk_level": "HIGH",
+              "recommendation": "CONSIDER"
+            }
+          ]
+        },
+        "status": "PENDING",
+        "action_required": "EXECUTE_IMMEDIATELY",
+        "memory_insights": {
+          "related_events": 0,
+          "similar_decisions": 0,
+          "relevant_learnings": 0,
+          "success_patterns": {
+            "successful_decisions": [],
+            "successful_strategies": [],
+            "optimal_timing": [],
+            "preferred_approaches": []
+          },
+          "recommendation": "No previous experience. Proceed with standard evaluation."
+        },
+        "ai_can_decide": false,
+        "autonomy_level": 77.4,
+        "logged_at": "2025-10-30T23:33:11.767665"
+      }
+    ]
+  },
+  "income_manager_status": {
+    "total_strategies": 4,
+    "active_strategies": 0,
+    "total_revenue": 0.0,
+    "strategies": [
+      {
+        "name": "API_SERVICES",
+        "status": "INACTIVE",
+        "capital_allocation": 0.0,
+        "total_revenue": 0.0,
+        "start_date": null,
+        "performance": []
+      },
+      {
+        "name": "SAAS_PRODUCT",
+        "status": "INACTIVE",
+        "capital_allocation": 0.0,
+        "total_revenue": 0.0,
+        "start_date": null,
+        "performance": []
+      },
+      {
+        "name": "E_COMMERCE",
+        "status": "INACTIVE",
+        "capital_allocation": 0.0,
+        "total_revenue": 0.0,
+        "start_date": null,
+        "performance": []
+      },
+      {
+        "name": "AFFILIATE_MARKETING",
+        "status": "INACTIVE",
+        "capital_allocation": 0.0,
+        "total_revenue": 0.0,
+        "start_date": null,
+        "performance": []
+      }
+    ]
+  }
+}

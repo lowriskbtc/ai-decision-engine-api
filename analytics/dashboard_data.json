@@ -1,0 +1,171 @@
+{
+  "timestamp": "2025-10-31T01:04:37.347037",
+  "revenue": {
+    "projected": {
+      "month_1_3": {
+        "min": 500,
+        "max": 5000
+      },
+      "month_4_6": {
+        "min": 2500,
+        "max": 8000
+      },
+      "month_7_12": {
+        "min": 7000,
+        "max": 25000
+      }
+    },
+    "actual": {
+      "current": 0.0,
+      "month_to_date": 0.0,
+      "trend": "starting"
+    }
+  },
+  "strategies": {
+    "API_SERVICES": {
+      "completion": 90,
+      "status": "ready_for_testing",
+      "next_milestone": "Local testing",
+      "expected_revenue_start": "4-8 weeks"
+    },
+    "SAAS_PRODUCT": {
+      "completion": 70,
+      "status": "ready_for_deployment",
+      "next_milestone": "Landing page launch",
+      "expected_revenue_start": "8-12 weeks"
+    }
+  },
+  "metrics": {
+    "total_events": 13,
+    "total_decisions": 6,
+    "success_rate": 0.0,
+    "ai_autonomy": 77.4,
+    "system_health": "operational"
+  },
+  "recent_activity": [
+    {
+      "id": "EVT_20251030025303",
+      "timestamp": "2025-10-30T02:53:03.450380",
+      "type": "INFRASTRUCTURE",
+      "description": "Income strategies framework created",
+      "data": {
+        "component": "income_strategies.py"
+      }
+    },
+    {
+      "id": "EVT_20251030025303",
+      "timestamp": "2025-10-30T02:53:03.450380",
+      "type": "INFRASTRUCTURE",
+      "description": "Autonomous tweet system created",
+      "data": {
+        "component": "autonomous_tweet_scheduler.py"
+      }
+    },
+    {
+      "id": "EVT_20251030040516",
+      "timestamp": "2025-10-30T04:05:16.421369",
+      "type": "INCOMING_MESSAGE",
+      "description": "Message from Mr boss | Official: Hi \u00f0\u0178\u0161\u20ac Let's drive your project into the spotlight. ",
+      "data": {
+        "sender": "Mr boss | Official",
+        "message": "Hi \u00f0\u0178\u0161\u20ac Let's drive your project into the spotlight. Interested?",
+        "verified": true,
+        "timestamp": "2025-10-30T04:05:16.364709",
+        "risk_level": "LOW",
+        "action": "REQUIRES_HUMAN_REVIEW",
+        "recommendation": "Verify legitimacy before responding",
+        "category": "PROMOTIONAL_OFFER"
+      }
+    },
+    {
+      "id": "EVT_20251030040725",
+      "timestamp": "2025-10-30T04:07:25.113521",
+      "type": "INCOMING_MESSAGE",
+      "description": "Message from Mr boss | Official: Hi \u00f0\u0178\u0161\u20ac Let's drive your project into the spotlight. ",
+      "data": {
+        "sender": "Mr boss | Official",
+        "message": "Hi \u00f0\u0178\u0161\u20ac Let's drive your project into the spotlight. Interested?",
+        "verified": true,
+        "timestamp": "2025-10-30T04:07:25.113521",
+        "risk_level": "LOW",
+        "action": "REQUIRES_HUMAN_REVIEW",
+        "recommendation": "Verify legitimacy before responding",
+        "category": "PROMOTIONAL_OFFER"
+      }
+    },
+    {
+      "id": "EVT_20251030040734",
+      "timestamp": "2025-10-30T04:07:34.413990",
+      "type": "INCOMING_MESSAGE",
+      "description": "Message from Mr boss | Official: Hi \u00f0\u0178\u0161\u20ac Let's drive your project into the spotlight. ",
+      "data": {
+        "sender": "Mr boss | Official",
+        "message": "Hi \u00f0\u0178\u0161\u20ac Let's drive your project into the spotlight. Interested?",
+        "verified": true,
+        "timestamp": "2025-10-30T04:07:34.413481",
+        "risk_level": "LOW",
+        "action": "REQUIRES_HUMAN_REVIEW",
+        "recommendation": "Verify legitimacy before responding",
+        "category": "PROMOTIONAL_OFFER"
+      }
+    },
+    {
+      "id": "EVT_20251030040734",
+      "timestamp": "2025-10-30T04:07:34.433525",
+      "type": "AI_DECISION",
+      "description": "AI proceeding autonomously with message response",
+      "data": {
+        "action": "AUTONOMOUS_RESPONSE",
+        "message_type": "promotional_offer",
+        "autonomy_level": 25.0
+      }
+    },
+    {
+      "id": "EVT_20251030040734",
+      "timestamp": "2025-10-30T04:07:34.436090",
+      "type": "AI_AUTONOMOUS_ACTION",
+      "description": "AI generated and prepared response autonomously",
+      "data": {
+        "recipient": "Mr boss | Official",
+        "response_generated": true,
+        "file_saved": "ai_response_to_mr_boss.txt"
+      }
+    },
+    {
+      "id": "EVT_20251030232738",
+      "timestamp": "2025-10-30T23:27:38.839791",
+      "type": "TWEET_GENERATION",
+      "description": "AI selected tweet for posting",
+      "data": {
+        "tweet_length": 324,
+        "timestamp": "2025-10-30T23:27:38.839791",
+        "auto_generated": true,
+        "can_auto_post": true
+      }
+    },
+    {
+      "id": "EVT_20251030233053",
+      "timestamp": "2025-10-30T23:30:53.147106",
+      "type": "TWEET_GENERATION",
+      "description": "AI selected tweet for posting",
+      "data": {
+        "tweet_length": 324,
+        "timestamp": "2025-10-30T23:30:53.147106",
+        "auto_generated": true,
+        "can_auto_post": true
+      }
+    },
+    {
+      "id": "EVT_20251030233433",
+      "timestamp": "2025-10-30T23:34:33.165814",
+      "type": "TWEET_GENERATION",
+      "description": "AI selected tweet for posting",
+      "data": {
+        "tweet_length": 257,
+        "timestamp": "2025-10-30T23:34:33.165814",
+        "auto_generated": true,
+        "can_auto_post": true
+      }
+    }
+  ]
+}

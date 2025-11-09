@@ -1,0 +1,27 @@
+{
+  "generated_at": "2025-11-08T21:30:29.092847",
+  "keys": {
+    "free_tier": {
+      "key": "prod_free_sjMoxPPgPDtuV0SBSCynq2gQ",
+      "tier": "free",
+      "limit": 100,
+      "created": "2025-11-08T21:30:29.093848",
+      "note": "Free tier - 100 requests/month"
+    },
+    "pro_tier": {
+      "key": "prod_pro_qqySWJBI9BcpJhuu1582wLM1",
+      "tier": "pro",
+      "limit": 10000,
+      "created": "2025-11-08T21:30:29.093848",
+      "note": "Pro tier - 10,000 requests/month"
+    },
+    "enterprise_tier": {
+      "key": "prod_ent_pUmdsKbZs3zXogvuMHt8Xn4F",
+      "tier": "enterprise",
+      "limit": 1000000,
+      "created": "2025-11-08T21:30:29.093848",
+      "note": "Enterprise tier - 1,000,000 requests/month"
+    }
+  },
+  "security_note": "These are example keys. Generate new ones for production!"
+}

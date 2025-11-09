@@ -1,0 +1,26 @@
+{
+  "reddit_posts": {
+    "r_api": {
+      "title": "Show HN: AI Decision Engine API - RESTful API for AI-driven decision making",
+      "body": "I've built an API for AI-driven decision making and risk assessment. It's designed for developers building autonomous systems.\n\n**What it does:**\n- Evaluates decisions using AI frameworks\n- Assesses risk levels automatically  \n- Tracks AI autonomy progression\n- Provides memory-based insights\n\n**Tech Stack:** FastAPI, Python, production-ready\n\n**Free tier:** 100 requests/month\n**Pro tier:** $9/month - 10,000 requests\n\n**Try it:** https://your-app.railway.app/docs\n**GitHub:** [Your repo link]\n\nWould love feedback from the API community!"
+    },
+    "r_startups": {
+      "title": "Launched my first SaaS - AI Decision Engine API (bootstrapped with $0)",
+      "body": "Just launched my first SaaS product - an API for AI decision making. Built it with zero budget using free tiers.\n\n**The Product:**\nAI Decision Engine API - helps developers build autonomous systems with intelligent decision-making capabilities.\n\n**The Journey:**\n- Built in 2 weeks\n- Deployed on Railway (free tier)\n- Using free monitoring\n- Ready to get first customers\n\n**Pricing:**\n- Free: 100 requests/month\n- Pro: $9/month\n\n**What I learned:**\n- You can launch with $0\n- Free tiers are powerful\n- Focus on value, not features\n\nWould love to hear from other bootstrappers!"
+    },
+    "r_sideproject": {
+      "title": "My side project: AI Decision Engine API - Making $0 → $X",
+      "body": "Built an API for AI decision making as a side project. Starting with zero budget and seeing where it goes.\n\n**What it is:**\nRESTful API for AI-driven decision making, risk assessment, and autonomy tracking.\n\n**Current status:**\n- ✅ Built and deployed (free)\n- ✅ Documentation complete\n- ✅ Ready for users\n- 🎯 Goal: First paying customer this month\n\n**Tech:**\nFastAPI, Python, deployed on Railway\n\n**Try it:** https://your-app.railway.app/docs\n\nWould love feedback and early users!"
+    }
+  },
+  "twitter_posts": [
+    "🚀 Just launched: AI Decision Engine API\n\nRESTful API for AI-driven decision making\n\n✅ Free tier available\n✅ Production ready\n✅ Zero budget launch\n\nTry it: [your-link]\n\n#API #SaaS #IndieHacker",
+    "Built my first SaaS with $0 budget 💰\n\nAI Decision Engine API - helps developers build autonomous systems\n\nDeployed on Railway (free)\nUsing free monitoring\nReady for first customers\n\n#Bootstrapped #SaaS #IndieHacker",
+    "New API launch: AI Decision Engine 🧠\n\nFeatures:\n✅ Decision evaluation\n✅ Risk assessment\n✅ Autonomy tracking\n✅ Memory insights\n\nFree tier: 100 requests/month\nPro: $9/month\n\nDocs: [your-link]\n\n#API #DeveloperTools"
+  ],
+  "hackernews_post": {
+    "title": "Show HN: AI Decision Engine API - RESTful API for AI-driven decision making",
+    "body": "I've built an API for AI-driven decision making and risk assessment.\n\n**What it does:**\n- Evaluates decisions using AI frameworks\n- Assesses risk levels automatically\n- Tracks AI autonomy progression\n- Provides memory-based insights\n\n**Tech:** FastAPI, Python, production-ready\n\n**Free tier:** 100 requests/month\n**Pro tier:** $9/month - 10,000 requests\n\n**Try it:** https://your-app.railway.app/docs\n\nBuilt with zero budget, deployed on free tier. Would love feedback!"
+  },
+  "producthunt_description": "AI Decision Engine API - RESTful API for AI-driven decision making\n\n**What it does:**\nEvaluate decisions, assess risks, and track AI autonomy with a simple REST API.\n\n**Perfect for:**\n- Developers building AI systems\n- Companies needing decision automation\n- Projects requiring risk assessment\n\n**Features:**\n✅ 18+ API endpoints\n✅ Full authentication\n✅ Real-time analytics\n✅ Comprehensive documentation\n\n**Pricing:**\n- Free: 100 requests/month\n- Pro: $9/month - 10,000 requests\n- Enterprise: $49/month - Unlimited\n\n**Tech:** FastAPI, Python, production-ready\n\nBuilt with zero budget, ready for your projects!"
+}

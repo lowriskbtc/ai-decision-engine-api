@@ -1,0 +1,34 @@
+========================================
+🚀 PUSH CODE TO GITHUB - STEP BY STEP 🚀
+========================================
+
+## STEP 1: CREATE REPOSITORY ON GITHUB
+
+On the GitHub page you're on:
+
+✅ Repository name: `ai-decision-engine-api` (already filled - perfect!)
+✅ Owner: `lowriskbtc` (your username)
+✅ Visibility: **Public** (good!)
+
+❌ **DON'T check** "Add README" (we have code already)
+❌ **DON'T check** "Add .gitignore" (we have one)
+❌ **DON'T check** "Add license" (skip for now)
+
+**Click the green "Create repository" button**
+
+---
+
+## STEP 2: AFTER CREATING REPOSITORY
+
+GitHub will show you a page with instructions.
+
+**IGNORE those** - we'll use our commands instead.
+
+---
+
+## STEP 3: PUSH YOUR CODE
+
+I'll help you run these commands one by one.
+
+Ready? Let's start!
+

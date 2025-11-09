@@ -1,0 +1,1841 @@
+{
+  "events": [
+    {
+      "id": "EVT_20251030025303",
+      "timestamp": "2025-10-30T02:53:03.448868",
+      "type": "LAUNCH",
+      "description": "Official project launch on X (@first_ai_weed)",
+      "data": {
+        "date": "2025-10-30",
+        "time": "2:16 AM",
+        "platform": "X/Twitter",
+        "account": "@first_ai_weed"
+      }
+    },
+    {
+      "id": "EVT_20251030025303",
+      "timestamp": "2025-10-30T02:53:03.448868",
+      "type": "SOCIAL_MEDIA",
+      "description": "Posted day recap tweet (poetic version)",
+      "data": {
+        "tweet_type": "day_recap",
+        "version": "poetic",
+        "theme": "butterfly transformation",
+        "human_action": "posted_tweet"
+      }
+    },
+    {
+      "id": "EVT_20251030025303",
+      "timestamp": "2025-10-30T02:53:03.449868",
+      "type": "INFRASTRUCTURE",
+      "description": "AI decision engine created",
+      "data": {
+        "component": "ai_decision_engine.py"
+      }
+    },
+    {
+      "id": "EVT_20251030025303",
+      "timestamp": "2025-10-30T02:53:03.450380",
+      "type": "INFRASTRUCTURE",
+      "description": "Income strategies framework created",
+      "data": {
+        "component": "income_strategies.py"
+      }
+    },
+    {
+      "id": "EVT_20251030025303",
+      "timestamp": "2025-10-30T02:53:03.450380",
+      "type": "INFRASTRUCTURE",
+      "description": "Autonomous tweet system created",
+      "data": {
+        "component": "autonomous_tweet_scheduler.py"
+      }
+    },
+    {
+      "id": "EVT_20251030040516",
+      "timestamp": "2025-10-30T04:05:16.421369",
+      "type": "INCOMING_MESSAGE",
+      "description": "Message from Mr boss | Official: Hi 🚀 Let's drive your project into the spotlight. ",
+      "data": {
+        "sender": "Mr boss | Official",
+        "message": "Hi 🚀 Let's drive your project into the spotlight. Interested?",
+        "verified": true,
+        "timestamp": "2025-10-30T04:05:16.364709",
+        "risk_level": "LOW",
+        "action": "REQUIRES_HUMAN_REVIEW",
+        "recommendation": "Verify legitimacy before responding",
+        "category": "PROMOTIONAL_OFFER"
+      }
+    },
+    {
+      "id": "EVT_20251030040725",
+      "timestamp": "2025-10-30T04:07:25.113521",
+      "type": "INCOMING_MESSAGE",
+      "description": "Message from Mr boss | Official: Hi 🚀 Let's drive your project into the spotlight. ",
+      "data": {
+        "sender": "Mr boss | Official",
+        "message": "Hi 🚀 Let's drive your project into the spotlight. Interested?",
+        "verified": true,
+        "timestamp": "2025-10-30T04:07:25.113521",
+        "risk_level": "LOW",
+        "action": "REQUIRES_HUMAN_REVIEW",
+        "recommendation": "Verify legitimacy before responding",
+        "category": "PROMOTIONAL_OFFER"
+      }
+    },
+    {
+      "id": "EVT_20251030040734",
+      "timestamp": "2025-10-30T04:07:34.413990",
+      "type": "INCOMING_MESSAGE",
+      "description": "Message from Mr boss | Official: Hi 🚀 Let's drive your project into the spotlight. ",
+      "data": {
+        "sender": "Mr boss | Official",
+        "message": "Hi 🚀 Let's drive your project into the spotlight. Interested?",
+        "verified": true,
+        "timestamp": "2025-10-30T04:07:34.413481",
+        "risk_level": "LOW",
+        "action": "REQUIRES_HUMAN_REVIEW",
+        "recommendation": "Verify legitimacy before responding",
+        "category": "PROMOTIONAL_OFFER"
+      }
+    },
+    {
+      "id": "EVT_20251030040734",
+      "timestamp": "2025-10-30T04:07:34.433525",
+      "type": "AI_DECISION",
+      "description": "AI proceeding autonomously with message response",
+      "data": {
+        "action": "AUTONOMOUS_RESPONSE",
+        "message_type": "promotional_offer",
+        "autonomy_level": 25.0
+      }
+    },
+    {
+      "id": "EVT_20251030040734",
+      "timestamp": "2025-10-30T04:07:34.436090",
+      "type": "AI_AUTONOMOUS_ACTION",
+      "description": "AI generated and prepared response autonomously",
+      "data": {
+        "recipient": "Mr boss | Official",
+        "response_generated": true,
+        "file_saved": "ai_response_to_mr_boss.txt"
+      }
+    },
+    {
+      "id": "EVT_20251030232738",
+      "timestamp": "2025-10-30T23:27:38.839791",
+      "type": "TWEET_GENERATION",
+      "description": "AI selected tweet for posting",
+      "data": {
+        "tweet_length": 324,
+        "timestamp": "2025-10-30T23:27:38.839791",
+        "auto_generated": true,
+        "can_auto_post": true
+      }
+    },
+    {
+      "id": "EVT_20251030233053",
+      "timestamp": "2025-10-30T23:30:53.147106",
+      "type": "TWEET_GENERATION",
+      "description": "AI selected tweet for posting",
+      "data": {
+        "tweet_length": 324,
+        "timestamp": "2025-10-30T23:30:53.147106",
+        "auto_generated": true,
+        "can_auto_post": true
+      }
+    },
+    {
+      "id": "EVT_20251030233433",
+      "timestamp": "2025-10-30T23:34:33.165814",
+      "type": "TWEET_GENERATION",
+      "description": "AI selected tweet for posting",
+      "data": {
+        "tweet_length": 257,
+        "timestamp": "2025-10-30T23:34:33.165814",
+        "auto_generated": true,
+        "can_auto_post": true
+      }
+    }
+  ],
+  "decisions": [
+    {
+      "id": "DEC_20251030232848",
+      "timestamp": "2025-10-30T23:28:48.801594",
+      "decision": {
+        "id": "DEC_20251030232848",
+        "timestamp": "2025-10-30T23:28:48.801594",
+        "category": "STRATEGIC",
+        "risk_level": "LOW",
+        "description": "Income strategy evaluation",
+        "amount": 0,
+        "data": {
+          "category": "STRATEGIC",
+          "description": "Income strategy evaluation",
+          "amount": 0,
+          "strategies": [
+            {
+              "strategy": "API_SERVICES",
+              "attributes": {
+                "roi_potential": "high",
+                "risk": "low",
+                "scalability": "very_high"
+              },
+              "score": 90,
+              "recommended_allocation": 0.0
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "DEC_20251030233039",
+      "timestamp": "2025-10-30T23:30:39.557125",
+      "decision": {
+        "id": "DEC_20251030233039",
+        "timestamp": "2025-10-30T23:30:39.557125",
+        "category": "STRATEGIC",
+        "risk_level": "LOW",
+        "description": "Income strategy evaluation",
+        "amount": 0,
+        "data": {
+          "category": "STRATEGIC",
+          "description": "Income strategy evaluation",
+          "amount": 0,
+          "strategies": [
+            {
+              "strategy": "API_SERVICES",
+              "attributes": {
+                "roi_potential": "high",
+                "risk": "low",
+                "scalability": "very_high"
+              },
+              "score": 90,
+              "recommended_allocation": 0.0,
+              "risk_level": "LOW",
+              "recommendation": "RECOMMENDED"
+            },
+            {
+              "strategy": "SAAS_PRODUCT",
+              "attributes": {
+                "roi_potential": "high",
+                "risk": "low",
+                "scalability": "high"
+              },
+              "score": 85,
+              "recommended_allocation": 0.0,
+              "risk_level": "LOW",
+              "recommendation": "RECOMMENDED"
+            },
+            {
+              "strategy": "E_COMMERCE",
+              "attributes": {
+                "roi_potential": "medium",
+                "risk": "low",
+                "scalability": "high"
+              },
+              "score": 75,
+              "recommended_allocation": 0.0,
+              "risk_level": "LOW",
+              "recommendation": "RECOMMENDED"
+            },
+            {
+              "strategy": "AFFILIATE_MARKETING",
+              "attributes": {
+                "roi_potential": "medium",
+                "risk": "low",
+                "scalability": "high"
+              },
+              "score": 75,
+              "recommended_allocation": 0.0,
+              "risk_level": "LOW",
+              "recommendation": "RECOMMENDED"
+            },
+            {
+              "strategy": "DEFI_YIELD",
+              "attributes": {
+                "roi_potential": "medium",
+                "risk": "medium",
+                "scalability": "high"
+              },
+              "score": 65,
+              "recommended_allocation": 0.0,
+              "risk_level": "MEDIUM",
+              "recommendation": "CONSIDER"
+            },
+            {
+              "strategy": "CONTENT_CREATION",
+              "attributes": {
+                "roi_potential": "medium",
+                "risk": "low",
+                "scalability": "medium"
+              },
+              "score": 65,
+              "recommended_allocation": 0.0,
+              "risk_level": "LOW",
+              "recommendation": "CONSIDER"
+            },
+            {
+              "strategy": "CONSULTING",
+              "attributes": {
+                "roi_potential": "high",
+                "risk": "low",
+                "scalability": "low"
+              },
+              "score": 65,
+              "recommended_allocation": 0.0,
+              "risk_level": "LOW",
+              "recommendation": "CONSIDER"
+            },
+            {
+              "strategy": "CRYPTO_TRADING",
+              "attributes": {
+                "roi_potential": "high",
+                "risk": "high",
+                "scalability": "medium"
+              },
+              "score": 55,
+              "recommended_allocation": 0.0,
+              "risk_level": "HIGH",
+              "recommendation": "CONSIDER"
+            }
+          ]
+        },
+        "status": "PENDING",
+        "action_required": "EXECUTE_IMMEDIATELY",
+        "memory_insights": {
+          "related_events": 0,
+          "similar_decisions": 0,
+          "relevant_learnings": 0,
+          "success_patterns": {
+            "successful_decisions": [],
+            "successful_strategies": [],
+            "optimal_timing": [],
+            "preferred_approaches": []
+          },
+          "recommendation": "No previous experience. Proceed with standard evaluation."
+        },
+        "ai_can_decide": false,
+        "autonomy_level": 77.4
+      },
+      "outcome": null,
+      "learned": false
+    },
+    {
+      "id": "DEC_20251030233047",
+      "timestamp": "2025-10-30T23:30:47.298148",
+      "decision": {
+        "id": "DEC_20251030233047",
+        "timestamp": "2025-10-30T23:30:47.298148",
+        "category": "STRATEGIC",
+        "risk_level": "LOW",
+        "description": "Income strategy evaluation",
+        "amount": 0,
+        "data": {
+          "category": "STRATEGIC",
+          "description": "Income strategy evaluation",
+          "amount": 0,
+          "strategies": [
+            {
+              "strategy": "API_SERVICES",
+              "attributes": {
+                "roi_potential": "high",
+                "risk": "low",
+                "scalability": "very_high"
+              },
+              "score": 90,
+              "recommended_allocation": 0.0,
+              "risk_level": "LOW",
+              "recommendation": "RECOMMENDED"
+            },
+            {
+              "strategy": "SAAS_PRODUCT",
+              "attributes": {
+                "roi_potential": "high",
+                "risk": "low",
+                "scalability": "high"
+              },
+              "score": 85,
+              "recommended_allocation": 0.0,
+              "risk_level": "LOW",
+              "recommendation": "RECOMMENDED"
+            },
+            {
+              "strategy": "E_COMMERCE",
+              "attributes": {
+                "roi_potential": "medium",
+                "risk": "low",
+                "scalability": "high"
+              },
+              "score": 75,
+              "recommended_allocation": 0.0,
+              "risk_level": "LOW",
+              "recommendation": "RECOMMENDED"
+            },
+            {
+              "strategy": "AFFILIATE_MARKETING",
+              "attributes": {
+                "roi_potential": "medium",
+                "risk": "low",
+                "scalability": "high"
+              },
+              "score": 75,
+              "recommended_allocation": 0.0,
+              "risk_level": "LOW",
+              "recommendation": "RECOMMENDED"
+            },
+            {
+              "strategy": "DEFI_YIELD",
+              "attributes": {
+                "roi_potential": "medium",
+                "risk": "medium",
+                "scalability": "high"
+              },
+              "score": 65,
+              "recommended_allocation": 0.0,
+              "risk_level": "MEDIUM",
+              "recommendation": "CONSIDER"
+            },
+            {
+              "strategy": "CONTENT_CREATION",
+              "attributes": {
+                "roi_potential": "medium",
+                "risk": "low",
+                "scalability": "medium"
+              },
+              "score": 65,
+              "recommended_allocation": 0.0,
+              "risk_level": "LOW",
+              "recommendation": "CONSIDER"
+            },
+            {
+              "strategy": "CONSULTING",
+              "attributes": {
+                "roi_potential": "high",
+                "risk": "low",
+                "scalability": "low"
+              },
+              "score": 65,
+              "recommended_allocation": 0.0,
+              "risk_level": "LOW",
+              "recommendation": "CONSIDER"
+            },
+            {
+              "strategy": "CRYPTO_TRADING",
+              "attributes": {
+                "roi_potential": "high",
+                "risk": "high",
+                "scalability": "medium"
+              },
+              "score": 55,
+              "recommended_allocation": 0.0,
+              "risk_level": "HIGH",
+              "recommendation": "CONSIDER"
+            }
+          ]
+        },
+        "status": "PENDING",
+        "action_required": "EXECUTE_IMMEDIATELY",
+        "memory_insights": {
+          "related_events": 0,
+          "similar_decisions": 0,
+          "relevant_learnings": 0,
+          "success_patterns": {
+            "successful_decisions": [],
+            "successful_strategies": [],
+            "optimal_timing": [],
+            "preferred_approaches": []
+          },
+          "recommendation": "No previous experience. Proceed with standard evaluation."
+        },
+        "ai_can_decide": false,
+        "autonomy_level": 77.4
+      },
+      "outcome": null,
+      "learned": false
+    },
+    {
+      "id": "DEC_20251030233052",
+      "timestamp": "2025-10-30T23:30:52.493386",
+      "decision": {
+        "id": "DEC_20251030233052",
+        "timestamp": "2025-10-30T23:30:52.493386",
+        "category": "STRATEGIC",
+        "risk_level": "LOW",
+        "description": "Income strategy evaluation",
+        "amount": 0,
+        "data": {
+          "category": "STRATEGIC",
+          "description": "Income strategy evaluation",
+          "amount": 0,
+          "strategies": [
+            {
+              "strategy": "API_SERVICES",
+              "attributes": {
+                "roi_potential": "high",
+                "risk": "low",
+                "scalability": "very_high"
+              },
+              "score": 90,
+              "recommended_allocation": 0.0,
+              "risk_level": "LOW",
+              "recommendation": "RECOMMENDED"
+            },
+            {
+              "strategy": "SAAS_PRODUCT",
+              "attributes": {
+                "roi_potential": "high",
+                "risk": "low",
+                "scalability": "high"
+              },
+              "score": 85,
+              "recommended_allocation": 0.0,
+              "risk_level": "LOW",
+              "recommendation": "RECOMMENDED"
+            },
+            {
+              "strategy": "E_COMMERCE",
+              "attributes": {
+                "roi_potential": "medium",
+                "risk": "low",
+                "scalability": "high"
+              },
+              "score": 75,
+              "recommended_allocation": 0.0,
+              "risk_level": "LOW",
+              "recommendation": "RECOMMENDED"
+            },
+            {
+              "strategy": "AFFILIATE_MARKETING",
+              "attributes": {
+                "roi_potential": "medium",
+                "risk": "low",
+                "scalability": "high"
+              },
+              "score": 75,
+              "recommended_allocation": 0.0,
+              "risk_level": "LOW",
+              "recommendation": "RECOMMENDED"
+            },
+            {
+              "strategy": "DEFI_YIELD",
+              "attributes": {
+                "roi_potential": "medium",
+                "risk": "medium",
+                "scalability": "high"
+              },
+              "score": 65,
+              "recommended_allocation": 0.0,
+              "risk_level": "MEDIUM",
+              "recommendation": "CONSIDER"
+            },
+            {
+              "strategy": "CONTENT_CREATION",
+              "attributes": {
+                "roi_potential": "medium",
+                "risk": "low",
+                "scalability": "medium"
+              },
+              "score": 65,
+              "recommended_allocation": 0.0,
+              "risk_level": "LOW",
+              "recommendation": "CONSIDER"
+            },
+            {
+              "strategy": "CONSULTING",
+              "attributes": {
+                "roi_potential": "high",
+                "risk": "low",
+                "scalability": "low"
+              },
+              "score": 65,
+              "recommended_allocation": 0.0,
+              "risk_level": "LOW",
+              "recommendation": "CONSIDER"
+            },
+            {
+              "strategy": "CRYPTO_TRADING",
+              "attributes": {
+                "roi_potential": "high",
+                "risk": "high",
+                "scalability": "medium"
+              },
+              "score": 55,
+              "recommended_allocation": 0.0,
+              "risk_level": "HIGH",
+              "recommendation": "CONSIDER"
+            }
+          ]
+        },
+        "status": "PENDING",
+        "action_required": "EXECUTE_IMMEDIATELY",
+        "memory_insights": {
+          "related_events": 0,
+          "similar_decisions": 0,
+          "relevant_learnings": 0,
+          "success_patterns": {
+            "successful_decisions": [],
+            "successful_strategies": [],
+            "optimal_timing": [],
+            "preferred_approaches": []
+          },
+          "recommendation": "No previous experience. Proceed with standard evaluation."
+        },
+        "ai_can_decide": false,
+        "autonomy_level": 77.4
+      },
+      "outcome": null,
+      "learned": false
+    },
+    {
+      "id": "DEC_20251030233100",
+      "timestamp": "2025-10-30T23:31:00.736145",
+      "decision": {
+        "id": "DEC_20251030233100",
+        "timestamp": "2025-10-30T23:31:00.736145",
+        "category": "STRATEGIC",
+        "risk_level": "LOW",
+        "description": "Income strategy evaluation",
+        "amount": 0,
+        "data": {
+          "category": "STRATEGIC",
+          "description": "Income strategy evaluation",
+          "amount": 0,
+          "strategies": [
+            {
+              "strategy": "API_SERVICES",
+              "attributes": {
+                "roi_potential": "high",
+                "risk": "low",
+                "scalability": "very_high"
+              },
+              "score": 90,
+              "recommended_allocation": 0.0,
+              "risk_level": "LOW",
+              "recommendation": "RECOMMENDED"
+            },
+            {
+              "strategy": "SAAS_PRODUCT",
+              "attributes": {
+                "roi_potential": "high",
+                "risk": "low",
+                "scalability": "high"
+              },
+              "score": 85,
+              "recommended_allocation": 0.0,
+              "risk_level": "LOW",
+              "recommendation": "RECOMMENDED"
+            },
+            {
+              "strategy": "E_COMMERCE",
+              "attributes": {
+                "roi_potential": "medium",
+                "risk": "low",
+                "scalability": "high"
+              },
+              "score": 75,
+              "recommended_allocation": 0.0,
+              "risk_level": "LOW",
+              "recommendation": "RECOMMENDED"
+            },
+            {
+              "strategy": "AFFILIATE_MARKETING",
+              "attributes": {
+                "roi_potential": "medium",
+                "risk": "low",
+                "scalability": "high"
+              },
+              "score": 75,
+              "recommended_allocation": 0.0,
+              "risk_level": "LOW",
+              "recommendation": "RECOMMENDED"
+            },
+            {
+              "strategy": "DEFI_YIELD",
+              "attributes": {
+                "roi_potential": "medium",
+                "risk": "medium",
+                "scalability": "high"
+              },
+              "score": 65,
+              "recommended_allocation": 0.0,
+              "risk_level": "MEDIUM",
+              "recommendation": "CONSIDER"
+            },
+            {
+              "strategy": "CONTENT_CREATION",
+              "attributes": {
+                "roi_potential": "medium",
+                "risk": "low",
+                "scalability": "medium"
+              },
+              "score": 65,
+              "recommended_allocation": 0.0,
+              "risk_level": "LOW",
+              "recommendation": "CONSIDER"
+            },
+            {
+              "strategy": "CONSULTING",
+              "attributes": {
+                "roi_potential": "high",
+                "risk": "low",
+                "scalability": "low"
+              },
+              "score": 65,
+              "recommended_allocation": 0.0,
+              "risk_level": "LOW",
+              "recommendation": "CONSIDER"
+            },
+            {
+              "strategy": "CRYPTO_TRADING",
+              "attributes": {
+                "roi_potential": "high",
+                "risk": "high",
+                "scalability": "medium"
+              },
+              "score": 55,
+              "recommended_allocation": 0.0,
+              "risk_level": "HIGH",
+              "recommendation": "CONSIDER"
+            }
+          ]
+        },
+        "status": "PENDING",
+        "action_required": "EXECUTE_IMMEDIATELY",
+        "memory_insights": {
+          "related_events": 0,
+          "similar_decisions": 0,
+          "relevant_learnings": 0,
+          "success_patterns": {
+            "successful_decisions": [],
+            "successful_strategies": [],
+            "optimal_timing": [],
+            "preferred_approaches": []
+          },
+          "recommendation": "No previous experience. Proceed with standard evaluation."
+        },
+        "ai_can_decide": false,
+        "autonomy_level": 77.4
+      },
+      "outcome": null,
+      "learned": false
+    },
+    {
+      "id": "DEC_20251030233311",
+      "timestamp": "2025-10-30T23:33:11.765437",
+      "decision": {
+        "id": "DEC_20251030233311",
+        "timestamp": "2025-10-30T23:33:11.765437",
+        "category": "STRATEGIC",
+        "risk_level": "LOW",
+        "description": "Income strategy evaluation",
+        "amount": 0,
+        "data": {
+          "category": "STRATEGIC",
+          "description": "Income strategy evaluation",
+          "amount": 0,
+          "strategies": [
+            {
+              "strategy": "API_SERVICES",
+              "attributes": {
+                "roi_potential": "high",
+                "risk": "low",
+                "scalability": "very_high"
+              },
+              "score": 90,
+              "recommended_allocation": 0.0,
+              "risk_level": "LOW",
+              "recommendation": "RECOMMENDED"
+            },
+            {
+              "strategy": "SAAS_PRODUCT",
+              "attributes": {
+                "roi_potential": "high",
+                "risk": "low",
+                "scalability": "high"
+              },
+              "score": 85,
+              "recommended_allocation": 0.0,
+              "risk_level": "LOW",
+              "recommendation": "RECOMMENDED"
+            },
+            {
+              "strategy": "E_COMMERCE",
+              "attributes": {
+                "roi_potential": "medium",
+                "risk": "low",
+                "scalability": "high"
+              },
+              "score": 75,
+              "recommended_allocation": 0.0,
+              "risk_level": "LOW",
+              "recommendation": "RECOMMENDED"
+            },
+            {
+              "strategy": "AFFILIATE_MARKETING",
+              "attributes": {
+                "roi_potential": "medium",
+                "risk": "low",
+                "scalability": "high"
+              },
+              "score": 75,
+              "recommended_allocation": 0.0,
+              "risk_level": "LOW",
+              "recommendation": "RECOMMENDED"
+            },
+            {
+              "strategy": "DEFI_YIELD",
+              "attributes": {
+                "roi_potential": "medium",
+                "risk": "medium",
+                "scalability": "high"
+              },
+              "score": 65,
+              "recommended_allocation": 0.0,
+              "risk_level": "MEDIUM",
+              "recommendation": "CONSIDER"
+            },
+            {
+              "strategy": "CONTENT_CREATION",
+              "attributes": {
+                "roi_potential": "medium",
+                "risk": "low",
+                "scalability": "medium"
+              },
+              "score": 65,
+              "recommended_allocation": 0.0,
+              "risk_level": "LOW",
+              "recommendation": "CONSIDER"
+            },
+            {
+              "strategy": "CONSULTING",
+              "attributes": {
+                "roi_potential": "high",
+                "risk": "low",
+                "scalability": "low"
+              },
+              "score": 65,
+              "recommended_allocation": 0.0,
+              "risk_level": "LOW",
+              "recommendation": "CONSIDER"
+            },
+            {
+              "strategy": "CRYPTO_TRADING",
+              "attributes": {
+                "roi_potential": "high",
+                "risk": "high",
+                "scalability": "medium"
+              },
+              "score": 55,
+              "recommended_allocation": 0.0,
+              "risk_level": "HIGH",
+              "recommendation": "CONSIDER"
+            }
+          ]
+        },
+        "status": "PENDING",
+        "action_required": "EXECUTE_IMMEDIATELY",
+        "memory_insights": {
+          "related_events": 0,
+          "similar_decisions": 0,
+          "relevant_learnings": 0,
+          "success_patterns": {
+            "successful_decisions": [],
+            "successful_strategies": [],
+            "optimal_timing": [],
+            "preferred_approaches": []
+          },
+          "recommendation": "No previous experience. Proceed with standard evaluation."
+        },
+        "ai_can_decide": false,
+        "autonomy_level": 77.4
+      },
+      "outcome": null,
+      "learned": false
+    },
+    {
+      "id": "DEC_20251031011948",
+      "timestamp": "2025-10-31T01:19:48.438643",
+      "decision": {
+        "id": "DEC_20251031011948",
+        "timestamp": "2025-10-31T01:19:48.438643",
+        "category": "FINANCIAL",
+        "risk_level": "LOW",
+        "description": "Test marketing campaign investment",
+        "amount": 1000.0,
+        "data": {
+          "category": "FINANCIAL",
+          "amount": 1000.0,
+          "description": "Test marketing campaign investment"
+        },
+        "status": "PENDING",
+        "action_required": "EXECUTE_IMMEDIATELY",
+        "memory_insights": {
+          "related_events": 0,
+          "similar_decisions": 0,
+          "relevant_learnings": 0,
+          "success_patterns": {
+            "successful_decisions": [],
+            "successful_strategies": [],
+            "optimal_timing": [],
+            "preferred_approaches": []
+          },
+          "recommendation": "No previous experience. Proceed with standard evaluation."
+        },
+        "ai_can_decide": false,
+        "autonomy_level": 77.4
+      },
+      "outcome": null,
+      "learned": false
+    },
+    {
+      "id": "DEC_20251031011948",
+      "timestamp": "2025-10-31T01:19:48.443216",
+      "decision": {
+        "id": "DEC_20251031011948",
+        "timestamp": "2025-10-31T01:19:48.443216",
+        "category": "STRATEGIC",
+        "risk_level": "MEDIUM",
+        "description": "Test strategic decision with higher amount",
+        "amount": 5000.0,
+        "data": {
+          "category": "STRATEGIC",
+          "amount": 5000.0,
+          "description": "Test strategic decision with higher amount"
+        },
+        "status": "PENDING",
+        "action_required": "EXECUTE_IMMEDIATELY",
+        "memory_insights": {
+          "related_events": 0,
+          "similar_decisions": 0,
+          "relevant_learnings": 0,
+          "success_patterns": {
+            "successful_decisions": [],
+            "successful_strategies": [],
+            "optimal_timing": [],
+            "preferred_approaches": []
+          },
+          "recommendation": "No previous experience. Proceed with standard evaluation."
+        },
+        "ai_can_decide": false,
+        "autonomy_level": 77.4
+      },
+      "outcome": null,
+      "learned": false
+    },
+    {
+      "id": "DEC_20251031011957",
+      "timestamp": "2025-10-31T01:19:57.977600",
+      "decision": {
+        "id": "DEC_20251031011957",
+        "timestamp": "2025-10-31T01:19:57.977600",
+        "category": "FINANCIAL",
+        "risk_level": "LOW",
+        "description": "Test marketing campaign investment",
+        "amount": 1000.0,
+        "data": {
+          "category": "FINANCIAL",
+          "amount": 1000.0,
+          "description": "Test marketing campaign investment"
+        },
+        "status": "PENDING",
+        "action_required": "EXECUTE_IMMEDIATELY",
+        "memory_insights": {
+          "related_events": 0,
+          "similar_decisions": 0,
+          "relevant_learnings": 0,
+          "success_patterns": {
+            "successful_decisions": [],
+            "successful_strategies": [],
+            "optimal_timing": [],
+            "preferred_approaches": []
+          },
+          "recommendation": "No previous experience. Proceed with standard evaluation."
+        },
+        "ai_can_decide": false,
+        "autonomy_level": 77.4
+      },
+      "outcome": null,
+      "learned": false
+    },
+    {
+      "id": "DEC_20251031011957",
+      "timestamp": "2025-10-31T01:19:57.986194",
+      "decision": {
+        "id": "DEC_20251031011957",
+        "timestamp": "2025-10-31T01:19:57.986194",
+        "category": "STRATEGIC",
+        "risk_level": "MEDIUM",
+        "description": "Test strategic decision with higher amount",
+        "amount": 5000.0,
+        "data": {
+          "category": "STRATEGIC",
+          "amount": 5000.0,
+          "description": "Test strategic decision with higher amount"
+        },
+        "status": "PENDING",
+        "action_required": "EXECUTE_IMMEDIATELY",
+        "memory_insights": {
+          "related_events": 0,
+          "similar_decisions": 0,
+          "relevant_learnings": 0,
+          "success_patterns": {
+            "successful_decisions": [],
+            "successful_strategies": [],
+            "optimal_timing": [],
+            "preferred_approaches": []
+          },
+          "recommendation": "No previous experience. Proceed with standard evaluation."
+        },
+        "ai_can_decide": false,
+        "autonomy_level": 77.4
+      },
+      "outcome": null,
+      "learned": false
+    },
+    {
+      "id": "DEC_20251031015058",
+      "timestamp": "2025-10-31T01:50:58.102073",
+      "decision": {
+        "id": "DEC_20251031015058",
+        "timestamp": "2025-10-31T01:50:58.102073",
+        "category": "FINANCIAL",
+        "risk_level": "LOW",
+        "description": "Test marketing campaign investment",
+        "amount": 1000.0,
+        "data": {
+          "category": "FINANCIAL",
+          "amount": 1000.0,
+          "description": "Test marketing campaign investment"
+        },
+        "status": "PENDING",
+        "action_required": "EXECUTE_IMMEDIATELY",
+        "memory_insights": {
+          "related_events": 0,
+          "similar_decisions": 0,
+          "relevant_learnings": 0,
+          "success_patterns": {
+            "successful_decisions": [],
+            "successful_strategies": [],
+            "optimal_timing": [],
+            "preferred_approaches": []
+          },
+          "recommendation": "No previous experience. Proceed with standard evaluation."
+        },
+        "ai_can_decide": false,
+        "autonomy_level": 77.4
+      },
+      "outcome": null,
+      "learned": false
+    },
+    {
+      "id": "DEC_20251031015058",
+      "timestamp": "2025-10-31T01:50:58.105928",
+      "decision": {
+        "id": "DEC_20251031015058",
+        "timestamp": "2025-10-31T01:50:58.105928",
+        "category": "STRATEGIC",
+        "risk_level": "MEDIUM",
+        "description": "Test strategic decision with higher amount",
+        "amount": 5000.0,
+        "data": {
+          "category": "STRATEGIC",
+          "amount": 5000.0,
+          "description": "Test strategic decision with higher amount"
+        },
+        "status": "PENDING",
+        "action_required": "EXECUTE_IMMEDIATELY",
+        "memory_insights": {
+          "related_events": 0,
+          "similar_decisions": 0,
+          "relevant_learnings": 0,
+          "success_patterns": {
+            "successful_decisions": [],
+            "successful_strategies": [],
+            "optimal_timing": [],
+            "preferred_approaches": []
+          },
+          "recommendation": "No previous experience. Proceed with standard evaluation."
+        },
+        "ai_can_decide": false,
+        "autonomy_level": 77.4
+      },
+      "outcome": null,
+      "learned": false
+    },
+    {
+      "id": "DEC_20251031015104",
+      "timestamp": "2025-10-31T01:51:04.474801",
+      "decision": {
+        "id": "DEC_20251031015104",
+        "timestamp": "2025-10-31T01:51:04.474801",
+        "category": "FINANCIAL",
+        "risk_level": "LOW",
+        "description": "Test marketing campaign investment",
+        "amount": 1000.0,
+        "data": {
+          "category": "FINANCIAL",
+          "amount": 1000.0,
+          "description": "Test marketing campaign investment"
+        },
+        "status": "PENDING",
+        "action_required": "EXECUTE_IMMEDIATELY",
+        "memory_insights": {
+          "related_events": 0,
+          "similar_decisions": 0,
+          "relevant_learnings": 0,
+          "success_patterns": {
+            "successful_decisions": [],
+            "successful_strategies": [],
+            "optimal_timing": [],
+            "preferred_approaches": []
+          },
+          "recommendation": "No previous experience. Proceed with standard evaluation."
+        },
+        "ai_can_decide": false,
+        "autonomy_level": 77.4
+      },
+      "outcome": null,
+      "learned": false
+    },
+    {
+      "id": "DEC_20251031015104",
+      "timestamp": "2025-10-31T01:51:04.478801",
+      "decision": {
+        "id": "DEC_20251031015104",
+        "timestamp": "2025-10-31T01:51:04.477801",
+        "category": "STRATEGIC",
+        "risk_level": "MEDIUM",
+        "description": "Test strategic decision with higher amount",
+        "amount": 5000.0,
+        "data": {
+          "category": "STRATEGIC",
+          "amount": 5000.0,
+          "description": "Test strategic decision with higher amount"
+        },
+        "status": "PENDING",
+        "action_required": "EXECUTE_IMMEDIATELY",
+        "memory_insights": {
+          "related_events": 0,
+          "similar_decisions": 0,
+          "relevant_learnings": 0,
+          "success_patterns": {
+            "successful_decisions": [],
+            "successful_strategies": [],
+            "optimal_timing": [],
+            "preferred_approaches": []
+          },
+          "recommendation": "No previous experience. Proceed with standard evaluation."
+        },
+        "ai_can_decide": false,
+        "autonomy_level": 77.4
+      },
+      "outcome": null,
+      "learned": false
+    },
+    {
+      "id": "DEC_20251031015216",
+      "timestamp": "2025-10-31T01:52:16.071254",
+      "decision": {
+        "id": "DEC_20251031015216",
+        "timestamp": "2025-10-31T01:52:16.070113",
+        "category": "FINANCIAL",
+        "risk_level": "LOW",
+        "description": "Test marketing campaign investment",
+        "amount": 1000.0,
+        "data": {
+          "category": "FINANCIAL",
+          "amount": 1000.0,
+          "description": "Test marketing campaign investment"
+        },
+        "status": "PENDING",
+        "action_required": "EXECUTE_IMMEDIATELY",
+        "memory_insights": {
+          "related_events": 0,
+          "similar_decisions": 0,
+          "relevant_learnings": 0,
+          "success_patterns": {
+            "successful_decisions": [],
+            "successful_strategies": [],
+            "optimal_timing": [],
+            "preferred_approaches": []
+          },
+          "recommendation": "No previous experience. Proceed with standard evaluation."
+        },
+        "ai_can_decide": false,
+        "autonomy_level": 77.4
+      },
+      "outcome": null,
+      "learned": false
+    },
+    {
+      "id": "DEC_20251031015216",
+      "timestamp": "2025-10-31T01:52:16.081004",
+      "decision": {
+        "id": "DEC_20251031015216",
+        "timestamp": "2025-10-31T01:52:16.081004",
+        "category": "STRATEGIC",
+        "risk_level": "MEDIUM",
+        "description": "Test strategic decision with higher amount",
+        "amount": 5000.0,
+        "data": {
+          "category": "STRATEGIC",
+          "amount": 5000.0,
+          "description": "Test strategic decision with higher amount"
+        },
+        "status": "PENDING",
+        "action_required": "EXECUTE_IMMEDIATELY",
+        "memory_insights": {
+          "related_events": 0,
+          "similar_decisions": 0,
+          "relevant_learnings": 0,
+          "success_patterns": {
+            "successful_decisions": [],
+            "successful_strategies": [],
+            "optimal_timing": [],
+            "preferred_approaches": []
+          },
+          "recommendation": "No previous experience. Proceed with standard evaluation."
+        },
+        "ai_can_decide": false,
+        "autonomy_level": 77.4
+      },
+      "outcome": null,
+      "learned": false
+    },
+    {
+      "id": "DEC_20251031015227",
+      "timestamp": "2025-10-31T01:52:27.475860",
+      "decision": {
+        "id": "DEC_20251031015227",
+        "timestamp": "2025-10-31T01:52:27.475860",
+        "category": "FINANCIAL",
+        "risk_level": "LOW",
+        "description": "Test marketing campaign investment",
+        "amount": 1000.0,
+        "data": {
+          "category": "FINANCIAL",
+          "amount": 1000.0,
+          "description": "Test marketing campaign investment"
+        },
+        "status": "PENDING",
+        "action_required": "EXECUTE_IMMEDIATELY",
+        "memory_insights": {
+          "related_events": 0,
+          "similar_decisions": 0,
+          "relevant_learnings": 0,
+          "success_patterns": {
+            "successful_decisions": [],
+            "successful_strategies": [],
+            "optimal_timing": [],
+            "preferred_approaches": []
+          },
+          "recommendation": "No previous experience. Proceed with standard evaluation."
+        },
+        "ai_can_decide": false,
+        "autonomy_level": 77.4
+      },
+      "outcome": null,
+      "learned": false
+    },
+    {
+      "id": "DEC_20251031015227",
+      "timestamp": "2025-10-31T01:52:27.482907",
+      "decision": {
+        "id": "DEC_20251031015227",
+        "timestamp": "2025-10-31T01:52:27.482907",
+        "category": "STRATEGIC",
+        "risk_level": "MEDIUM",
+        "description": "Test strategic decision with higher amount",
+        "amount": 5000.0,
+        "data": {
+          "category": "STRATEGIC",
+          "amount": 5000.0,
+          "description": "Test strategic decision with higher amount"
+        },
+        "status": "PENDING",
+        "action_required": "EXECUTE_IMMEDIATELY",
+        "memory_insights": {
+          "related_events": 0,
+          "similar_decisions": 0,
+          "relevant_learnings": 0,
+          "success_patterns": {
+            "successful_decisions": [],
+            "successful_strategies": [],
+            "optimal_timing": [],
+            "preferred_approaches": []
+          },
+          "recommendation": "No previous experience. Proceed with standard evaluation."
+        },
+        "ai_can_decide": false,
+        "autonomy_level": 77.4
+      },
+      "outcome": null,
+      "learned": false
+    },
+    {
+      "id": "DEC_20251101191211",
+      "timestamp": "2025-11-01T19:12:11.205344",
+      "decision": {
+        "id": "DEC_20251101191211",
+        "timestamp": "2025-11-01T19:12:11.205344",
+        "category": "FINANCIAL",
+        "risk_level": "LOW",
+        "description": "Test marketing campaign investment",
+        "amount": 1000.0,
+        "data": {
+          "category": "FINANCIAL",
+          "amount": 1000.0,
+          "description": "Test marketing campaign investment"
+        },
+        "status": "PENDING",
+        "action_required": "EXECUTE_IMMEDIATELY",
+        "memory_insights": {
+          "related_events": 0,
+          "similar_decisions": 0,
+          "relevant_learnings": 0,
+          "success_patterns": {
+            "successful_decisions": [],
+            "successful_strategies": [],
+            "optimal_timing": [],
+            "preferred_approaches": []
+          },
+          "recommendation": "No previous experience. Proceed with standard evaluation."
+        },
+        "ai_can_decide": false,
+        "autonomy_level": 77.4
+      },
+      "outcome": null,
+      "learned": false
+    },
+    {
+      "id": "DEC_20251101191211",
+      "timestamp": "2025-11-01T19:12:11.214747",
+      "decision": {
+        "id": "DEC_20251101191211",
+        "timestamp": "2025-11-01T19:12:11.214747",
+        "category": "STRATEGIC",
+        "risk_level": "MEDIUM",
+        "description": "Test strategic decision with higher amount",
+        "amount": 5000.0,
+        "data": {
+          "category": "STRATEGIC",
+          "amount": 5000.0,
+          "description": "Test strategic decision with higher amount"
+        },
+        "status": "PENDING",
+        "action_required": "EXECUTE_IMMEDIATELY",
+        "memory_insights": {
+          "related_events": 0,
+          "similar_decisions": 0,
+          "relevant_learnings": 0,
+          "success_patterns": {
+            "successful_decisions": [],
+            "successful_strategies": [],
+            "optimal_timing": [],
+            "preferred_approaches": []
+          },
+          "recommendation": "No previous experience. Proceed with standard evaluation."
+        },
+        "ai_can_decide": false,
+        "autonomy_level": 77.4
+      },
+      "outcome": null,
+      "learned": false
+    },
+    {
+      "id": "DEC_20251105011334",
+      "timestamp": "2025-11-05T01:13:34.680073",
+      "decision": {
+        "id": "DEC_20251105011334",
+        "timestamp": "2025-11-05T01:13:34.680073",
+        "category": "FINANCIAL",
+        "risk_level": "LOW",
+        "description": "Invest in marketing campaign",
+        "amount": 1000,
+        "data": {
+          "category": "FINANCIAL",
+          "amount": 1000,
+          "description": "Invest in marketing campaign"
+        },
+        "status": "PENDING",
+        "action_required": "EXECUTE_IMMEDIATELY",
+        "memory_insights": {
+          "related_events": 0,
+          "similar_decisions": 0,
+          "relevant_learnings": 0,
+          "success_patterns": {
+            "successful_decisions": [],
+            "successful_strategies": [],
+            "optimal_timing": [],
+            "preferred_approaches": []
+          },
+          "recommendation": "No previous experience. Proceed with standard evaluation."
+        },
+        "ai_can_decide": false,
+        "autonomy_level": 77.4
+      },
+      "outcome": null,
+      "learned": false
+    },
+    {
+      "id": "DEC_20251105011359",
+      "timestamp": "2025-11-05T01:13:59.981584",
+      "decision": {
+        "id": "DEC_20251105011359",
+        "timestamp": "2025-11-05T01:13:59.981584",
+        "category": "FINANCIAL",
+        "risk_level": "LOW",
+        "description": "Invest in marketing campaign",
+        "amount": 1000,
+        "data": {
+          "category": "FINANCIAL",
+          "amount": 1000,
+          "description": "Invest in marketing campaign"
+        },
+        "status": "PENDING",
+        "action_required": "EXECUTE_IMMEDIATELY",
+        "memory_insights": {
+          "related_events": 0,
+          "similar_decisions": 0,
+          "relevant_learnings": 0,
+          "success_patterns": {
+            "successful_decisions": [],
+            "successful_strategies": [],
+            "optimal_timing": [],
+            "preferred_approaches": []
+          },
+          "recommendation": "No previous experience. Proceed with standard evaluation."
+        },
+        "ai_can_decide": false,
+        "autonomy_level": 77.4
+      },
+      "outcome": null,
+      "learned": false
+    },
+    {
+      "id": "DEC_20251105011425",
+      "timestamp": "2025-11-05T01:14:25.039320",
+      "decision": {
+        "id": "DEC_20251105011425",
+        "timestamp": "2025-11-05T01:14:25.039320",
+        "category": "FINANCIAL",
+        "risk_level": "LOW",
+        "description": "Invest in marketing campaign",
+        "amount": 1000,
+        "data": {
+          "category": "FINANCIAL",
+          "amount": 1000,
+          "description": "Invest in marketing campaign"
+        },
+        "status": "PENDING",
+        "action_required": "EXECUTE_IMMEDIATELY",
+        "memory_insights": {
+          "related_events": 0,
+          "similar_decisions": 0,
+          "relevant_learnings": 0,
+          "success_patterns": {
+            "successful_decisions": [],
+            "successful_strategies": [],
+            "optimal_timing": [],
+            "preferred_approaches": []
+          },
+          "recommendation": "No previous experience. Proceed with standard evaluation."
+        },
+        "ai_can_decide": false,
+        "autonomy_level": 77.4
+      },
+      "outcome": null,
+      "learned": false
+    },
+    {
+      "id": "DEC_20251105013203",
+      "timestamp": "2025-11-05T01:32:03.753565",
+      "decision": {
+        "id": "DEC_20251105013203",
+        "timestamp": "2025-11-05T01:32:03.753565",
+        "category": "FINANCIAL",
+        "risk_level": "LOW",
+        "description": "Invest in marketing campaign",
+        "amount": 1000,
+        "data": {
+          "category": "FINANCIAL",
+          "amount": 1000,
+          "description": "Invest in marketing campaign"
+        },
+        "status": "PENDING",
+        "action_required": "EXECUTE_IMMEDIATELY",
+        "memory_insights": {
+          "related_events": 0,
+          "similar_decisions": 0,
+          "relevant_learnings": 0,
+          "success_patterns": {
+            "successful_decisions": [],
+            "successful_strategies": [],
+            "optimal_timing": [],
+            "preferred_approaches": []
+          },
+          "recommendation": "No previous experience. Proceed with standard evaluation."
+        },
+        "ai_can_decide": false,
+        "autonomy_level": 77.4
+      },
+      "outcome": null,
+      "learned": false
+    },
+    {
+      "id": "DEC_20251107012540",
+      "timestamp": "2025-11-07T01:25:40.865969",
+      "decision": {
+        "id": "DEC_20251107012540",
+        "timestamp": "2025-11-07T01:25:40.865969",
+        "category": "FINANCIAL",
+        "risk_level": "LOW",
+        "description": "Test decision",
+        "amount": 1000.0,
+        "data": {
+          "category": "FINANCIAL",
+          "amount": 1000.0,
+          "description": "Test decision"
+        },
+        "status": "PENDING",
+        "action_required": "EXECUTE_IMMEDIATELY",
+        "memory_insights": {
+          "related_events": 0,
+          "similar_decisions": 0,
+          "relevant_learnings": 0,
+          "success_patterns": {
+            "successful_decisions": [],
+            "successful_strategies": [],
+            "optimal_timing": [],
+            "preferred_approaches": []
+          },
+          "recommendation": "No previous experience. Proceed with standard evaluation."
+        },
+        "ai_can_decide": false,
+        "autonomy_level": 77.4
+      },
+      "outcome": null,
+      "learned": false
+    },
+    {
+      "id": "DEC_20251107012544",
+      "timestamp": "2025-11-07T01:25:44.967628",
+      "decision": {
+        "id": "DEC_20251107012544",
+        "timestamp": "2025-11-07T01:25:44.966230",
+        "category": "FINANCIAL",
+        "risk_level": "LOW",
+        "description": "",
+        "amount": 1000.0,
+        "data": {
+          "category": "FINANCIAL",
+          "amount": 1000.0,
+          "description": ""
+        },
+        "status": "PENDING",
+        "action_required": "EXECUTE_IMMEDIATELY",
+        "memory_insights": {
+          "related_events": 0,
+          "similar_decisions": 0,
+          "relevant_learnings": 0,
+          "success_patterns": {
+            "successful_decisions": [],
+            "successful_strategies": [],
+            "optimal_timing": [],
+            "preferred_approaches": []
+          },
+          "recommendation": "No previous experience. Proceed with standard evaluation."
+        },
+        "ai_can_decide": false,
+        "autonomy_level": 77.4
+      },
+      "outcome": null,
+      "learned": false
+    },
+    {
+      "id": "DEC_20251107012555",
+      "timestamp": "2025-11-07T01:25:55.237063",
+      "decision": {
+        "id": "DEC_20251107012555",
+        "timestamp": "2025-11-07T01:25:55.237063",
+        "category": "OPERATIONAL",
+        "risk_level": "LOW",
+        "description": "",
+        "amount": 100.0,
+        "data": {
+          "category": "OPERATIONAL",
+          "amount": 100.0,
+          "description": ""
+        },
+        "status": "PENDING",
+        "action_required": "EXECUTE_IMMEDIATELY",
+        "memory_insights": {
+          "related_events": 0,
+          "similar_decisions": 0,
+          "relevant_learnings": 0,
+          "success_patterns": {
+            "successful_decisions": [],
+            "successful_strategies": [],
+            "optimal_timing": [],
+            "preferred_approaches": []
+          },
+          "recommendation": "No previous experience. Proceed with standard evaluation."
+        },
+        "ai_can_decide": false,
+        "autonomy_level": 77.4
+      },
+      "outcome": null,
+      "learned": false
+    },
+    {
+      "id": "DEC_20251107012557",
+      "timestamp": "2025-11-07T01:25:57.292912",
+      "decision": {
+        "id": "DEC_20251107012557",
+        "timestamp": "2025-11-07T01:25:57.292912",
+        "category": "OPERATIONAL",
+        "risk_level": "LOW",
+        "description": "",
+        "amount": 100.0,
+        "data": {
+          "category": "OPERATIONAL",
+          "amount": 100.0,
+          "description": ""
+        },
+        "status": "PENDING",
+        "action_required": "EXECUTE_IMMEDIATELY",
+        "memory_insights": {
+          "related_events": 0,
+          "similar_decisions": 0,
+          "relevant_learnings": 0,
+          "success_patterns": {
+            "successful_decisions": [],
+            "successful_strategies": [],
+            "optimal_timing": [],
+            "preferred_approaches": []
+          },
+          "recommendation": "No previous experience. Proceed with standard evaluation."
+        },
+        "ai_can_decide": false,
+        "autonomy_level": 77.4
+      },
+      "outcome": null,
+      "learned": false
+    },
+    {
+      "id": "DEC_20251107012559",
+      "timestamp": "2025-11-07T01:25:59.366849",
+      "decision": {
+        "id": "DEC_20251107012559",
+        "timestamp": "2025-11-07T01:25:59.366849",
+        "category": "OPERATIONAL",
+        "risk_level": "LOW",
+        "description": "",
+        "amount": 100.0,
+        "data": {
+          "category": "OPERATIONAL",
+          "amount": 100.0,
+          "description": ""
+        },
+        "status": "PENDING",
+        "action_required": "EXECUTE_IMMEDIATELY",
+        "memory_insights": {
+          "related_events": 0,
+          "similar_decisions": 0,
+          "relevant_learnings": 0,
+          "success_patterns": {
+            "successful_decisions": [],
+            "successful_strategies": [],
+            "optimal_timing": [],
+            "preferred_approaches": []
+          },
+          "recommendation": "No previous experience. Proceed with standard evaluation."
+        },
+        "ai_can_decide": false,
+        "autonomy_level": 77.4
+      },
+      "outcome": null,
+      "learned": false
+    },
+    {
+      "id": "DEC_20251107012836",
+      "timestamp": "2025-11-07T01:28:36.122990",
+      "decision": {
+        "id": "DEC_20251107012836",
+        "timestamp": "2025-11-07T01:28:36.122990",
+        "category": "FINANCIAL",
+        "risk_level": "MEDIUM",
+        "description": "",
+        "amount": 5000.0,
+        "data": {
+          "category": "FINANCIAL",
+          "amount": 5000.0,
+          "description": ""
+        },
+        "status": "PENDING",
+        "action_required": "EXECUTE_IMMEDIATELY",
+        "memory_insights": {
+          "related_events": 0,
+          "similar_decisions": 0,
+          "relevant_learnings": 0,
+          "success_patterns": {
+            "successful_decisions": [],
+            "successful_strategies": [],
+            "optimal_timing": [],
+            "preferred_approaches": []
+          },
+          "recommendation": "No previous experience. Proceed with standard evaluation."
+        },
+        "ai_can_decide": false,
+        "autonomy_level": 77.4
+      },
+      "outcome": null,
+      "learned": false
+    },
+    {
+      "id": "DEC_20251108212447",
+      "timestamp": "2025-11-08T21:24:47.855619",
+      "decision": {
+        "id": "DEC_20251108212447",
+        "timestamp": "2025-11-08T21:24:47.855619",
+        "category": "FINANCIAL",
+        "risk_level": "LOW",
+        "description": "Test purchase",
+        "amount": 1000.0,
+        "data": {
+          "category": "FINANCIAL",
+          "amount": 1000.0,
+          "description": "Test purchase"
+        },
+        "status": "PENDING",
+        "action_required": "EXECUTE_IMMEDIATELY",
+        "memory_insights": {
+          "related_events": 0,
+          "similar_decisions": 0,
+          "relevant_learnings": 0,
+          "success_patterns": {
+            "successful_decisions": [],
+            "successful_strategies": [],
+            "optimal_timing": [],
+            "preferred_approaches": []
+          },
+          "recommendation": "No previous experience. Proceed with standard evaluation."
+        },
+        "ai_can_decide": false,
+        "autonomy_level": 77.4
+      },
+      "outcome": null,
+      "learned": false
+    },
+    {
+      "id": "DEC_20251108212606",
+      "timestamp": "2025-11-08T21:26:06.598090",
+      "decision": {
+        "id": "DEC_20251108212606",
+        "timestamp": "2025-11-08T21:26:06.598090",
+        "category": "FINANCIAL",
+        "risk_level": "LOW",
+        "description": "Purchase office supplies for team",
+        "amount": 500.0,
+        "data": {
+          "category": "FINANCIAL",
+          "amount": 500.0,
+          "description": "Purchase office supplies for team"
+        },
+        "status": "PENDING",
+        "action_required": "EXECUTE_IMMEDIATELY",
+        "memory_insights": {
+          "related_events": 0,
+          "similar_decisions": 0,
+          "relevant_learnings": 0,
+          "success_patterns": {
+            "successful_decisions": [],
+            "successful_strategies": [],
+            "optimal_timing": [],
+            "preferred_approaches": []
+          },
+          "recommendation": "No previous experience. Proceed with standard evaluation."
+        },
+        "ai_can_decide": false,
+        "autonomy_level": 77.4
+      },
+      "outcome": null,
+      "learned": false
+    },
+    {
+      "id": "DEC_20251108212608",
+      "timestamp": "2025-11-08T21:26:08.674762",
+      "decision": {
+        "id": "DEC_20251108212608",
+        "timestamp": "2025-11-08T21:26:08.674762",
+        "category": "STRATEGIC",
+        "risk_level": "MEDIUM",
+        "description": "Upgrade development infrastructure",
+        "amount": 10000.0,
+        "data": {
+          "category": "STRATEGIC",
+          "amount": 10000.0,
+          "description": "Upgrade development infrastructure"
+        },
+        "status": "PENDING",
+        "action_required": "EXECUTE_IMMEDIATELY",
+        "memory_insights": {
+          "related_events": 0,
+          "similar_decisions": 0,
+          "relevant_learnings": 0,
+          "success_patterns": {
+            "successful_decisions": [],
+            "successful_strategies": [],
+            "optimal_timing": [],
+            "preferred_approaches": []
+          },
+          "recommendation": "No previous experience. Proceed with standard evaluation."
+        },
+        "ai_can_decide": false,
+        "autonomy_level": 77.4
+      },
+      "outcome": null,
+      "learned": false
+    },
+    {
+      "id": "DEC_20251108212610",
+      "timestamp": "2025-11-08T21:26:10.737332",
+      "decision": {
+        "id": "DEC_20251108212610",
+        "timestamp": "2025-11-08T21:26:10.737332",
+        "category": "FINANCIAL",
+        "risk_level": "HIGH",
+        "description": "Major equipment purchase",
+        "amount": 50000.0,
+        "data": {
+          "category": "FINANCIAL",
+          "amount": 50000.0,
+          "description": "Major equipment purchase"
+        },
+        "status": "PENDING",
+        "action_required": "WAIT_HUMAN_APPROVAL",
+        "memory_insights": {
+          "related_events": 0,
+          "similar_decisions": 0,
+          "relevant_learnings": 0,
+          "success_patterns": {
+            "successful_decisions": [],
+            "successful_strategies": [],
+            "optimal_timing": [],
+            "preferred_approaches": []
+          },
+          "recommendation": "No previous experience. Proceed with standard evaluation."
+        },
+        "ai_can_decide": false,
+        "autonomy_level": 77.4
+      },
+      "outcome": null,
+      "learned": false
+    }
+  ],
+  "outcomes": [],
+  "learnings": [],
+  "preferences": {},
+  "patterns": {}
+}

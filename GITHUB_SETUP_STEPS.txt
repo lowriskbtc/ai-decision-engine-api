@@ -1,0 +1,100 @@
+========================================
+🚀 GITHUB SETUP - STEP BY STEP 🚀
+========================================
+
+## YOUR PROJECT ISN'T ON GITHUB YET
+
+Here's how to get it there so Railway can deploy it:
+
+---
+
+## STEP 1: CREATE GITHUB REPOSITORY
+
+1. Go to **github.com** (sign in or sign up)
+2. Click the **"+"** icon (top right) → **"New repository"**
+3. Repository name: `ai-decision-engine-api` (or any name)
+4. Description: "AI Decision Engine API - RESTful API for AI-driven decision making"
+5. Choose **Public** (or Private if you prefer)
+6. **DON'T** check "Initialize with README"
+7. Click **"Create repository"**
+
+---
+
+## STEP 2: PUSH YOUR CODE
+
+After creating the repo, GitHub will show you commands. Use these:
+
+```bash
+cd "C:\Users\aigen\Desktop\ai weed"
+git init
+git add .
+git commit -m "Initial commit - AI Decision Engine API"
+git branch -M main
+git remote add origin https://github.com/YOUR-USERNAME/YOUR-REPO-NAME.git
+git push -u origin main
+```
+
+**Replace:**
+- `YOUR-USERNAME` with your GitHub username
+- `YOUR-REPO-NAME` with your repository name
+
+---
+
+## STEP 3: BACK TO RAILWAY
+
+1. Go back to Railway
+2. The "Loading..." should finish
+3. Type your repository name: `username/repo-name`
+4. Or click the dropdown to see your repos
+5. Select your repository
+6. Railway will deploy!
+
+---
+
+## QUICK COMMANDS (Copy-Paste Ready)
+
+After creating GitHub repo, run these in PowerShell:
+
+```powershell
+cd "C:\Users\aigen\Desktop\ai weed"
+git init
+git add .
+git commit -m "Initial commit"
+git branch -M main
+git remote add origin https://github.com/YOUR-USERNAME/YOUR-REPO.git
+git push -u origin main
+```
+
+---
+
+## TROUBLESHOOTING
+
+### Git not installed?
+- Download from: git-scm.com
+- Install it
+- Restart terminal
+
+### Authentication error?
+- GitHub now requires personal access token
+- Go to GitHub → Settings → Developer settings → Personal access tokens
+- Create token with "repo" permissions
+- Use token as password when pushing
+
+### Repository not found?
+- Check repository name spelling
+- Verify it's created on GitHub
+- Make sure it's public (or you have access)
+
+---
+
+## AFTER PUSHING:
+
+1. ✅ Code is on GitHub
+2. ✅ Go back to Railway
+3. ✅ Type your repo name
+4. ✅ Railway will deploy!
+
+---
+
+**Let me know when you've created the GitHub repo and I'll help you push!**
+

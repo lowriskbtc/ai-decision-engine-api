@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Key Management Dashboard - AI Decision Engine</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            padding: 30px;
+        }
+        
+        h1 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+        }
+        
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .card {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .card h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        
+        .stat {
+            font-size: 32px;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .section {
+            margin-bottom: 40px;
+        }
+        
+        .section h2 {
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+        }
+        
+        .key-item {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .key-info {
+            flex: 1;
+        }
+        
+        .key-value {
+            font-family: monospace;
+            background: #f0f0f0;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            margin: 5px 0;
+            word-break: break-all;
+        }
+        
+        .key-meta {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        
+        .badge-free { background: #e3f2fd; color: #1976d2; }
+        .badge-pro { background: #f3e5f5; color: #7b1fa2; }
+        .badge-enterprise { background: #fff3e0; color: #e65100; }
+        .badge-dev { background: #e8f5e9; color: #388e3c; }
+        
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-danger {
+            background: #f44336;
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background: #d32f2f;
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+            font-weight: 500;
+        }
+        
+        .form-group select,
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        
+        .usage-bar {
+            background: #e0e0e0;
+            border-radius: 10px;
+            height: 20px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+        
+        .usage-fill {
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            height: 100%;
+            transition: width 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 11px;
+            font-weight: bold;
+        }
+        
+        .alert {
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+        
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔑 API Key Management Dashboard</h1>
+        <p class="subtitle">Manage your API keys, monitor usage, and track statistics</p>
+        
+        <div id="alertContainer"></div>
+        
+        <!-- Statistics Overview -->
+        <div class="dashboard-grid">
+            <div class="card">
+                <h3>Total API Keys</h3>
+                <div class="stat" id="totalKeys">0</div>
+                <div class="stat-label">Active keys</div>
+            </div>
+            
+            <div class="card">
+                <h3>Requests This Month</h3>
+                <div class="stat" id="totalRequests">0</div>
+                <div class="stat-label">Across all keys</div>
+            </div>
+            
+            <div class="card">
+                <h3>Success Rate</h3>
+                <div class="stat" id="successRate">0%</div>
+                <div class="stat-label">Last 30 days</div>
+            </div>
+        </div>
+        
+        <!-- Generate New Key -->
+        <div class="section">
+            <h2>Generate New API Key</h2>
+            <div class="card">
+                <form id="generateKeyForm">
+                    <div class="form-group">
+                        <label for="keyTier">Tier</label>
+                        <select id="keyTier" required>
+                            <option value="free">Free (100 requests/month)</option>
+                            <option value="dev">Dev (1,000 requests/month)</option>
+                            <option value="pro">Pro (10,000 requests/month)</option>
+                            <option value="enterprise">Enterprise (1,000,000 requests/month)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="keyPrefix">Prefix (optional)</label>
+                        <input type="text" id="keyPrefix" placeholder="key" maxlength="20">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Generate API Key</button>
+                </form>
+            </div>
+        </div>
+        
+        <!-- API Keys List -->
+        <div class="section">
+            <h2>Your API Keys</h2>
+            <div id="keysList" class="loading">Loading keys...</div>
+        </div>
+        
+        <!-- Usage Statistics -->
+        <div class="section">
+            <h2>Usage Statistics</h2>
+            <div id="usageStats" class="card">
+                <div class="loading">Loading statistics...</div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const API_BASE = window.location.hostname === 'localhost' 
+            ? 'http://localhost:8000'
+            : 'https://api.aiweedcompany.com';
+        
+        // Load dashboard data
+        async function loadDashboard() {
+            await Promise.all([
+                loadKeys(),
+                loadStatistics()
+            ]);
+        }
+        
+        // Load API keys
+        async function loadKeys() {
+            try {
+                // In production, this would call your backend API
+                // For now, we'll use a mock or local storage
+                const response = await fetch(`${API_BASE}/api/keys/list`, {
+                    headers: {
+                        'X-API-Key': getAdminKey() // Admin key for listing
+                    }
+                });
+                
+                if (response.ok) {
+                    const keys = await response.json();
+                    displayKeys(keys);
+                } else {
+                    // Fallback: use local storage or show message
+                    showAlert('Note: Connect to API to view keys. Using demo data.', 'info');
+                    displayKeys(getDemoKeys());
+                }
+            } catch (error) {
+                console.error('Error loading keys:', error);
+                displayKeys(getDemoKeys());
+            }
+        }
+        
+        // Display keys
+        function displayKeys(keys) {
+            const container = document.getElementById('keysList');
+            container.innerHTML = '';
+            
+            if (!keys || Object.keys(keys).length === 0) {
+                container.innerHTML = '<p>No API keys found. Generate one above!</p>';
+                return;
+            }
+            
+            document.getElementById('totalKeys').textContent = Object.keys(keys).length;
+            
+            for (const [key, info] of Object.entries(keys)) {
+                const keyItem = document.createElement('div');
+                keyItem.className = 'key-item';
+                
+                const usage = calculateUsage(info);
+                
+                keyItem.innerHTML = `
+                    <div class="key-info">
+                        <div class="key-value">${key}</div>
+                        <div class="key-meta">
+                            <span class="badge badge-${info.tier}">${info.tier}</span>
+                            <span style="margin-left: 10px;">Created: ${new Date(info.created_at).toLocaleDateString()}</span>
+                        </div>
+                        <div style="margin-top: 10px;">
+                            <div style="font-size: 12px; color: #666; margin-bottom: 5px;">
+                                Usage: ${usage.used} / ${usage.limit} requests
+                            </div>
+                            <div class="usage-bar">
+                                <div class="usage-fill" style="width: ${usage.percentage}%">
+                                    ${usage.percentage}%
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <button class="btn btn-danger" onclick="deactivateKey('${key}')">Deactivate</button>
+                    </div>
+                `;
+                
+                container.appendChild(keyItem);
+            }
+        }
+        
+        // Calculate usage
+        function calculateUsage(keyInfo) {
+            // This would come from rate_limits.json in production
+            const limit = keyInfo.requests_per_month || 100;
+            const used = Math.floor(Math.random() * limit * 0.3); // Demo data
+            const percentage = Math.min((used / limit) * 100, 100);
+            
+            return { used, limit, percentage: percentage.toFixed(1) };
+        }
+        
+        // Generate new key
+        document.getElementById('generateKeyForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const tier = document.getElementById('keyTier').value;
+            const prefix = document.getElementById('keyPrefix').value || 'key';
+            
+            try {
+                const response = await fetch(`${API_BASE}/api/keys/generate`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-API-Key': getAdminKey()
+                    },
+                    body: JSON.stringify({ tier, prefix })
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    showAlert(`✅ New API key generated: ${data.key}`, 'success');
+                    document.getElementById('generateKeyForm').reset();
+                    loadKeys();
+                } else {
+                    throw new Error('Failed to generate key');
+                }
+            } catch (error) {
+                showAlert('⚠️ Error generating key. Check console for details.', 'error');
+                console.error(error);
+            }
+        });
+        
+        // Deactivate key
+        async function deactivateKey(key) {
+            if (!confirm(`Are you sure you want to deactivate this key?\n\n${key}`)) {
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${API_BASE}/api/keys/deactivate`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-API-Key': getAdminKey()
+                    },
+                    body: JSON.stringify({ key })
+                });
+                
+                if (response.ok) {
+                    showAlert('✅ Key deactivated successfully', 'success');
+                    loadKeys();
+                } else {
+                    throw new Error('Failed to deactivate key');
+                }
+            } catch (error) {
+                showAlert('⚠️ Error deactivating key', 'error');
+                console.error(error);
+            }
+        }
+        
+        // Load statistics
+        async function loadStatistics() {
+            try {
+                const response = await fetch(`${API_BASE}/analytics/stats?days=30`, {
+                    headers: {
+                        'X-API-Key': getAdminKey()
+                    }
+                });
+                
+                if (response.ok) {
+                    const stats = await response.json();
+                    displayStatistics(stats.data);
+                } else {
+                    displayStatistics(getDemoStats());
+                }
+            } catch (error) {
+                console.error('Error loading statistics:', error);
+                displayStatistics(getDemoStats());
+            }
+        }
+        
+        // Display statistics
+        function displayStatistics(stats) {
+            document.getElementById('totalRequests').textContent = stats.total_requests?.toLocaleString() || '0';
+            document.getElementById('successRate').textContent = 
+                `${stats.success_rate?.toFixed(1) || 0}%`;
+            
+            const container = document.getElementById('usageStats');
+            container.innerHTML = `
+                <h3>Recent Activity</h3>
+                <p>Total Requests: ${stats.total_requests || 0}</p>
+                <p>Success Rate: ${stats.success_rate?.toFixed(1) || 0}%</p>
+                <p>Average Response Time: ${stats.avg_response_time_ms?.toFixed(2) || 0} ms</p>
+                ${stats.top_endpoints ? `
+                    <h3 style="margin-top: 20px;">Top Endpoints</h3>
+                    <ul>
+                        ${stats.top_endpoints.slice(0, 5).map(ep => 
+                            `<li>${ep.endpoint}: ${ep.count} requests</li>`
+                        ).join('')}
+                    </ul>
+                ` : ''}
+            `;
+        }
+        
+        // Helper functions
+        function showAlert(message, type) {
+            const container = document.getElementById('alertContainer');
+            const alert = document.createElement('div');
+            alert.className = `alert alert-${type}`;
+            alert.textContent = message;
+            container.appendChild(alert);
+            
+            setTimeout(() => {
+                alert.remove();
+            }, 5000);
+        }
+        
+        function getAdminKey() {
+            // In production, this would come from user session/auth
+            return localStorage.getItem('admin_api_key') || 'dev_key_123';
+        }
+        
+        function getDemoKeys() {
+            return {
+                'dev_key_123': {
+                    tier: 'dev',
+                    requests_per_month: 1000,
+                    created_at: new Date().toISOString(),
+                    active: true
+                },
+                'pro_key_456': {
+                    tier: 'pro',
+                    requests_per_month: 10000,
+                    created_at: new Date().toISOString(),
+                    active: true
+                }
+            };
+        }
+        
+        function getDemoStats() {
+            return {
+                total_requests: 0,
+                success_rate: 0,
+                avg_response_time_ms: 0,
+                top_endpoints: []
+            };
+        }
+        
+        // Initialize dashboard
+        loadDashboard();
+    </script>
+</body>
+</html>
+
