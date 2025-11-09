@@ -24,7 +24,7 @@ I've built an API for AI-driven decision making and risk assessment. It's design
 **Free tier:** 100 requests/month
 **Pro tier:** $9/month - 10,000 requests
 
-**Try it:** https://your-app.railway.app/docs
+**Try it:** https://web-production-62146.up.railway.app/docs
 **GitHub:** [Your repo link]
 
 Would love feedback from the API community!
@@ -72,7 +72,7 @@ RESTful API for AI-driven decision making
 ✅ Production ready
 ✅ Zero budget launch
 
-Try it: [your-link]
+Try it: https://web-production-62146.up.railway.app
 
 #API #SaaS #IndieHacker
 ```
@@ -111,7 +111,7 @@ I've built an API for AI-driven decision making and risk assessment.
 **Free tier:** 100 requests/month
 **Pro tier:** $9/month - 10,000 requests
 
-**Try it:** https://your-app.railway.app/docs
+**Try it:** https://web-production-62146.up.railway.app/docs
 
 Built with zero budget, deployed on free tier. Would love feedback!
 ```
@@ -168,5 +168,5 @@ Built with zero budget, ready for your projects!
 
 ---
 
-*Remember to replace [your-link] with your actual deployment URL!*
+*Remember to replace https://web-production-62146.up.railway.app with your actual deployment URL!*
 
