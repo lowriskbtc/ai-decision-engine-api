@@ -983,7 +983,7 @@ PRICING_PAGE_HTML = """<!DOCTYPE html>
                     <li>All endpoints included</li>
                     <li>Advanced analytics</li>
                 </ul>
-                <button class="cta-button" onclick="subscribe('pro')">Subscribe Now</button>
+                <button class="cta-button" onclick="subscribe('pro', this)">Subscribe Now</button>
             </div>
             <div class="pricing-card">
                 <div class="tier-name">Enterprise</div>
@@ -996,29 +996,22 @@ PRICING_PAGE_HTML = """<!DOCTYPE html>
                     <li>Advanced analytics</li>
                     <li>Custom integrations</li>
                 </ul>
-                <button class="cta-button secondary" onclick="subscribe('enterprise')">Subscribe Now</button>
+                <button class="cta-button secondary" onclick="subscribe('enterprise', this)">Subscribe Now</button>
             </div>
         </div>
     </div>
     <script>
         const API_BASE_URL = window.location.origin;
-        async function subscribe(tier) {
+        async function subscribe(tier, buttonElement) {
             const email = prompt('Enter your email address:');
             if (!email || !email.includes('@')) { 
                 alert('Please enter a valid email address'); 
                 return; 
             }
             
-            // Find the button that was clicked
-            const buttons = document.querySelectorAll('.cta-button');
-            let clickedButton = null;
-            buttons.forEach(btn => {
-                if (btn.textContent.includes('Subscribe Now')) {
-                    clickedButton = btn;
-                }
-            });
-            
             // Show loading state
+            const clickedButton = buttonElement || document.querySelector(`button[onclick*="${tier}"]`);
+            const originalText = clickedButton ? clickedButton.textContent : 'Subscribe Now';
             if (clickedButton) {
                 clickedButton.textContent = 'Processing...';
                 clickedButton.disabled = true;
@@ -1040,7 +1033,7 @@ PRICING_PAGE_HTML = """<!DOCTYPE html>
                     const errorMsg = data.detail || data.message || 'Error creating checkout session. Please try again.';
                     alert(errorMsg + '\\n\\nIf this persists, please contact support.');
                     if (clickedButton) {
-                        clickedButton.textContent = 'Subscribe Now';
+                        clickedButton.textContent = originalText;
                         clickedButton.disabled = false;
                     }
                 }
@@ -1048,7 +1041,7 @@ PRICING_PAGE_HTML = """<!DOCTYPE html>
                 console.error('Error:', error);
                 alert('Network error. Please check your connection and try again.\\n\\nIf this persists, please contact support.');
                 if (clickedButton) {
-                    clickedButton.textContent = 'Subscribe Now';
+                    clickedButton.textContent = originalText;
                     clickedButton.disabled = false;
                 }
             }
