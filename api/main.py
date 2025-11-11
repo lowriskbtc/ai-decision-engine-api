@@ -873,11 +873,123 @@ async def get_subscription_status(
         )
 
 
-@app.get("/pricing", response_model=Dict[str, Any])
-async def get_pricing():
+# Pricing page HTML (embedded)
+PRICING_PAGE_HTML = """<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pricing - AI Decision Engine API</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 40px 20px; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        h1 { text-align: center; color: white; font-size: 2.5rem; margin-bottom: 10px; }
+        .subtitle { text-align: center; color: rgba(255, 255, 255, 0.9); font-size: 1.2rem; margin-bottom: 50px; }
+        .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-top: 40px; }
+        .pricing-card { background: white; border-radius: 20px; padding: 40px; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3); transition: transform 0.3s ease, box-shadow 0.3s ease; position: relative; overflow: hidden; }
+        .pricing-card:hover { transform: translateY(-10px); box-shadow: 0 30px 80px rgba(0, 0, 0, 0.4); }
+        .pricing-card.featured { border: 3px solid #667eea; transform: scale(1.05); }
+        .pricing-card.featured::before { content: "POPULAR"; position: absolute; top: 20px; right: -30px; background: #667eea; color: white; padding: 5px 40px; transform: rotate(45deg); font-size: 0.8rem; font-weight: bold; }
+        .tier-name { font-size: 1.8rem; font-weight: bold; color: #333; margin-bottom: 10px; }
+        .price { font-size: 3rem; font-weight: bold; color: #667eea; margin: 20px 0; }
+        .price .currency { font-size: 1.5rem; vertical-align: top; }
+        .price .period { font-size: 1rem; color: #666; font-weight: normal; }
+        .features { list-style: none; margin: 30px 0; }
+        .features li { padding: 12px 0; border-bottom: 1px solid #eee; color: #555; }
+        .features li:last-child { border-bottom: none; }
+        .features li::before { content: "✓ "; color: #667eea; font-weight: bold; margin-right: 10px; }
+        .cta-button { width: 100%; padding: 15px; background: #667eea; color: white; border: none; border-radius: 10px; font-size: 1.1rem; font-weight: bold; cursor: pointer; transition: background 0.3s ease; margin-top: 20px; }
+        .cta-button:hover { background: #5568d3; }
+        .cta-button.secondary { background: #764ba2; }
+        .cta-button.secondary:hover { background: #5a3a7a; }
+        @media (max-width: 768px) { .pricing-card.featured { transform: scale(1); } h1 { font-size: 2rem; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Choose Your Plan</h1>
+        <p class="subtitle">Start free, upgrade when you need more</p>
+        <div class="pricing-grid">
+            <div class="pricing-card">
+                <div class="tier-name">Free</div>
+                <div class="price"><span class="currency">$</span>0<span class="period">/month</span></div>
+                <ul class="features">
+                    <li>100 requests/month</li>
+                    <li>Full API access</li>
+                    <li>Community support</li>
+                    <li>All endpoints included</li>
+                </ul>
+                <button class="cta-button" onclick="getFreeKey()">Get Free API Key</button>
+            </div>
+            <div class="pricing-card featured">
+                <div class="tier-name">Pro</div>
+                <div class="price"><span class="currency">$</span>9<span class="period">/month</span></div>
+                <ul class="features">
+                    <li>10,000 requests/month</li>
+                    <li>Full API access</li>
+                    <li>Priority support</li>
+                    <li>All endpoints included</li>
+                    <li>Advanced analytics</li>
+                </ul>
+                <button class="cta-button" onclick="subscribe('pro')">Subscribe Now</button>
+            </div>
+            <div class="pricing-card">
+                <div class="tier-name">Enterprise</div>
+                <div class="price"><span class="currency">$</span>49<span class="period">/month</span></div>
+                <ul class="features">
+                    <li>Unlimited requests</li>
+                    <li>Full API access</li>
+                    <li>Priority support</li>
+                    <li>All endpoints included</li>
+                    <li>Advanced analytics</li>
+                    <li>Custom integrations</li>
+                </ul>
+                <button class="cta-button secondary" onclick="subscribe('enterprise')">Subscribe Now</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        const API_BASE_URL = window.location.origin;
+        async function subscribe(tier) {
+            const email = prompt('Enter your email address:');
+            if (!email || !email.includes('@')) { alert('Please enter a valid email address'); return; }
+            try {
+                const response = await fetch(`${API_BASE_URL}/payment/checkout`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: email, tier: tier })
+                });
+                const data = await response.json();
+                if (data.checkout_url) { window.location.href = data.checkout_url; }
+                else { alert('Error creating checkout session. Please try again.'); }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error processing subscription. Please try again.');
+            }
+        }
+        async function getFreeKey() {
+            alert('Free API keys are available! Visit the documentation to get started: ' + API_BASE_URL + '/docs');
+            window.open(API_BASE_URL + '/docs', '_blank');
+        }
+    </script>
+</body>
+</html>"""
+
+
+@app.get("/pricing", response_class=HTMLResponse)
+async def get_pricing(request: Request):
     """
-    Get pricing information for all tiers
+    Get pricing information - serves HTML for browsers, JSON for API clients
     """
+    # Check if request is from a browser (has Accept: text/html) or API client
+    accept_header = request.headers.get("accept", "")
+    
+    if "text/html" in accept_header.lower():
+        # Serve HTML pricing page for browsers
+        return HTMLResponse(content=PRICING_PAGE_HTML)
+    
+    # Return JSON for API clients
     try:
         # Try to import from stripe_service, but fallback to hardcoded pricing if not available
         try:
@@ -916,10 +1028,10 @@ async def get_pricing():
                 ]
             }
         
-        return {
+        return JSONResponse(content={
             "tiers": pricing,
             "currency": "USD"
-        }
+        })
     except Exception as e:
         logger.error(f"Error getting pricing: {e}", exc_info=True)
         raise HTTPException(
