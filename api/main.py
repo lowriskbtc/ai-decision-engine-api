@@ -651,7 +651,56 @@ async def create_checkout_session(checkout_request: CheckoutRequest):
     Returns checkout session URL
     """
     try:
-        from api.stripe_service import stripe_service
+        from api.stripe_service import stripe_service, STRIPE_AVAILABLE, PRICING_TIERS
+        
+        # Check if Stripe is available
+        if not STRIPE_AVAILABLE:
+            raise HTTPException(
+                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                detail="Payment processing is currently being set up. Please check back soon or contact support."
+            )
+        
+        # Check if Stripe API key is configured
+        import stripe
+        if not stripe.api_key or stripe.api_key == "":
+            raise HTTPException(
+                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                detail="Payment processing is not yet configured. Please contact support or try again later."
+            )
+        
+        # Check if price ID is configured for this tier
+        tier_info = PRICING_TIERS.get(checkout_request.tier.lower())
+        if not tier_info:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=f"Invalid tier: {checkout_request.tier}. Valid tiers are: pro, enterprise"
+            )
+        
+        if not tier_info.get("price_id"):
+            # Try to create price dynamically if not configured
+            try:
+                # Create product and price on the fly
+                product = stripe.Product.create(
+                    name=f"{tier_info['name']} Plan",
+                    description=f"{tier_info['requests_per_month']:,} requests/month"
+                )
+                
+                price = stripe.Price.create(
+                    product=product.id,
+                    unit_amount=tier_info["amount"],
+                    currency="usd",
+                    recurring={"interval": "month"}
+                )
+                
+                # Update the price ID
+                tier_info["price_id"] = price.id
+                logger.info(f"Created Stripe product and price for {checkout_request.tier}: {price.id}")
+            except Exception as create_error:
+                logger.error(f"Error creating Stripe product/price: {create_error}")
+                raise HTTPException(
+                    status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                    detail=f"Payment setup incomplete for {checkout_request.tier} tier. Please contact support."
+                )
         
         session = stripe_service.create_checkout_session(
             customer_email=checkout_request.email,
@@ -663,6 +712,8 @@ async def create_checkout_session(checkout_request: CheckoutRequest):
             "session_id": session["session_id"],
             "tier": session["tier"]
         }
+    except HTTPException:
+        raise
     except ValueError as e:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -953,19 +1004,53 @@ PRICING_PAGE_HTML = """<!DOCTYPE html>
         const API_BASE_URL = window.location.origin;
         async function subscribe(tier) {
             const email = prompt('Enter your email address:');
-            if (!email || !email.includes('@')) { alert('Please enter a valid email address'); return; }
+            if (!email || !email.includes('@')) { 
+                alert('Please enter a valid email address'); 
+                return; 
+            }
+            
+            // Find the button that was clicked
+            const buttons = document.querySelectorAll('.cta-button');
+            let clickedButton = null;
+            buttons.forEach(btn => {
+                if (btn.textContent.includes('Subscribe Now')) {
+                    clickedButton = btn;
+                }
+            });
+            
+            // Show loading state
+            if (clickedButton) {
+                clickedButton.textContent = 'Processing...';
+                clickedButton.disabled = true;
+            }
+            
             try {
                 const response = await fetch(`${API_BASE_URL}/payment/checkout`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email: email, tier: tier })
                 });
+                
                 const data = await response.json();
-                if (data.checkout_url) { window.location.href = data.checkout_url; }
-                else { alert('Error creating checkout session. Please try again.'); }
+                
+                if (response.ok && data.checkout_url) {
+                    window.location.href = data.checkout_url;
+                } else {
+                    // Show detailed error message
+                    const errorMsg = data.detail || data.message || 'Error creating checkout session. Please try again.';
+                    alert(errorMsg + '\\n\\nIf this persists, please contact support.');
+                    if (clickedButton) {
+                        clickedButton.textContent = 'Subscribe Now';
+                        clickedButton.disabled = false;
+                    }
+                }
             } catch (error) {
                 console.error('Error:', error);
-                alert('Error processing subscription. Please try again.');
+                alert('Network error. Please check your connection and try again.\\n\\nIf this persists, please contact support.');
+                if (clickedButton) {
+                    clickedButton.textContent = 'Subscribe Now';
+                    clickedButton.disabled = false;
+                }
             }
         }
         async function getFreeKey() {

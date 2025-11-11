@@ -101,8 +101,18 @@ class StripeService:
             raise ValueError("Stripe API key not configured")
         
         tier_info = PRICING_TIERS.get(tier.lower())
-        if not tier_info or not tier_info["price_id"]:
-            raise ValueError(f"Invalid tier or price ID not configured: {tier}")
+        if not tier_info:
+            raise ValueError(f"Invalid tier: {tier}. Valid tiers are: pro, enterprise")
+        
+        # If price_id is not set, try to get it from environment or create it
+        if not tier_info.get("price_id"):
+            # Try to get from environment variable
+            env_var_name = f"STRIPE_{tier.upper()}_PRICE_ID"
+            price_id = os.getenv(env_var_name, "")
+            if price_id:
+                tier_info["price_id"] = price_id
+            else:
+                raise ValueError(f"Price ID not configured for {tier} tier. Please set {env_var_name} environment variable or create product in Stripe.")
         
         try:
             # Create checkout session
