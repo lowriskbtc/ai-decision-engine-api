@@ -3,7 +3,6 @@ Stripe Payment Service
 Handles subscription management, payment processing, and billing
 """
 
-import stripe
 import os
 import json
 import logging
@@ -13,8 +12,16 @@ from pathlib import Path
 
 logger = logging.getLogger(__name__)
 
-# Initialize Stripe
-stripe.api_key = os.getenv("STRIPE_SECRET_KEY", "")
+# Try to import stripe, but handle if not installed
+try:
+    import stripe
+    stripe.api_key = os.getenv("STRIPE_SECRET_KEY", "")
+    STRIPE_AVAILABLE = True
+except ImportError:
+    stripe = None
+    STRIPE_AVAILABLE = False
+    logger.warning("Stripe module not installed. Payment features will be disabled.")
+
 STRIPE_WEBHOOK_SECRET = os.getenv("STRIPE_WEBHOOK_SECRET", "")
 
 # Pricing tiers
@@ -87,6 +94,9 @@ class StripeService:
         Returns:
             Checkout session object
         """
+        if not STRIPE_AVAILABLE:
+            raise ValueError("Stripe module not installed. Please install stripe package.")
+        
         if not stripe.api_key:
             raise ValueError("Stripe API key not configured")
         
@@ -124,7 +134,7 @@ class StripeService:
     
     def get_subscription(self, subscription_id: str) -> Optional[Dict[str, Any]]:
         """Get subscription from Stripe"""
-        if not stripe.api_key:
+        if not STRIPE_AVAILABLE or not stripe.api_key:
             return None
         
         try:
@@ -143,7 +153,7 @@ class StripeService:
     
     def cancel_subscription(self, subscription_id: str) -> bool:
         """Cancel a subscription"""
-        if not stripe.api_key:
+        if not STRIPE_AVAILABLE or not stripe.api_key:
             return False
         
         try:
@@ -193,6 +203,10 @@ class StripeService:
     
     def verify_webhook(self, payload: bytes, signature: str) -> Optional[Dict[str, Any]]:
         """Verify Stripe webhook signature"""
+        if not STRIPE_AVAILABLE:
+            logger.warning("Stripe module not installed")
+            return None
+        
         if not STRIPE_WEBHOOK_SECRET:
             logger.warning("Stripe webhook secret not configured")
             return None

@@ -879,10 +879,32 @@ async def get_pricing():
     Get pricing information for all tiers
     """
     try:
-        from api.stripe_service import PRICING_TIERS
+        # Try to import from stripe_service, but fallback to hardcoded pricing if not available
+        try:
+            from api.stripe_service import PRICING_TIERS
+            pricing_tiers = PRICING_TIERS
+        except (ImportError, ModuleNotFoundError):
+            # Fallback pricing if Stripe not installed yet
+            pricing_tiers = {
+                "free": {
+                    "name": "Free",
+                    "amount": 0,
+                    "requests_per_month": 100
+                },
+                "pro": {
+                    "name": "Pro",
+                    "amount": 900,  # $9.00 in cents
+                    "requests_per_month": 10000
+                },
+                "enterprise": {
+                    "name": "Enterprise",
+                    "amount": 4900,  # $49.00 in cents
+                    "requests_per_month": 1000000
+                }
+            }
         
         pricing = {}
-        for tier, info in PRICING_TIERS.items():
+        for tier, info in pricing_tiers.items():
             pricing[tier] = {
                 "name": info["name"],
                 "price": info["amount"] / 100,  # Convert cents to dollars
