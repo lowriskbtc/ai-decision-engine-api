@@ -653,37 +653,25 @@ async def create_checkout_session(checkout_request: CheckoutRequest):
     try:
         from api.stripe_service import stripe_service, STRIPE_AVAILABLE, PRICING_TIERS
         
-        # Check if Stripe is available
-        if not STRIPE_AVAILABLE:
-            # Try to import stripe to check if it's installed
-            try:
-                import stripe
-                # If we can import, check if API key is set
-                stripe_key = os.getenv("STRIPE_SECRET_KEY", "")
-                if not stripe_key:
-                    raise HTTPException(
-                        status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-                        detail="Stripe API key not configured. Please add STRIPE_SECRET_KEY to Railway environment variables."
-                    )
-                # Set the API key
-                stripe.api_key = stripe_key
-            except ImportError:
-                raise HTTPException(
-                    status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-                    detail="Stripe module not installed. Railway is deploying the update. Please wait a few minutes and try again."
-                )
+        # Import stripe and check availability
+        try:
+            import stripe
+        except ImportError:
+            raise HTTPException(
+                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                detail="Stripe module not installed. Railway is deploying the update. Please wait a few minutes and try again."
+            )
         
         # Check if Stripe API key is configured
-        import stripe
-        if not stripe.api_key or stripe.api_key == "":
-            stripe_key = os.getenv("STRIPE_SECRET_KEY", "")
-            if stripe_key:
-                stripe.api_key = stripe_key
-            else:
-                raise HTTPException(
-                    status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-                    detail="Stripe API key not configured. Please add STRIPE_SECRET_KEY to Railway environment variables."
-                )
+        stripe_key = os.getenv("STRIPE_SECRET_KEY", "")
+        if not stripe_key:
+            raise HTTPException(
+                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                detail="Stripe API key not configured. Please add STRIPE_SECRET_KEY to Railway environment variables."
+            )
+        
+        # Set the API key
+        stripe.api_key = stripe_key
         
         # Check if price ID is configured for this tier
         tier_info = PRICING_TIERS.get(checkout_request.tier.lower())

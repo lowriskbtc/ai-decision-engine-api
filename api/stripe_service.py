@@ -15,13 +15,13 @@ logger = logging.getLogger(__name__)
 # Try to import stripe, but handle if not installed
 try:
     import stripe
-    stripe.api_key = os.getenv("STRIPE_SECRET_KEY", "")
-    # Verify Stripe is actually working
-    if stripe.api_key:
-        STRIPE_AVAILABLE = True
+    STRIPE_AVAILABLE = True
+    # Set API key if available
+    stripe_key = os.getenv("STRIPE_SECRET_KEY", "")
+    if stripe_key:
+        stripe.api_key = stripe_key
     else:
-        STRIPE_AVAILABLE = False
-        logger.warning("Stripe module installed but API key not configured.")
+        logger.warning("Stripe module installed but API key not configured in environment variables.")
 except ImportError:
     stripe = None
     STRIPE_AVAILABLE = False
