@@ -5,7 +5,7 @@ Main API server with enhanced error handling and validation
 
 from fastapi import FastAPI, Header, HTTPException, Depends, Request, status
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, HTMLResponse
 from fastapi.exceptions import RequestValidationError
 from pydantic import BaseModel, Field, validator
 from typing import Optional, Dict, Any, List
@@ -173,10 +173,26 @@ async def general_exception_handler(request: Request, exc: Exception):
     )
 
 
-@app.get("/")
-async def root():
-    """Root endpoint - redirects to API documentation"""
-    return {
+@app.get("/", response_class=HTMLResponse)
+async def root(request: Request):
+    """
+    Root endpoint - serves HTML landing page for browsers, JSON for API clients
+    """
+    # Check if request is from a browser (has Accept: text/html) or API client
+    accept_header = request.headers.get("accept", "")
+    
+    if "text/html" in accept_header.lower():
+        # Serve HTML landing page for browsers
+        try:
+            landing_path = os.path.join(os.path.dirname(__file__), "landing.html")
+            with open(landing_path, "r", encoding="utf-8") as f:
+                return HTMLResponse(content=f.read())
+        except FileNotFoundError:
+            # Fallback to JSON if HTML file not found
+            pass
+    
+    # Return JSON for API clients
+    return JSONResponse(content={
         "message": "AI Decision Engine API",
         "version": "1.0.0",
         "status": "operational",
@@ -188,9 +204,10 @@ async def root():
             "redoc": "/redoc",
             "evaluate_decision": "/decisions/evaluate",
             "assess_risk": "/risk/assess",
-            "autonomy_level": "/autonomy/level"
+            "autonomy_level": "/autonomy/level",
+            "pricing": "/pricing"
         }
-    }
+    })
 
 
 @app.get("/health")
@@ -480,6 +497,286 @@ def _get_execution_reason(should_execute, task_type, risk_level):
         return f"AI autonomy level sufficient for {risk_level} risk {task_type} tasks"
     else:
         return f"Insufficient autonomy level or task requires human oversight"
+
+
+# Payment and Subscription Models
+class CheckoutRequest(BaseModel):
+    email: str = Field(..., description="Customer email address")
+    tier: str = Field(default="pro", description="Subscription tier (pro, enterprise)")
+
+class SubscriptionStatusResponse(BaseModel):
+    subscription_id: Optional[str] = None
+    status: str
+    tier: str
+    current_period_end: Optional[int] = None
+    cancel_at_period_end: bool = False
+
+
+# Payment and Subscription Endpoints
+@app.post("/payment/checkout", response_model=Dict[str, Any])
+async def create_checkout_session(checkout_request: CheckoutRequest):
+    """
+    Create Stripe checkout session for subscription
+    
+    - **email**: Customer email address
+    - **tier**: Subscription tier (pro, enterprise)
+    
+    Returns checkout session URL
+    """
+    try:
+        from api.stripe_service import stripe_service
+        
+        session = stripe_service.create_checkout_session(
+            customer_email=checkout_request.email,
+            tier=checkout_request.tier
+        )
+        
+        return {
+            "checkout_url": session["url"],
+            "session_id": session["session_id"],
+            "tier": session["tier"]
+        }
+    except ValueError as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(e)
+        )
+    except Exception as e:
+        logger.error(f"Error creating checkout session: {e}", exc_info=True)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error creating checkout session: {str(e)}"
+        )
+
+
+@app.get("/payment/success")
+async def payment_success(session_id: Optional[str] = None):
+    """
+    Payment success page - called after successful Stripe checkout
+    """
+    if not session_id:
+        return {"message": "Payment successful! Check your email for API key."}
+    
+    try:
+        from api.stripe_service import stripe_service, PRICING_TIERS
+        from api.api_key_manager import api_key_manager
+        import stripe
+        
+        # Retrieve checkout session
+        session = stripe.checkout.Session.retrieve(session_id)
+        
+        if session.mode == "subscription" and session.subscription:
+            # Get subscription details
+            subscription = stripe_service.get_subscription(session.subscription)
+            
+            if subscription:
+                tier = subscription.get("tier", "pro")
+                customer_email = session.customer_email or session.metadata.get("customer_email", "")
+                
+                # Generate API key for this subscription
+                api_key = api_key_manager.generate_api_key(tier=tier, prefix=f"{tier}_sub")
+                
+                # Link subscription to API key
+                stripe_service.link_subscription_to_api_key(
+                    api_key=api_key,
+                    subscription_id=session.subscription,
+                    customer_email=customer_email,
+                    tier=tier
+                )
+                
+                return {
+                    "message": "Payment successful!",
+                    "api_key": api_key,
+                    "tier": tier,
+                    "requests_per_month": PRICING_TIERS.get(tier, {}).get("requests_per_month", 0),
+                    "subscription_id": session.subscription
+                }
+        
+        return {"message": "Payment successful! Processing subscription..."}
+    except Exception as e:
+        logger.error(f"Error processing payment success: {e}", exc_info=True)
+        return {"message": "Payment successful! We'll send your API key via email."}
+
+
+@app.get("/payment/cancel")
+async def payment_cancel():
+    """Payment cancellation page"""
+    return {"message": "Payment cancelled. You can try again anytime."}
+
+
+@app.post("/webhooks/stripe", response_model=Dict[str, Any])
+async def stripe_webhook(request: Request):
+    """
+    Handle Stripe webhook events
+    
+    Processes subscription updates, cancellations, etc.
+    """
+    try:
+        from api.stripe_service import stripe_service
+        from api.api_key_manager import api_key_manager
+        
+        payload = await request.body()
+        signature = request.headers.get("stripe-signature")
+        
+        if not signature:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Missing stripe-signature header"
+            )
+        
+        # Verify webhook
+        event = stripe_service.verify_webhook(payload, signature)
+        
+        if not event:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Invalid webhook signature"
+            )
+        
+        # Handle different event types
+        event_type = event["type"]
+        event_data = event["data"]["object"]
+        
+        if event_type == "checkout.session.completed":
+            # Subscription created
+            subscription_id = event_data.get("subscription")
+            if subscription_id:
+                subscription = stripe_service.get_subscription(subscription_id)
+                if subscription:
+                    tier = subscription.get("tier", "pro")
+                    # Update subscription status
+                    stripe_service.update_subscription_status(subscription_id, "active")
+                    logger.info(f"Subscription activated: {subscription_id}")
+        
+        elif event_type == "customer.subscription.updated":
+            # Subscription updated
+            subscription_id = event_data.get("id")
+            status = event_data.get("status")
+            stripe_service.update_subscription_status(subscription_id, status)
+            logger.info(f"Subscription updated: {subscription_id}, status: {status}")
+        
+        elif event_type == "customer.subscription.deleted":
+            # Subscription cancelled
+            subscription_id = event_data.get("id")
+            stripe_service.update_subscription_status(subscription_id, "cancelled")
+            
+            # Optionally downgrade API key to free tier
+            api_key = stripe_service.get_api_key_from_subscription(subscription_id)
+            if api_key:
+                keys = api_key_manager._load_keys()
+                if api_key in keys:
+                    keys[api_key]["tier"] = "free"
+                    keys[api_key]["requests_per_month"] = 100
+                    api_key_manager._save_keys(keys)
+                    logger.info(f"Downgraded API key {api_key[:10]}... to free tier")
+        
+        return {"status": "success", "event": event_type}
+    
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error processing webhook: {e}", exc_info=True)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error processing webhook: {str(e)}"
+        )
+
+
+@app.get("/subscription/status", response_model=SubscriptionStatusResponse)
+async def get_subscription_status(
+    x_api_key: Optional[str] = Header(None, alias="X-API-Key")
+):
+    """
+    Get subscription status for current API key
+    """
+    try:
+        from api.stripe_service import stripe_service
+        
+        if not x_api_key:
+            return SubscriptionStatusResponse(
+                status="free",
+                tier="free"
+            )
+        
+        # Find subscription for this API key
+        subscriptions = stripe_service._load_subscriptions()
+        subscription_id = None
+        
+        for sub_id, sub_data in subscriptions.items():
+            if sub_data.get("api_key") == x_api_key:
+                subscription_id = sub_id
+                break
+        
+        if not subscription_id:
+            # Check tier from API key manager
+            from api.api_key_manager import api_key_manager
+            key_info = api_key_manager.validate_api_key(x_api_key)
+            tier = key_info.get("tier", "free") if key_info else "free"
+            
+            return SubscriptionStatusResponse(
+                status="free",
+                tier=tier
+            )
+        
+        subscription = stripe_service.get_subscription(subscription_id)
+        if subscription:
+            return SubscriptionStatusResponse(
+                subscription_id=subscription["id"],
+                status=subscription["status"],
+                tier=subscription["tier"],
+                current_period_end=subscription.get("current_period_end"),
+                cancel_at_period_end=subscription.get("cancel_at_period_end", False)
+            )
+        
+        # Fallback to API key tier
+        from api.api_key_manager import api_key_manager
+        key_info = api_key_manager.validate_api_key(x_api_key)
+        tier = key_info.get("tier", "free") if key_info else "free"
+        
+        return SubscriptionStatusResponse(
+            status="unknown",
+            tier=tier
+        )
+    
+    except Exception as e:
+        logger.error(f"Error getting subscription status: {e}", exc_info=True)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error getting subscription status: {str(e)}"
+        )
+
+
+@app.get("/pricing", response_model=Dict[str, Any])
+async def get_pricing():
+    """
+    Get pricing information for all tiers
+    """
+    try:
+        from api.stripe_service import PRICING_TIERS
+        
+        pricing = {}
+        for tier, info in PRICING_TIERS.items():
+            pricing[tier] = {
+                "name": info["name"],
+                "price": info["amount"] / 100,  # Convert cents to dollars
+                "requests_per_month": info["requests_per_month"],
+                "features": [
+                    f"{info['requests_per_month']:,} requests/month",
+                    "Full API access",
+                    "Priority support" if tier != "free" else "Community support"
+                ]
+            }
+        
+        return {
+            "tiers": pricing,
+            "currency": "USD"
+        }
+    except Exception as e:
+        logger.error(f"Error getting pricing: {e}", exc_info=True)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error getting pricing: {str(e)}"
+        )
 
 
 # Include analytics routes
