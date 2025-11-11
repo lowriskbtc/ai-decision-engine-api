@@ -655,18 +655,35 @@ async def create_checkout_session(checkout_request: CheckoutRequest):
         
         # Check if Stripe is available
         if not STRIPE_AVAILABLE:
-            raise HTTPException(
-                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-                detail="Payment processing is currently being set up. Please check back soon or contact support."
-            )
+            # Try to import stripe to check if it's installed
+            try:
+                import stripe
+                # If we can import, check if API key is set
+                stripe_key = os.getenv("STRIPE_SECRET_KEY", "")
+                if not stripe_key:
+                    raise HTTPException(
+                        status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                        detail="Stripe API key not configured. Please add STRIPE_SECRET_KEY to Railway environment variables."
+                    )
+                # Set the API key
+                stripe.api_key = stripe_key
+            except ImportError:
+                raise HTTPException(
+                    status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                    detail="Stripe module not installed. Railway is deploying the update. Please wait a few minutes and try again."
+                )
         
         # Check if Stripe API key is configured
         import stripe
         if not stripe.api_key or stripe.api_key == "":
-            raise HTTPException(
-                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-                detail="Payment processing is not yet configured. Please contact support or try again later."
-            )
+            stripe_key = os.getenv("STRIPE_SECRET_KEY", "")
+            if stripe_key:
+                stripe.api_key = stripe_key
+            else:
+                raise HTTPException(
+                    status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                    detail="Stripe API key not configured. Please add STRIPE_SECRET_KEY to Railway environment variables."
+                )
         
         # Check if price ID is configured for this tier
         tier_info = PRICING_TIERS.get(checkout_request.tier.lower())
@@ -720,11 +737,25 @@ async def create_checkout_session(checkout_request: CheckoutRequest):
             detail=str(e)
         )
     except Exception as e:
+        error_msg = str(e)
         logger.error(f"Error creating checkout session: {e}", exc_info=True)
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Error creating checkout session: {str(e)}"
-        )
+        
+        # Provide more helpful error messages
+        if "Price ID not configured" in error_msg:
+            raise HTTPException(
+                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                detail=f"Payment setup incomplete. The {checkout_request.tier} tier is being configured. Please try again in a moment."
+            )
+        elif "Stripe API key" in error_msg or "not configured" in error_msg:
+            raise HTTPException(
+                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                detail="Payment processing is not yet configured. Please contact support."
+            )
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=f"Error creating checkout session: {error_msg}"
+            )
 
 
 @app.get("/payment/success")
