@@ -820,7 +820,7 @@ PAYMENT_SUCCESS_HTML = """<!DOCTYPE html>
 
 
 @app.get("/payment/success", response_class=HTMLResponse)
-async def payment_success(session_id: Optional[str] = None, request: Request = Request):
+async def payment_success(session_id: Optional[str] = None, request: Request):
     """
     Payment success page - called after successful Stripe checkout
     """
