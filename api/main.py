@@ -937,9 +937,9 @@ async def stripe_webhook(request: Request):
         elif event_type == "customer.subscription.updated":
             # Subscription updated
             subscription_id = event_data.get("id")
-            status = event_data.get("status")
-            stripe_service.update_subscription_status(subscription_id, status)
-            logger.info(f"Subscription updated: {subscription_id}, status: {status}")
+            subscription_status = event_data.get("status")
+            stripe_service.update_subscription_status(subscription_id, subscription_status)
+            logger.info(f"Subscription updated: {subscription_id}, status: {subscription_status}")
         
         elif event_type == "customer.subscription.deleted":
             # Subscription cancelled
