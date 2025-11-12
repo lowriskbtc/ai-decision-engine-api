@@ -1079,7 +1079,7 @@ PRICING_PAGE_HTML = """<!DOCTYPE html>
                     <li>Community support</li>
                     <li>All endpoints included</li>
                 </ul>
-                <button class="cta-button" onclick="getFreeKey()">Get Free API Key</button>
+                <button class="cta-button" data-action="free">Get Free API Key</button>
             </div>
             <div class="pricing-card featured">
                 <div class="tier-name">Pro</div>
@@ -1091,7 +1091,7 @@ PRICING_PAGE_HTML = """<!DOCTYPE html>
                     <li>All endpoints included</li>
                     <li>Advanced analytics</li>
                 </ul>
-                <button class="cta-button" onclick="subscribe('pro', this)">Subscribe Now</button>
+                <button class="cta-button" data-tier="pro" data-action="subscribe">Subscribe Now</button>
             </div>
             <div class="pricing-card">
                 <div class="tier-name">Enterprise</div>
@@ -1104,7 +1104,7 @@ PRICING_PAGE_HTML = """<!DOCTYPE html>
                     <li>Advanced analytics</li>
                     <li>Custom integrations</li>
                 </ul>
-                <button class="cta-button secondary" onclick="subscribe('enterprise', this)">Subscribe Now</button>
+                <button class="cta-button secondary" data-tier="enterprise" data-action="subscribe">Subscribe Now</button>
             </div>
         </div>
     </div>
@@ -1119,7 +1119,7 @@ PRICING_PAGE_HTML = """<!DOCTYPE html>
                 }
                 
                 // Show loading state
-                const clickedButton = buttonElement || document.querySelector(`button[onclick*="${tier}"]`);
+                const clickedButton = buttonElement || document.querySelector(`button[data-tier="${tier}"]`);
                 const originalText = clickedButton ? clickedButton.textContent : 'Subscribe Now';
                 if (clickedButton) {
                     clickedButton.textContent = 'Processing...';
@@ -1155,7 +1155,7 @@ PRICING_PAGE_HTML = """<!DOCTYPE html>
             } catch (error) {
                 console.error('Error:', error);
                 alert('Network error: ' + error.message + '\n\nPlease check your connection and try again.\n\nIf this persists, please contact support.');
-                const clickedButton = buttonElement || document.querySelector(`button[onclick*="${tier}"]`);
+                const clickedButton = buttonElement || document.querySelector(`button[data-tier="${tier}"]`);
                 if (clickedButton) {
                     clickedButton.textContent = 'Subscribe Now';
                     clickedButton.disabled = false;
@@ -1201,31 +1201,28 @@ PRICING_PAGE_HTML = """<!DOCTYPE html>
             }
         }
         
-        // Add event listeners as backup (in case onclick doesn't work)
+        // Set up event listeners for all buttons
         document.addEventListener('DOMContentLoaded', function() {
             // Subscribe buttons
-            document.querySelectorAll('button[onclick*="subscribe"]').forEach(button => {
-                const onclick = button.getAttribute('onclick');
-                if (onclick) {
-                    const match = onclick.match(/subscribe\('(\w+)'/);
-                    if (match) {
-                        const tier = match[1];
-                        button.addEventListener('click', function(e) {
-                            e.preventDefault();
-                            subscribe(tier, this);
-                        });
+            document.querySelectorAll('button[data-action="subscribe"]').forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const tier = this.getAttribute('data-tier');
+                    if (tier) {
+                        subscribe(tier, this);
                     }
-                }
+                });
             });
             
             // Free key button
-            const freeButton = document.querySelector('button[onclick*="getFreeKey"]');
-            if (freeButton) {
-                freeButton.addEventListener('click', function(e) {
+            document.querySelectorAll('button[data-action="free"]').forEach(button => {
+                button.addEventListener('click', function(e) {
                     e.preventDefault();
+                    e.stopPropagation();
                     getFreeKey();
                 });
-            }
+            });
         });
     </script>
 </body>
