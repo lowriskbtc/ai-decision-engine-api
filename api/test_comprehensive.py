@@ -29,7 +29,7 @@ class TestAPI:
         assert response.status_code == 200
         data = response.json()
         assert data["status"] == "healthy"
-        assert "version" in data"
+        assert "version" in data
     
     def test_evaluate_decision(self, headers):
         """Test decision evaluation"""

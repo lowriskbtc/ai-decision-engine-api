@@ -36,17 +36,23 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       
-      - name: Deploy to Heroku
-        uses: akhileshns/heroku-deploy@v3.12.12
-        with:
-          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
-          heroku_app_name: "ai-decision-engine-api"
-          heroku_email: ${{secrets.HEROKU_EMAIL}}
+      - name: Deploy to Railway (via Git push)
+        run: |
+          echo "Railway auto-deploys from GitHub. No manual deployment needed."
+          echo "Railway will automatically deploy when code is pushed to main branch."
+      
+      # Heroku deployment disabled - using Railway instead
+      # - name: Deploy to Heroku
+      #   uses: akhileshns/heroku-deploy@v3.12.12
+      #   with:
+      #     heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+      #     heroku_app_name: "ai-decision-engine-api"
+      #     heroku_email: ${{secrets.HEROKU_EMAIL}}
       
       - name: Verify deployment
         run: |
-          sleep 10
-          curl -f https://ai-decision-engine-api.herokuapp.com/health || exit 1
+          echo "Railway deployment verification - check Railway dashboard for status"
+          # Railway auto-deploys, check dashboard for deployment status
 
   deploy-landing:
     needs: test
