@@ -751,12 +751,85 @@ async def create_checkout_session(checkout_request: CheckoutRequest):
             )
 
 
-@app.get("/payment/success")
-async def payment_success(session_id: Optional[str] = None):
+# Payment success page HTML
+PAYMENT_SUCCESS_HTML = """<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Successful - AI Decision Engine API</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
+        .success-card { background: white; border-radius: 20px; padding: 40px; max-width: 600px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); text-align: center; }
+        .success-icon { font-size: 64px; margin-bottom: 20px; }
+        h1 { color: #4caf50; font-size: 2rem; margin-bottom: 10px; }
+        .api-key-box { background: #f8f9fa; border: 2px solid #667eea; border-radius: 10px; padding: 20px; margin: 20px 0; font-family: monospace; word-break: break-all; }
+        .api-key { font-size: 1.1rem; color: #333; font-weight: bold; }
+        .copy-button { background: #667eea; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin-top: 10px; font-weight: bold; }
+        .copy-button:hover { background: #5568d3; }
+        .info { color: #666; margin: 20px 0; line-height: 1.6; }
+        .cta-button { display: inline-block; background: #667eea; color: white; padding: 15px 30px; border-radius: 10px; text-decoration: none; margin-top: 20px; font-weight: bold; }
+        .cta-button:hover { background: #5568d3; }
+    </style>
+</head>
+<body>
+    <div class="success-card">
+        <div class="success-icon">✅</div>
+        <h1>Payment Successful!</h1>
+        <p class="info">Your subscription is active. Here's your API key:</p>
+        <div class="api-key-box">
+            <div class="api-key" id="apiKey">LOADING...</div>
+            <button class="copy-button" onclick="copyApiKey()">Copy API Key</button>
+        </div>
+        <p class="info">
+            <strong>Tier:</strong> <span id="tier">-</span><br>
+            <strong>Requests/month:</strong> <span id="requests">-</span>
+        </p>
+        <a href="/docs" class="cta-button">View API Documentation</a>
+        <p style="margin-top: 20px; font-size: 0.9rem; color: #999;">
+            Save this API key securely. You won't be able to see it again.
+        </p>
+    </div>
+    <script>
+        // Get API key from URL or response
+        const urlParams = new URLSearchParams(window.location.search);
+        const sessionId = urlParams.get('session_id');
+        
+        if (sessionId) {
+            fetch(`/payment/success?session_id=${sessionId}`)
+                .then(r => r.json())
+                .then(data => {
+                    if (data.api_key) {
+                        document.getElementById('apiKey').textContent = data.api_key;
+                        document.getElementById('tier').textContent = data.tier.toUpperCase();
+                        document.getElementById('requests').textContent = data.requests_per_month.toLocaleString();
+                    }
+                });
+        }
+        
+        function copyApiKey() {
+            const key = document.getElementById('apiKey').textContent;
+            navigator.clipboard.writeText(key).then(() => {
+                alert('API key copied to clipboard!');
+            });
+        }
+    </script>
+</body>
+</html>"""
+
+
+@app.get("/payment/success", response_class=HTMLResponse)
+async def payment_success(session_id: Optional[str] = None, request: Request = None):
     """
     Payment success page - called after successful Stripe checkout
     """
+    # Check if browser request
+    accept_header = request.headers.get("accept", "") if request else ""
+    
     if not session_id:
+        if "text/html" in accept_header.lower():
+            return HTMLResponse(content=PAYMENT_SUCCESS_HTML.replace("LOADING...", "No session ID provided. Check your email for your API key."))
         return {"message": "Payment successful! Check your email for API key."}
     
     try:
@@ -786,6 +859,13 @@ async def payment_success(session_id: Optional[str] = None):
                     tier=tier
                 )
                 
+                # Return HTML for browsers, JSON for API clients
+                if "text/html" in accept_header.lower():
+                    html = PAYMENT_SUCCESS_HTML.replace("LOADING...", api_key)
+                    html = html.replace('id="tier">-</span>', f'id="tier">{tier.upper()}</span>')
+                    html = html.replace('id="requests">-</span>', f'id="requests">{PRICING_TIERS.get(tier, {}).get("requests_per_month", 0):,}</span>')
+                    return HTMLResponse(content=html)
+                
                 return {
                     "message": "Payment successful!",
                     "api_key": api_key,
@@ -794,9 +874,13 @@ async def payment_success(session_id: Optional[str] = None):
                     "subscription_id": session.subscription
                 }
         
+        if "text/html" in accept_header.lower():
+            return HTMLResponse(content=PAYMENT_SUCCESS_HTML.replace("LOADING...", "Processing your subscription..."))
         return {"message": "Payment successful! Processing subscription..."}
     except Exception as e:
         logger.error(f"Error processing payment success: {e}", exc_info=True)
+        if "text/html" in accept_header.lower():
+            return HTMLResponse(content=PAYMENT_SUCCESS_HTML.replace("LOADING...", "Payment successful! We'll send your API key via email."))
         return {"message": "Payment successful! We'll send your API key via email."}
 
 
@@ -1071,8 +1155,35 @@ PRICING_PAGE_HTML = """<!DOCTYPE html>
             }
         }
         async function getFreeKey() {
-            alert('Free API keys are available! Visit the documentation to get started: ' + API_BASE_URL + '/docs');
-            window.open(API_BASE_URL + '/docs', '_blank');
+            const email = prompt('Enter your email address to get a free API key:');
+            if (!email || !email.includes('@')) {
+                alert('Please enter a valid email address');
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/keys/free`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: email })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok && data.api_key) {
+                    // Show API key in a nice dialog
+                    const message = `Your Free API Key:\n\n${data.api_key}\n\nRequests: ${data.requests_per_month}/month\n\nCopy this key - you won't see it again!`;
+                    if (confirm(message + '\n\nOpen documentation?')) {
+                        window.open(API_BASE_URL + '/docs', '_blank');
+                    }
+                } else {
+                    alert(data.detail || 'Error generating API key. Please try again.');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error generating API key. Please visit the documentation to get started: ' + API_BASE_URL + '/docs');
+                window.open(API_BASE_URL + '/docs', '_blank');
+            }
         }
     </script>
 </body>
@@ -1154,6 +1265,46 @@ async def get_pricing(request: Request):
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Error getting pricing: {str(e)}"
+        )
+
+
+# Free API Key Generation Endpoint
+class FreeKeyRequest(BaseModel):
+    email: str = Field(..., description="Email address for the free API key")
+
+@app.post("/api/keys/free", response_model=Dict[str, Any])
+async def generate_free_api_key(request: FreeKeyRequest):
+    """
+    Generate a free API key (public endpoint, no auth required)
+    
+    - **email**: Email address (for tracking purposes)
+    
+    Returns a free tier API key
+    """
+    try:
+        from api.api_key_manager import api_key_manager
+        
+        # Generate free tier API key
+        api_key = api_key_manager.generate_api_key(tier="free", prefix="free")
+        
+        key_info = api_key_manager.get_key_info(api_key)
+        
+        logger.info(f"Generated free API key for email: {request.email}")
+        
+        return {
+            "success": True,
+            "api_key": api_key,
+            "tier": "free",
+            "requests_per_month": key_info.get("requests_per_month", 100),
+            "message": "Free API key generated successfully!",
+            "documentation": "/docs",
+            "timestamp": datetime.now().isoformat()
+        }
+    except Exception as e:
+        logger.error(f"Error generating free API key: {e}", exc_info=True)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error generating API key: {str(e)}"
         )
 
 
