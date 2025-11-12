@@ -15,8 +15,24 @@ Webhooks let Stripe notify your API when:
 
 ### Step 1: Go to Stripe Webhooks
 
-1. In Stripe Dashboard, go to **Developers** → **Webhooks**
+**Option A: Direct URL (Easiest)**
+1. Open this URL directly:
+   - **Test mode:** https://dashboard.stripe.com/test/webhooks
+   - **Live mode:** https://dashboard.stripe.com/webhooks
 2. Click **"+ Add endpoint"**
+
+**Option B: Via Dashboard**
+1. In Stripe Dashboard, go to **Developers** section
+2. Look for **"Webhooks"** tab (may be hidden - try scrolling or use search)
+3. Click **"+ Add endpoint"**
+
+**Option C: Use Script (If dashboard doesn't work)**
+1. Run the setup script:
+   ```bash
+   python setup_stripe_webhook.py
+   ```
+2. Enter your Stripe secret key when prompted
+3. Copy the signing secret it gives you
 
 ### Step 2: Configure Webhook
 
