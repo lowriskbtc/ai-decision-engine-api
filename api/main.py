@@ -1032,7 +1032,7 @@ async def get_subscription_status(
         )
 
 
-# Pricing page HTML (embedded)
+# Pricing page HTML (embedded) - Version 2.0 - Fixed button click handlers
 PRICING_PAGE_HTML = """<!DOCTYPE html>
 <html lang="en">
 <head>
