@@ -1257,62 +1257,65 @@ async def get_pricing(request: Request):
     """
     Get pricing information - serves HTML for browsers, JSON for API clients
     """
-    # Check if request is from a browser (has Accept: text/html) or API client
-    accept_header = request.headers.get("accept", "")
+    # Check if request is from a browser or API client
+    accept_header = request.headers.get("accept", "").lower()
+    user_agent = request.headers.get("user-agent", "").lower()
     
-    if "text/html" in accept_header.lower():
-        # Serve HTML pricing page for browsers
-        return HTMLResponse(content=PRICING_PAGE_HTML)
-    
-    # Return JSON for API clients
-    try:
-        # Try to import from stripe_service, but fallback to hardcoded pricing if not available
+    # Return JSON only if explicitly requested with Accept: application/json
+    # Otherwise, default to HTML (for browsers)
+    if "application/json" in accept_header and "text/html" not in accept_header:
+        # Return JSON for API clients
         try:
-            from api.stripe_service import PRICING_TIERS
-            pricing_tiers = PRICING_TIERS
-        except (ImportError, ModuleNotFoundError):
-            # Fallback pricing if Stripe not installed yet
-            pricing_tiers = {
-                "free": {
-                    "name": "Free",
-                    "amount": 0,
-                    "requests_per_month": 100
-                },
-                "pro": {
-                    "name": "Pro",
-                    "amount": 900,  # $9.00 in cents
-                    "requests_per_month": 10000
-                },
-                "enterprise": {
-                    "name": "Enterprise",
-                    "amount": 4900,  # $49.00 in cents
-                    "requests_per_month": 1000000
+            # Try to import from stripe_service, but fallback to hardcoded pricing if not available
+            try:
+                from api.stripe_service import PRICING_TIERS
+                pricing_tiers = PRICING_TIERS
+            except (ImportError, ModuleNotFoundError):
+                # Fallback pricing if Stripe not installed yet
+                pricing_tiers = {
+                    "free": {
+                        "name": "Free",
+                        "amount": 0,
+                        "requests_per_month": 100
+                    },
+                    "pro": {
+                        "name": "Pro",
+                        "amount": 900,  # $9.00 in cents
+                        "requests_per_month": 10000
+                    },
+                    "enterprise": {
+                        "name": "Enterprise",
+                        "amount": 4900,  # $49.00 in cents
+                        "requests_per_month": 1000000
+                    }
                 }
-            }
-        
-        pricing = {}
-        for tier, info in pricing_tiers.items():
-            pricing[tier] = {
-                "name": info["name"],
-                "price": info["amount"] / 100,  # Convert cents to dollars
-                "requests_per_month": info["requests_per_month"],
-                "features": [
-                    f"{info['requests_per_month']:,} requests/month",
-                    "Full API access",
-                    "Priority support" if tier != "free" else "Community support"
-                ]
-            }
-        
-        return JSONResponse(content={
-            "tiers": pricing,
-            "currency": "USD"
-        })
-    except Exception as e:
-        logger.error(f"Error getting pricing: {e}", exc_info=True)
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Error getting pricing: {str(e)}"
-        )
+            
+            pricing = {}
+            for tier, info in pricing_tiers.items():
+                pricing[tier] = {
+                    "name": info["name"],
+                    "price": info["amount"] / 100,  # Convert cents to dollars
+                    "requests_per_month": info["requests_per_month"],
+                    "features": [
+                        f"{info['requests_per_month']:,} requests/month",
+                        "Full API access",
+                        "Priority support" if tier != "free" else "Community support"
+                    ]
+                }
+            
+            return JSONResponse(content={
+                "tiers": pricing,
+                "currency": "USD"
+            })
+        except Exception as e:
+            logger.error(f"Error getting pricing: {e}", exc_info=True)
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=f"Error getting pricing: {str(e)}"
+            )
+    
+    # Default: Return HTML for browsers
+    return HTMLResponse(content=PRICING_PAGE_HTML)
 
 
 # Free API Key Generation Endpoint
