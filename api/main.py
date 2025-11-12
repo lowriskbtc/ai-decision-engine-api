@@ -820,12 +820,12 @@ PAYMENT_SUCCESS_HTML = """<!DOCTYPE html>
 
 
 @app.get("/payment/success", response_class=HTMLResponse)
-async def payment_success(session_id: Optional[str] = None, request: Request = None):
+async def payment_success(session_id: Optional[str] = None, request: Request = Request):
     """
     Payment success page - called after successful Stripe checkout
     """
     # Check if browser request
-    accept_header = request.headers.get("accept", "") if request else ""
+    accept_header = request.headers.get("accept", "")
     
     if not session_id:
         if "text/html" in accept_header.lower():
