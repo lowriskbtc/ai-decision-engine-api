@@ -662,16 +662,21 @@ async def create_checkout_session(checkout_request: CheckoutRequest):
                 detail="Stripe module not installed. Railway is deploying the update. Please wait a few minutes and try again."
             )
         
-        # Check if Stripe API key is configured
-        stripe_key = os.getenv("STRIPE_SECRET_KEY", "")
+        # Check if Stripe API key is configured - try multiple ways
+        stripe_key = os.getenv("STRIPE_SECRET_KEY", "") or os.getenv("STRIPE_KEY", "")
+        
         if not stripe_key:
+            # Log all environment variables that start with STRIPE for debugging
+            stripe_vars = {k: "***" + v[-4:] if len(v) > 4 else "***" for k, v in os.environ.items() if "STRIPE" in k.upper()}
+            logger.warning(f"Stripe key not found. Available Stripe env vars: {list(stripe_vars.keys())}")
             raise HTTPException(
                 status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-                detail="Stripe API key not configured. Please add STRIPE_SECRET_KEY to Railway environment variables."
+                detail="Stripe API key not configured. Please add STRIPE_SECRET_KEY to Railway environment variables and redeploy."
             )
         
         # Set the API key
         stripe.api_key = stripe_key
+        logger.info(f"Stripe API key configured (length: {len(stripe_key)})")
         
         # Check if price ID is configured for this tier
         tier_info = PRICING_TIERS.get(checkout_request.tier.lower())
@@ -1072,6 +1077,21 @@ PRICING_PAGE_HTML = """<!DOCTYPE html>
     </script>
 </body>
 </html>"""
+
+
+@app.get("/debug/stripe-config")
+async def debug_stripe_config():
+    """Debug endpoint to check Stripe configuration (remove in production)"""
+    import stripe
+    config = {
+        "stripe_installed": STRIPE_AVAILABLE if 'STRIPE_AVAILABLE' in globals() else False,
+        "stripe_module_available": hasattr(stripe, 'api_key') if stripe else False,
+        "stripe_key_set": bool(os.getenv("STRIPE_SECRET_KEY", "")),
+        "stripe_key_length": len(os.getenv("STRIPE_SECRET_KEY", "")),
+        "stripe_key_prefix": os.getenv("STRIPE_SECRET_KEY", "")[:7] if os.getenv("STRIPE_SECRET_KEY", "") else "not set",
+        "api_base_url": os.getenv("API_BASE_URL", "not set")
+    }
+    return config
 
 
 @app.get("/pricing", response_class=HTMLResponse)
