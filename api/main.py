@@ -1202,7 +1202,7 @@ PRICING_PAGE_HTML = """<!DOCTYPE html>
         }
         
         // Set up event listeners for all buttons
-        document.addEventListener('DOMContentLoaded', function() {
+        function attachButtonListeners() {
             // Subscribe buttons
             document.querySelectorAll('button[data-action="subscribe"]').forEach(button => {
                 button.addEventListener('click', function(e) {
@@ -1214,7 +1214,7 @@ PRICING_PAGE_HTML = """<!DOCTYPE html>
                     }
                 });
             });
-            
+
             // Free key button
             document.querySelectorAll('button[data-action="free"]').forEach(button => {
                 button.addEventListener('click', function(e) {
@@ -1223,7 +1223,14 @@ PRICING_PAGE_HTML = """<!DOCTYPE html>
                     getFreeKey();
                 });
             });
-        });
+        }
+
+        // Attach listeners immediately if DOM is already loaded, otherwise wait
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', attachButtonListeners);
+        } else {
+            attachButtonListeners();
+        }
     </script>
 </body>
 </html>"""
