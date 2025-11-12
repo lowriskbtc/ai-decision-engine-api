@@ -820,7 +820,7 @@ PAYMENT_SUCCESS_HTML = """<!DOCTYPE html>
 
 
 @app.get("/payment/success", response_class=HTMLResponse)
-async def payment_success(session_id: Optional[str] = None, request: Request):
+async def payment_success(request: Request, session_id: Optional[str] = None):
     """
     Payment success page - called after successful Stripe checkout
     """
@@ -1111,35 +1111,42 @@ PRICING_PAGE_HTML = """<!DOCTYPE html>
     <script>
         const API_BASE_URL = window.location.origin;
         async function subscribe(tier, buttonElement) {
-            const email = prompt('Enter your email address:');
-            if (!email || !email.includes('@')) { 
-                alert('Please enter a valid email address'); 
-                return; 
-            }
-            
-            // Show loading state
-            const clickedButton = buttonElement || document.querySelector(`button[onclick*="${tier}"]`);
-            const originalText = clickedButton ? clickedButton.textContent : 'Subscribe Now';
-            if (clickedButton) {
-                clickedButton.textContent = 'Processing...';
-                clickedButton.disabled = true;
-            }
-            
             try {
+                const email = prompt('Enter your email address:');
+                if (!email || !email.includes('@')) { 
+                    alert('Please enter a valid email address'); 
+                    return; 
+                }
+                
+                // Show loading state
+                const clickedButton = buttonElement || document.querySelector(`button[onclick*="${tier}"]`);
+                const originalText = clickedButton ? clickedButton.textContent : 'Subscribe Now';
+                if (clickedButton) {
+                    clickedButton.textContent = 'Processing...';
+                    clickedButton.disabled = true;
+                }
+                
                 const response = await fetch(`${API_BASE_URL}/payment/checkout`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email: email, tier: tier })
                 });
                 
-                const data = await response.json();
+                let data;
+                const contentType = response.headers.get('content-type');
+                if (contentType && contentType.includes('application/json')) {
+                    data = await response.json();
+                } else {
+                    const text = await response.text();
+                    throw new Error(text || 'Invalid response from server');
+                }
                 
                 if (response.ok && data.checkout_url) {
                     window.location.href = data.checkout_url;
                 } else {
                     // Show detailed error message
                     const errorMsg = data.detail || data.message || 'Error creating checkout session. Please try again.';
-                    alert(errorMsg + '\\n\\nIf this persists, please contact support.');
+                    alert(errorMsg + '\n\nIf this persists, please contact support.');
                     if (clickedButton) {
                         clickedButton.textContent = originalText;
                         clickedButton.disabled = false;
@@ -1147,28 +1154,36 @@ PRICING_PAGE_HTML = """<!DOCTYPE html>
                 }
             } catch (error) {
                 console.error('Error:', error);
-                alert('Network error. Please check your connection and try again.\\n\\nIf this persists, please contact support.');
+                alert('Network error: ' + error.message + '\n\nPlease check your connection and try again.\n\nIf this persists, please contact support.');
+                const clickedButton = buttonElement || document.querySelector(`button[onclick*="${tier}"]`);
                 if (clickedButton) {
-                    clickedButton.textContent = originalText;
+                    clickedButton.textContent = 'Subscribe Now';
                     clickedButton.disabled = false;
                 }
             }
         }
         async function getFreeKey() {
-            const email = prompt('Enter your email address to get a free API key:');
-            if (!email || !email.includes('@')) {
-                alert('Please enter a valid email address');
-                return;
-            }
-            
             try {
+                const email = prompt('Enter your email address to get a free API key:');
+                if (!email || !email.includes('@')) {
+                    alert('Please enter a valid email address');
+                    return;
+                }
+                
                 const response = await fetch(`${API_BASE_URL}/api/keys/free`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email: email })
                 });
                 
-                const data = await response.json();
+                const contentType = response.headers.get('content-type');
+                let data;
+                if (contentType && contentType.includes('application/json')) {
+                    data = await response.json();
+                } else {
+                    const text = await response.text();
+                    throw new Error(text || 'Invalid response from server');
+                }
                 
                 if (response.ok && data.api_key) {
                     // Show API key in a nice dialog
@@ -1181,10 +1196,37 @@ PRICING_PAGE_HTML = """<!DOCTYPE html>
                 }
             } catch (error) {
                 console.error('Error:', error);
-                alert('Error generating API key. Please visit the documentation to get started: ' + API_BASE_URL + '/docs');
+                alert('Error generating API key: ' + error.message + '\n\nPlease visit the documentation to get started: ' + API_BASE_URL + '/docs');
                 window.open(API_BASE_URL + '/docs', '_blank');
             }
         }
+        
+        // Add event listeners as backup (in case onclick doesn't work)
+        document.addEventListener('DOMContentLoaded', function() {
+            // Subscribe buttons
+            document.querySelectorAll('button[onclick*="subscribe"]').forEach(button => {
+                const onclick = button.getAttribute('onclick');
+                if (onclick) {
+                    const match = onclick.match(/subscribe\('(\w+)'/);
+                    if (match) {
+                        const tier = match[1];
+                        button.addEventListener('click', function(e) {
+                            e.preventDefault();
+                            subscribe(tier, this);
+                        });
+                    }
+                }
+            });
+            
+            // Free key button
+            const freeButton = document.querySelector('button[onclick*="getFreeKey"]');
+            if (freeButton) {
+                freeButton.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    getFreeKey();
+                });
+            }
+        });
     </script>
 </body>
 </html>"""
@@ -1194,12 +1236,17 @@ PRICING_PAGE_HTML = """<!DOCTYPE html>
 async def debug_stripe_config():
     """Debug endpoint to check Stripe configuration (remove in production)"""
     import stripe
+    from api.stripe_service import STRIPE_AVAILABLE, STRIPE_WEBHOOK_SECRET
+    webhook_secret = os.getenv("STRIPE_WEBHOOK_SECRET", "")
     config = {
-        "stripe_installed": STRIPE_AVAILABLE if 'STRIPE_AVAILABLE' in globals() else False,
+        "stripe_installed": STRIPE_AVAILABLE,
         "stripe_module_available": hasattr(stripe, 'api_key') if stripe else False,
         "stripe_key_set": bool(os.getenv("STRIPE_SECRET_KEY", "")),
         "stripe_key_length": len(os.getenv("STRIPE_SECRET_KEY", "")),
         "stripe_key_prefix": os.getenv("STRIPE_SECRET_KEY", "")[:7] if os.getenv("STRIPE_SECRET_KEY", "") else "not set",
+        "webhook_secret_set": bool(webhook_secret),
+        "webhook_secret_length": len(webhook_secret),
+        "webhook_secret_prefix": webhook_secret[:7] if webhook_secret else "not set",
         "api_base_url": os.getenv("API_BASE_URL", "not set")
     }
     return config
