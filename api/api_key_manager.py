@@ -127,7 +127,7 @@ class APIKeyManager:
         return key_info
     
     def _check_rate_limit(self, api_key: str, key_info: Dict[str, Any]) -> bool:
-        """Check if API key is within rate limits"""
+        """Check if API key is within rate limits (allows overage for paid tiers)"""
         try:
             with open(self.rate_limit_file, "r") as f:
                 rate_limits = json.load(f)
@@ -141,15 +141,18 @@ class APIKeyManager:
         # Get requests this month
         requests_this_month = rate_limits.get(month_key, {}).get("count", 0)
         max_requests = key_info.get("requests_per_month", 100)
+        tier = key_info.get("tier", "free")
         
-        # Check if limit exceeded
-        if requests_this_month >= max_requests:
+        # Free tier has hard limit (no overage)
+        if tier == "free" and requests_this_month >= max_requests:
             return False
         
+        # Paid tiers allow overage (will be billed)
+        # For now, allow unlimited requests (overage will be calculated and billed)
         return True
     
     def record_request(self, api_key: str):
-        """Record an API request for rate limiting"""
+        """Record an API request for rate limiting and usage tracking"""
         try:
             with open(self.rate_limit_file, "r") as f:
                 rate_limits = json.load(f)
@@ -164,16 +167,62 @@ class APIKeyManager:
         if month_key not in rate_limits:
             rate_limits[month_key] = {
                 "count": 0,
-                "first_request": datetime.now().isoformat()
+                "first_request": datetime.now().isoformat(),
+                "overage_requests": 0
             }
         
         # Increment count
         rate_limits[month_key]["count"] = rate_limits[month_key].get("count", 0) + 1
         rate_limits[month_key]["last_request"] = datetime.now().isoformat()
         
+        # Get key info to check for overage
+        key_info = self.get_key_info(api_key)
+        if key_info:
+            max_requests = key_info.get("requests_per_month", 100)
+            current_count = rate_limits[month_key]["count"]
+            if current_count > max_requests:
+                rate_limits[month_key]["overage_requests"] = current_count - max_requests
+        
         # Save
         with open(self.rate_limit_file, "w") as f:
             json.dump(rate_limits, f, indent=2)
+    
+    def get_usage_stats(self, api_key: str) -> Dict[str, Any]:
+        """Get usage statistics for an API key"""
+        try:
+            with open(self.rate_limit_file, "r") as f:
+                rate_limits = json.load(f)
+        except (FileNotFoundError, json.JSONDecodeError):
+            rate_limits = {}
+        
+        current_month = datetime.now().strftime("%Y-%m")
+        month_key = f"{api_key}_{current_month}"
+        
+        key_info = self.get_key_info(api_key)
+        if not key_info:
+            return {
+                "total_requests": 0,
+                "included_requests": 0,
+                "overage_requests": 0,
+                "tier": "unknown"
+            }
+        
+        tier = key_info.get("tier", "free")
+        max_requests = key_info.get("requests_per_month", 100)
+        
+        month_data = rate_limits.get(month_key, {})
+        total_requests = month_data.get("count", 0)
+        overage_requests = max(0, total_requests - max_requests)
+        included_requests = min(total_requests, max_requests)
+        
+        return {
+            "total_requests": total_requests,
+            "included_requests": included_requests,
+            "overage_requests": overage_requests,
+            "max_requests": max_requests,
+            "tier": tier,
+            "month": current_month
+        }
     
     def get_key_info(self, api_key: str) -> Optional[Dict[str, Any]]:
         """Get information about an API key"""

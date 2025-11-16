@@ -29,24 +29,30 @@ except ImportError:
 
 STRIPE_WEBHOOK_SECRET = os.getenv("STRIPE_WEBHOOK_SECRET", "")
 
-# Pricing tiers
+# Pricing tiers with hybrid model (flat rate + usage-based overage)
 PRICING_TIERS = {
     "free": {
         "price_id": None,
-        "amount": 0,
-        "requests_per_month": 100,
+        "amount": 0,  # $0/month
+        "requests_per_month": 100,  # Included requests
+        "overage_rate": None,  # No overage allowed (hard limit)
+        "overage_per_1000": None,
         "name": "Free"
     },
     "pro": {
         "price_id": os.getenv("STRIPE_PRO_PRICE_ID", ""),
-        "amount": 900,  # $9.00 in cents
-        "requests_per_month": 10000,
+        "amount": 900,  # $9.00/month base
+        "requests_per_month": 10000,  # Included requests
+        "overage_rate": 0.001,  # $0.001 per request over limit
+        "overage_per_1000": 100,  # $1.00 per 1,000 requests
         "name": "Pro"
     },
     "enterprise": {
         "price_id": os.getenv("STRIPE_ENTERPRISE_PRICE_ID", ""),
-        "amount": 4900,  # $49.00 in cents
-        "requests_per_month": 1000000,
+        "amount": 4900,  # $49.00/month base
+        "requests_per_month": 1000000,  # Included requests (1M)
+        "overage_rate": 0.0005,  # $0.0005 per request over limit (volume discount)
+        "overage_per_1000": 50,  # $0.50 per 1,000 requests
         "name": "Enterprise"
     }
 }
@@ -215,6 +221,59 @@ class StripeService:
             subscriptions[subscription_id]["status"] = status
             subscriptions[subscription_id]["updated_at"] = datetime.now().isoformat()
             self._save_subscriptions(subscriptions)
+    
+    def calculate_overage(self, tier: str, overage_requests: int) -> float:
+        """
+        Calculate overage charges for a tier
+        
+        Args:
+            tier: Subscription tier
+            overage_requests: Number of requests over the included limit
+        
+        Returns:
+            Overage charge in dollars
+        """
+        if overage_requests <= 0:
+            return 0.0
+        
+        tier_info = PRICING_TIERS.get(tier.lower())
+        if not tier_info:
+            return 0.0
+        
+        overage_rate = tier_info.get("overage_rate")
+        if overage_rate is None:
+            return 0.0
+        
+        return overage_requests * overage_rate
+    
+    def get_billing_summary(self, api_key: str, usage_stats: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Get billing summary including base subscription and overage
+        
+        Args:
+            api_key: API key
+            usage_stats: Usage statistics from APIKeyManager
+        
+        Returns:
+            Billing summary with base price, overage, and total
+        """
+        tier = usage_stats.get("tier", "free")
+        overage_requests = usage_stats.get("overage_requests", 0)
+        
+        tier_info = PRICING_TIERS.get(tier.lower(), {})
+        base_price = tier_info.get("amount", 0) / 100  # Convert cents to dollars
+        overage_charge = self.calculate_overage(tier, overage_requests)
+        
+        return {
+            "tier": tier,
+            "base_price": base_price,
+            "included_requests": usage_stats.get("max_requests", 0),
+            "total_requests": usage_stats.get("total_requests", 0),
+            "overage_requests": overage_requests,
+            "overage_charge": round(overage_charge, 2),
+            "total_charge": round(base_price + overage_charge, 2),
+            "month": usage_stats.get("month", "")
+        }
     
     def verify_webhook(self, payload: bytes, signature: str) -> Optional[Dict[str, Any]]:
         """Verify Stripe webhook signature"""
