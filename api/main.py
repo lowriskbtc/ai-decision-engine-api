@@ -1169,6 +1169,10 @@ PRICING_PAGE_HTML = """<!DOCTYPE html>
                     window.open(API_BASE_URL + '/docs', '_blank');
                 }
             };
+            
+            // Also expose as global functions (not just window properties) for maximum compatibility
+            subscribe = window.subscribe;
+            getFreeKey = window.getFreeKey;
         })();
     </script>
     <style>
