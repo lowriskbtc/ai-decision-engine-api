@@ -92,12 +92,13 @@ def verify_api_key(x_api_key: Optional[str] = Header(None, alias="X-API-Key")) -
     
     # Record request for rate limiting
     api_key_manager.record_request(x_api_key)
-    
+
     # Return key info
     return {
         "tier": key_info.get("tier", "free"),
         "requests_per_month": key_info.get("requests_per_month", 100),
-        "api_key": x_api_key[:10] + "..."  # Partial key for logging
+        "api_key": x_api_key[:10] + "...",  # Partial key for logging
+        "_full_key": x_api_key  # Full key for internal use (not exposed in logs)
     }
 
 
@@ -1692,6 +1693,137 @@ app.include_router(analytics_router)
 # Include key management routes
 from api.key_management_routes import router as key_management_router
 app.include_router(key_management_router)
+
+
+# ==================== User Dashboard Endpoints ====================
+
+@app.get("/api/usage")
+async def get_usage(key_info: Dict[str, Any] = Depends(verify_api_key)):
+    """
+    Get usage statistics for the authenticated API key
+
+    Returns:
+    - total_requests: Total requests this month
+    - included_requests: Requests included in your plan
+    - overage_requests: Requests beyond your plan
+    - max_requests: Maximum requests for your tier
+    - tier: Your subscription tier
+    - month: Current billing month
+
+    Requires: X-API-Key header
+    """
+    try:
+        api_key = key_info["api_key"].replace("...", "")  # Get the truncated key
+
+        # We need the full key - let's get it from the header
+        from fastapi import Request
+
+        # Get usage stats
+        usage_stats = api_key_manager.get_usage_stats(key_info.get("_full_key", ""))
+
+        return {
+            "success": True,
+            "usage": usage_stats,
+            "reset_date": f"{usage_stats.get('month', '')}-01",
+            "tier_info": {
+                "tier": key_info.get("tier", "free"),
+                "included_requests": key_info.get("requests_per_month", 100)
+            }
+        }
+    except Exception as e:
+        logger.error(f"Error getting usage: {e}", exc_info=True)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error getting usage statistics"
+        )
+
+
+@app.get("/api/billing")
+async def get_billing(key_info: Dict[str, Any] = Depends(verify_api_key)):
+    """
+    Get billing summary for the authenticated API key
+
+    Returns:
+    - tier: Your subscription tier
+    - base_price: Monthly base price
+    - included_requests: Requests included in your plan
+    - total_requests: Total requests this month
+    - overage_requests: Requests beyond your plan
+    - overage_charge: Additional charges for overage
+    - total_charge: Total monthly charge (base + overage)
+    - month: Current billing month
+
+    Requires: X-API-Key header
+    """
+    try:
+        from api.stripe_service import stripe_service
+
+        # Get usage stats
+        full_key = key_info.get("_full_key", "")
+        usage_stats = api_key_manager.get_usage_stats(full_key)
+
+        # Get billing summary
+        billing_summary = stripe_service.get_billing_summary(full_key, usage_stats)
+
+        return {
+            "success": True,
+            "billing": billing_summary,
+            "note": "Overage charges are billed monthly" if billing_summary.get("overage_charge", 0) > 0 else None
+        }
+    except Exception as e:
+        logger.error(f"Error getting billing: {e}", exc_info=True)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error getting billing information"
+        )
+
+
+@app.get("/api/key/info")
+async def get_key_info(key_info: Dict[str, Any] = Depends(verify_api_key)):
+    """
+    Get information about the authenticated API key
+
+    Returns:
+    - tier: Subscription tier
+    - requests_per_month: Included requests
+    - created_at: When the key was created
+    - active: Whether the key is active
+    - key_preview: First 10 characters of the key
+
+    Requires: X-API-Key header
+    """
+    try:
+        full_key = key_info.get("_full_key", "")
+        detailed_info = api_key_manager.get_key_info(full_key)
+
+        if not detailed_info:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="API key not found"
+            )
+
+        # Remove sensitive internal fields
+        safe_info = {
+            "tier": detailed_info.get("tier", "free"),
+            "requests_per_month": detailed_info.get("requests_per_month", 100),
+            "created_at": detailed_info.get("created_at"),
+            "active": detailed_info.get("active", True),
+            "key_preview": key_info.get("api_key", "")[:10] + "...",
+            "email": detailed_info.get("email", "Not provided")
+        }
+
+        return {
+            "success": True,
+            "key_info": safe_info
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error getting key info: {e}", exc_info=True)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error getting key information"
+        )
 
 
 if __name__ == "__main__":
