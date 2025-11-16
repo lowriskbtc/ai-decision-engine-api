@@ -1212,7 +1212,7 @@ PRICING_PAGE_HTML = """<!DOCTYPE html>
                     <li>All endpoints included</li>
                     <li style="color: #999; font-size: 0.9rem;">Hard limit (no overage)</li>
                 </ul>
-                <button class="cta-button" data-action="free" onclick="getFreeKey(); return false;">Get Free API Key</button>
+                <button class="cta-button" data-action="free" onclick="window.getFreeKey(); return false;">Get Free API Key</button>
             </div>
             <div class="pricing-card featured">
                 <div class="tier-name">Pro</div>
@@ -1225,7 +1225,7 @@ PRICING_PAGE_HTML = """<!DOCTYPE html>
                     <li>Advanced analytics</li>
                     <li style="color: #667eea; font-weight: bold;">$1 per 1,000 overage</li>
                 </ul>
-                <button class="cta-button" data-tier="pro" data-action="subscribe" onclick="subscribe('pro', this); return false;">Subscribe Now</button>
+                <button class="cta-button" data-tier="pro" data-action="subscribe" onclick="window.subscribe('pro', this); return false;">Subscribe Now</button>
             </div>
             <div class="pricing-card">
                 <div class="tier-name">Enterprise</div>
@@ -1239,7 +1239,7 @@ PRICING_PAGE_HTML = """<!DOCTYPE html>
                     <li>Custom integrations</li>
                     <li style="color: #667eea; font-weight: bold;">$0.50 per 1,000 overage</li>
                 </ul>
-                <button class="cta-button secondary" data-tier="enterprise" data-action="subscribe" onclick="subscribe('enterprise', this); return false;">Subscribe Now</button>
+                <button class="cta-button secondary" data-tier="enterprise" data-action="subscribe" onclick="window.subscribe('enterprise', this); return false;">Subscribe Now</button>
             </div>
         </div>
     </div>
