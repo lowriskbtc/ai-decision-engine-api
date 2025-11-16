@@ -1244,7 +1244,7 @@ PRICING_PAGE_HTML = """<!DOCTYPE html>
                                           data.api_key + 
                                           '\\n\\nRequests: ' + 
                                           (data.requests_per_month || 100) + 
-                                          '/month\\n\\nCopy this key - you won\'t see it again!';
+                                          '/month\\n\\nCopy this key - you will not see it again!';
                             
                             // Show API key
                             alert(message);
