@@ -1092,7 +1092,7 @@ PRICING_PAGE_HTML = """<!DOCTYPE html>
                     <li>All endpoints included</li>
                     <li style="color: #999; font-size: 0.9rem;">Hard limit (no overage)</li>
                 </ul>
-                <button class="cta-button" data-action="free">Get Free API Key</button>
+                <button class="cta-button" data-action="free" onclick="if(typeof getFreeKey==='function'){getFreeKey();}else{alert('Loading...');}">Get Free API Key</button>
             </div>
             <div class="pricing-card featured">
                 <div class="tier-name">Pro</div>
@@ -1105,7 +1105,7 @@ PRICING_PAGE_HTML = """<!DOCTYPE html>
                     <li>Advanced analytics</li>
                     <li style="color: #667eea; font-weight: bold;">$1 per 1,000 overage</li>
                 </ul>
-                <button class="cta-button" data-tier="pro" data-action="subscribe">Subscribe Now</button>
+                <button class="cta-button" data-tier="pro" data-action="subscribe" onclick="if(typeof subscribe==='function'){subscribe('pro',this);}else{alert('Loading...');}">Subscribe Now</button>
             </div>
             <div class="pricing-card">
                 <div class="tier-name">Enterprise</div>
@@ -1119,7 +1119,7 @@ PRICING_PAGE_HTML = """<!DOCTYPE html>
                     <li>Custom integrations</li>
                     <li style="color: #667eea; font-weight: bold;">$0.50 per 1,000 overage</li>
                 </ul>
-                <button class="cta-button secondary" data-tier="enterprise" data-action="subscribe">Subscribe Now</button>
+                <button class="cta-button secondary" data-tier="enterprise" data-action="subscribe" onclick="if(typeof subscribe==='function'){subscribe('enterprise',this);}else{alert('Loading...');}">Subscribe Now</button>
             </div>
         </div>
     </div>
@@ -1135,7 +1135,7 @@ PRICING_PAGE_HTML = """<!DOCTYPE html>
                 }
                 
                 // Show loading state
-                const clickedButton = buttonElement || document.querySelector(`button[data-tier="${tier}"]`);
+                const clickedButton = buttonElement || document.querySelector('button[data-tier="' + tier + '"]');
                 const originalText = clickedButton ? clickedButton.textContent : 'Subscribe Now';
                 if (clickedButton) {
                     clickedButton.textContent = 'Processing...';
@@ -1143,7 +1143,7 @@ PRICING_PAGE_HTML = """<!DOCTYPE html>
                 }
                 
                 console.log('Creating checkout session for tier:', tier, 'email:', email);
-                const checkoutUrl = `${API_BASE_URL}/payment/checkout`;
+                const checkoutUrl = API_BASE_URL + '/payment/checkout';
                 console.log('POST to:', checkoutUrl);
                 
                 const response = await fetch(checkoutUrl, {
@@ -1180,8 +1180,8 @@ PRICING_PAGE_HTML = """<!DOCTYPE html>
                 }
             } catch (error) {
                 console.error('Error in subscribe function:', error);
-                alert('Network error: ' + error.message + '\n\nPlease check your connection and try again.\n\nIf this persists, please contact support.');
-                const clickedButton = buttonElement || document.querySelector(`button[data-tier="${tier}"]`);
+                alert('Network error: ' + error.message + '\\n\\nPlease check your connection and try again.\\n\\nIf this persists, please contact support.');
+                const clickedButton = buttonElement || document.querySelector('button[data-tier="' + tier + '"]');
                 if (clickedButton) {
                     clickedButton.textContent = 'Subscribe Now';
                     clickedButton.disabled = false;
@@ -1196,7 +1196,7 @@ PRICING_PAGE_HTML = """<!DOCTYPE html>
                     return;
                 }
                 
-                const response = await fetch(`${API_BASE_URL}/api/keys/free`, {
+                const response = await fetch(API_BASE_URL + '/api/keys/free', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email: email })
@@ -1227,16 +1227,24 @@ PRICING_PAGE_HTML = """<!DOCTYPE html>
             }
         }
         
-        // Set up event listeners for all buttons
-        document.addEventListener('DOMContentLoaded', function() {
+        // Set up event listeners - multiple approaches for maximum compatibility
+        function setupButtons() {
             console.log('Setting up button event listeners...');
+            
             // Subscribe buttons
             const subscribeButtons = document.querySelectorAll('button[data-action="subscribe"]');
             console.log('Found subscribe buttons:', subscribeButtons.length);
-            subscribeButtons.forEach(button => {
+            
+            subscribeButtons.forEach(function(button) {
                 const tier = button.getAttribute('data-tier');
                 console.log('Setting up listener for button with tier:', tier);
-                button.addEventListener('click', function(e) {
+                
+                // Remove any existing listeners
+                var newButton = button.cloneNode(true);
+                button.parentNode.replaceChild(newButton, button);
+                
+                // Add click listener
+                newButton.addEventListener('click', function(e) {
                     e.preventDefault();
                     e.stopPropagation();
                     console.log('Subscribe button clicked, tier:', tier);
@@ -1246,18 +1254,32 @@ PRICING_PAGE_HTML = """<!DOCTYPE html>
                         console.error('No tier attribute found on button');
                         alert('Error: Invalid button configuration. Please refresh the page.');
                     }
-                });
+                }, false);
             });
             
             // Free key button
-            document.querySelectorAll('button[data-action="free"]').forEach(button => {
-                button.addEventListener('click', function(e) {
+            const freeButtons = document.querySelectorAll('button[data-action="free"]');
+            freeButtons.forEach(function(button) {
+                var newButton = button.cloneNode(true);
+                button.parentNode.replaceChild(newButton, button);
+                newButton.addEventListener('click', function(e) {
                     e.preventDefault();
                     e.stopPropagation();
                     getFreeKey();
-                });
+                }, false);
             });
-        });
+        }
+        
+        // Try immediately (in case DOM is already loaded)
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', setupButtons);
+        } else {
+            // DOM is already loaded
+            setupButtons();
+        }
+        
+        // Also try after a short delay as backup
+        setTimeout(setupButtons, 100);
     </script>
 </body>
 </html>"""
