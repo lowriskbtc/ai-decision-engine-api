@@ -912,51 +912,71 @@ async def payment_success(request: Request, session_id: Optional[str] = None):
         from api.api_key_manager import api_key_manager
         import stripe
         
+        # Set Stripe API key if not already set
+        stripe_key = os.getenv("STRIPE_SECRET_KEY", "") or os.getenv("STRIPE_KEY", "")
+        if stripe_key:
+            stripe.api_key = stripe_key
+        
+        logger.info(f"Processing payment success for session: {session_id}")
+        
         # Retrieve checkout session
         session = stripe.checkout.Session.retrieve(session_id)
+        logger.info(f"Retrieved session: mode={session.mode}, subscription={session.subscription}, payment_status={session.payment_status}")
         
-        if session.mode == "subscription" and session.subscription:
-            # Get subscription details
-            subscription = stripe_service.get_subscription(session.subscription)
+        # Get tier from session metadata (fallback to "pro")
+        tier = session.metadata.get("tier", "pro") if session.metadata else "pro"
+        customer_email = session.customer_email or session.metadata.get("customer_email", "") if session.metadata else ""
+        
+        # Check if we already generated an API key for this session
+        subscription_id = session.subscription if hasattr(session, 'subscription') and session.subscription else None
+        
+        # Try to get existing API key from subscription
+        existing_api_key = None
+        if subscription_id:
+            existing_api_key = stripe_service.get_api_key_from_subscription(subscription_id)
+        
+        # Generate new API key if we don't have one
+        if not existing_api_key:
+            logger.info(f"Generating new API key for tier: {tier}, email: {customer_email}")
+            api_key = api_key_manager.generate_api_key(tier=tier, prefix=f"{tier}_sub")
             
-            if subscription:
-                tier = subscription.get("tier", "pro")
-                customer_email = session.customer_email or session.metadata.get("customer_email", "")
-                
-                # Generate API key for this subscription
-                api_key = api_key_manager.generate_api_key(tier=tier, prefix=f"{tier}_sub")
-                
-                # Link subscription to API key
+            # Link subscription to API key if we have a subscription
+            if subscription_id:
                 stripe_service.link_subscription_to_api_key(
                     api_key=api_key,
-                    subscription_id=session.subscription,
+                    subscription_id=subscription_id,
                     customer_email=customer_email,
                     tier=tier
                 )
-                
-                # Return HTML for browsers, JSON for API clients
-                if "text/html" in accept_header.lower():
-                    html = PAYMENT_SUCCESS_HTML.replace("LOADING...", api_key)
-                    html = html.replace('id="tier">-</span>', f'id="tier">{tier.upper()}</span>')
-                    html = html.replace('id="requests">-</span>', f'id="requests">{PRICING_TIERS.get(tier, {}).get("requests_per_month", 0):,}</span>')
-                    return HTMLResponse(content=html)
-                
-                return {
-                    "message": "Payment successful!",
-                    "api_key": api_key,
-                    "tier": tier,
-                    "requests_per_month": PRICING_TIERS.get(tier, {}).get("requests_per_month", 0),
-                    "subscription_id": session.subscription
-                }
+                logger.info(f"Linked subscription {subscription_id} to API key")
+        else:
+            logger.info(f"Using existing API key for subscription {subscription_id}")
+            api_key = existing_api_key
         
+        # Return HTML for browsers, JSON for API clients
         if "text/html" in accept_header.lower():
-            return HTMLResponse(content=PAYMENT_SUCCESS_HTML.replace("LOADING...", "Processing your subscription..."))
-        return {"message": "Payment successful! Processing subscription..."}
+            html = PAYMENT_SUCCESS_HTML.replace("Loading your API key...", api_key)
+            html = html.replace('id="tier">-</span>', f'id="tier">{tier.upper()}</span>')
+            html = html.replace('id="requests">-</span>', f'id="requests">{PRICING_TIERS.get(tier, {}).get("requests_per_month", 0):,}</span>')
+            return HTMLResponse(content=html)
+        
+        return {
+            "message": "Payment successful!",
+            "api_key": api_key,
+            "tier": tier,
+            "requests_per_month": PRICING_TIERS.get(tier, {}).get("requests_per_month", 0),
+            "subscription_id": subscription_id
+        }
+    except stripe.error.StripeError as e:
+        logger.error(f"Stripe error processing payment success: {e}", exc_info=True)
+        if "text/html" in accept_header.lower():
+            return HTMLResponse(content=PAYMENT_SUCCESS_HTML.replace("Loading your API key...", f"Stripe error: {str(e)}. Please contact support with session ID: {session_id}"))
+        return {"error": f"Stripe error: {str(e)}", "session_id": session_id}
     except Exception as e:
         logger.error(f"Error processing payment success: {e}", exc_info=True)
         if "text/html" in accept_header.lower():
-            return HTMLResponse(content=PAYMENT_SUCCESS_HTML.replace("LOADING...", "Payment successful! We'll send your API key via email."))
-        return {"message": "Payment successful! We'll send your API key via email."}
+            return HTMLResponse(content=PAYMENT_SUCCESS_HTML.replace("Loading your API key...", f"Error: {str(e)}. Please contact support with session ID: {session_id}"))
+        return {"error": str(e), "session_id": session_id}
 
 
 @app.get("/payment/cancel")
