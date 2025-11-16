@@ -1051,6 +1051,126 @@ PRICING_PAGE_HTML = """<!DOCTYPE html>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pricing - AI Decision Engine API</title>
+    <script>
+        // Define functions IMMEDIATELY in head so they're available when buttons render
+        (function() {
+            const API_BASE_URL = window.location.origin;
+            
+            window.subscribe = async function(tier, buttonElement) {
+                console.log('Subscribe function called with tier:', tier);
+                try {
+                    const email = prompt('Enter your email address:');
+                    if (!email || !email.includes('@')) { 
+                        alert('Please enter a valid email address'); 
+                        return; 
+                    }
+                    
+                    const clickedButton = buttonElement || document.querySelector('button[data-tier="' + tier + '"]');
+                    const originalText = clickedButton ? clickedButton.textContent : 'Subscribe Now';
+                    if (clickedButton) {
+                        clickedButton.textContent = 'Processing...';
+                        clickedButton.disabled = true;
+                    }
+                    
+                    console.log('Creating checkout session for tier:', tier, 'email:', email);
+                    const checkoutUrl = API_BASE_URL + '/payment/checkout';
+                    console.log('POST to:', checkoutUrl);
+                    
+                    const controller = new AbortController();
+                    const timeoutId = setTimeout(() => controller.abort(), 10000);
+                    
+                    try {
+                        const response = await fetch(checkoutUrl, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ email: email, tier: tier }),
+                            signal: controller.signal
+                        });
+                        clearTimeout(timeoutId);
+                        
+                        console.log('Response status:', response.status, response.statusText);
+                        
+                        let data;
+                        const contentType = response.headers.get('content-type');
+                        if (contentType && contentType.includes('application/json')) {
+                            data = await response.json();
+                            console.log('Response data:', data);
+                        } else {
+                            const text = await response.text();
+                            console.error('Non-JSON response:', text);
+                            throw new Error(text || 'Invalid response from server');
+                        }
+                        
+                        if (response.ok && data.checkout_url) {
+                            console.log('Redirecting to Stripe checkout:', data.checkout_url);
+                            window.location.href = data.checkout_url;
+                        } else {
+                            const errorMsg = data.detail || data.message || 'Error creating checkout session. Please try again.';
+                            console.error('Checkout error:', errorMsg);
+                            alert(errorMsg + '\\n\\nIf this persists, please contact support.');
+                            if (clickedButton) {
+                                clickedButton.textContent = originalText;
+                                clickedButton.disabled = false;
+                            }
+                        }
+                    } catch (fetchError) {
+                        clearTimeout(timeoutId);
+                        if (fetchError.name === 'AbortError') {
+                            throw new Error('Request timed out. Please check your connection and try again.');
+                        }
+                        throw fetchError;
+                    }
+                } catch (error) {
+                    console.error('Error in subscribe function:', error);
+                    const errorMsg = error.message || 'Unknown error occurred';
+                    alert('Error: ' + errorMsg + '\\n\\nPlease check your connection and try again.\\n\\nIf this persists, please contact support.');
+                    const clickedButton = buttonElement || document.querySelector('button[data-tier="' + tier + '"]');
+                    if (clickedButton) {
+                        clickedButton.textContent = 'Subscribe Now';
+                        clickedButton.disabled = false;
+                    }
+                }
+            };
+            
+            window.getFreeKey = async function() {
+                try {
+                    const email = prompt('Enter your email address to get a free API key:');
+                    if (!email || !email.includes('@')) {
+                        alert('Please enter a valid email address');
+                        return;
+                    }
+                    
+                    const response = await fetch(API_BASE_URL + '/api/keys/free', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ email: email })
+                    });
+                    
+                    const contentType = response.headers.get('content-type');
+                    let data;
+                    if (contentType && contentType.includes('application/json')) {
+                        data = await response.json();
+                    } else {
+                        const text = await response.text();
+                        throw new Error(text || 'Invalid response from server');
+                    }
+                    
+                    if (response.ok && data.api_key) {
+                        const message = 'Your Free API Key:\\n\\n' + data.api_key + '\\n\\nRequests: ' + data.requests_per_month + '/month\\n\\nCopy this key - you won\'t see it again!';
+                        if (confirm(message + '\\n\\nOpen documentation?')) {
+                            window.open(API_BASE_URL + '/docs', '_blank');
+                        }
+                    } else {
+                        alert(data.detail || 'Error generating API key. Please try again.');
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('Error generating API key: ' + error.message + '\\n\\nPlease visit the documentation to get started: ' + API_BASE_URL + '/docs');
+                    window.open(API_BASE_URL + '/docs', '_blank');
+                }
+            };
+        })();
+    </script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 40px 20px; }
@@ -1092,7 +1212,7 @@ PRICING_PAGE_HTML = """<!DOCTYPE html>
                     <li>All endpoints included</li>
                     <li style="color: #999; font-size: 0.9rem;">Hard limit (no overage)</li>
                 </ul>
-                <button class="cta-button" data-action="free" onclick="if(typeof getFreeKey==='function'){getFreeKey();}else{alert('Loading...');}">Get Free API Key</button>
+                <button class="cta-button" data-action="free" onclick="getFreeKey(); return false;">Get Free API Key</button>
             </div>
             <div class="pricing-card featured">
                 <div class="tier-name">Pro</div>
@@ -1105,7 +1225,7 @@ PRICING_PAGE_HTML = """<!DOCTYPE html>
                     <li>Advanced analytics</li>
                     <li style="color: #667eea; font-weight: bold;">$1 per 1,000 overage</li>
                 </ul>
-                <button class="cta-button" data-tier="pro" data-action="subscribe" onclick="if(typeof subscribe==='function'){subscribe('pro',this);}else{alert('Loading...');}">Subscribe Now</button>
+                <button class="cta-button" data-tier="pro" data-action="subscribe" onclick="subscribe('pro', this); return false;">Subscribe Now</button>
             </div>
             <div class="pricing-card">
                 <div class="tier-name">Enterprise</div>
@@ -1119,168 +1239,10 @@ PRICING_PAGE_HTML = """<!DOCTYPE html>
                     <li>Custom integrations</li>
                     <li style="color: #667eea; font-weight: bold;">$0.50 per 1,000 overage</li>
                 </ul>
-                <button class="cta-button secondary" data-tier="enterprise" data-action="subscribe" onclick="if(typeof subscribe==='function'){subscribe('enterprise',this);}else{alert('Loading...');}">Subscribe Now</button>
+                <button class="cta-button secondary" data-tier="enterprise" data-action="subscribe" onclick="subscribe('enterprise', this); return false;">Subscribe Now</button>
             </div>
         </div>
     </div>
-    <script>
-        const API_BASE_URL = window.location.origin;
-        async function subscribe(tier, buttonElement) {
-            console.log('Subscribe function called with tier:', tier);
-            try {
-                const email = prompt('Enter your email address:');
-                if (!email || !email.includes('@')) { 
-                    alert('Please enter a valid email address'); 
-                    return; 
-                }
-                
-                // Show loading state
-                const clickedButton = buttonElement || document.querySelector('button[data-tier="' + tier + '"]');
-                const originalText = clickedButton ? clickedButton.textContent : 'Subscribe Now';
-                if (clickedButton) {
-                    clickedButton.textContent = 'Processing...';
-                    clickedButton.disabled = true;
-                }
-                
-                console.log('Creating checkout session for tier:', tier, 'email:', email);
-                const checkoutUrl = API_BASE_URL + '/payment/checkout';
-                console.log('POST to:', checkoutUrl);
-                
-                const response = await fetch(checkoutUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email: email, tier: tier })
-                });
-                
-                console.log('Response status:', response.status, response.statusText);
-                
-                let data;
-                const contentType = response.headers.get('content-type');
-                if (contentType && contentType.includes('application/json')) {
-                    data = await response.json();
-                    console.log('Response data:', data);
-                } else {
-                    const text = await response.text();
-                    console.error('Non-JSON response:', text);
-                    throw new Error(text || 'Invalid response from server');
-                }
-                
-                if (response.ok && data.checkout_url) {
-                    console.log('Redirecting to Stripe checkout:', data.checkout_url);
-                    window.location.href = data.checkout_url;
-                } else {
-                    // Show detailed error message
-                    const errorMsg = data.detail || data.message || 'Error creating checkout session. Please try again.';
-                    console.error('Checkout error:', errorMsg);
-                    alert(errorMsg + '\n\nIf this persists, please contact support.');
-                    if (clickedButton) {
-                        clickedButton.textContent = originalText;
-                        clickedButton.disabled = false;
-                    }
-                }
-            } catch (error) {
-                console.error('Error in subscribe function:', error);
-                alert('Network error: ' + error.message + '\\n\\nPlease check your connection and try again.\\n\\nIf this persists, please contact support.');
-                const clickedButton = buttonElement || document.querySelector('button[data-tier="' + tier + '"]');
-                if (clickedButton) {
-                    clickedButton.textContent = 'Subscribe Now';
-                    clickedButton.disabled = false;
-                }
-            }
-        }
-        async function getFreeKey() {
-            try {
-                const email = prompt('Enter your email address to get a free API key:');
-                if (!email || !email.includes('@')) {
-                    alert('Please enter a valid email address');
-                    return;
-                }
-                
-                const response = await fetch(API_BASE_URL + '/api/keys/free', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email: email })
-                });
-                
-                const contentType = response.headers.get('content-type');
-                let data;
-                if (contentType && contentType.includes('application/json')) {
-                    data = await response.json();
-                } else {
-                    const text = await response.text();
-                    throw new Error(text || 'Invalid response from server');
-                }
-                
-                if (response.ok && data.api_key) {
-                    // Show API key in a nice dialog
-                    const message = 'Your Free API Key:\\n\\n' + data.api_key + '\\n\\nRequests: ' + data.requests_per_month + '/month\\n\\nCopy this key - you won\'t see it again!';
-                    if (confirm(message + '\\n\\nOpen documentation?')) {
-                        window.open(API_BASE_URL + '/docs', '_blank');
-                    }
-                } else {
-                    alert(data.detail || 'Error generating API key. Please try again.');
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                alert('Error generating API key: ' + error.message + '\\n\\nPlease visit the documentation to get started: ' + API_BASE_URL + '/docs');
-                window.open(API_BASE_URL + '/docs', '_blank');
-            }
-        }
-        
-        // Set up event listeners - multiple approaches for maximum compatibility
-        function setupButtons() {
-            console.log('Setting up button event listeners...');
-            
-            // Subscribe buttons
-            const subscribeButtons = document.querySelectorAll('button[data-action="subscribe"]');
-            console.log('Found subscribe buttons:', subscribeButtons.length);
-            
-            subscribeButtons.forEach(function(button) {
-                const tier = button.getAttribute('data-tier');
-                console.log('Setting up listener for button with tier:', tier);
-                
-                // Remove any existing listeners
-                var newButton = button.cloneNode(true);
-                button.parentNode.replaceChild(newButton, button);
-                
-                // Add click listener
-                newButton.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    console.log('Subscribe button clicked, tier:', tier);
-                    if (tier) {
-                        subscribe(tier, this);
-                    } else {
-                        console.error('No tier attribute found on button');
-                        alert('Error: Invalid button configuration. Please refresh the page.');
-                    }
-                }, false);
-            });
-            
-            // Free key button
-            const freeButtons = document.querySelectorAll('button[data-action="free"]');
-            freeButtons.forEach(function(button) {
-                var newButton = button.cloneNode(true);
-                button.parentNode.replaceChild(newButton, button);
-                newButton.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    getFreeKey();
-                }, false);
-            });
-        }
-        
-        // Try immediately (in case DOM is already loaded)
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', setupButtons);
-        } else {
-            // DOM is already loaded
-            setupButtons();
-        }
-        
-        // Also try after a short delay as backup
-        setTimeout(setupButtons, 100);
-    </script>
 </body>
 </html>"""
 
