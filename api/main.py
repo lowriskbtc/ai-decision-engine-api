@@ -678,12 +678,24 @@ async def create_checkout_session(checkout_request: CheckoutRequest):
         stripe.api_key = stripe_key
         logger.info(f"Stripe API key configured (length: {len(stripe_key)})")
         
+        # Validate tier
+        tier_lower = checkout_request.tier.lower()
+        logger.info(f"Creating checkout for tier: {tier_lower}")
+        
         # Check if price ID is configured for this tier
-        tier_info = PRICING_TIERS.get(checkout_request.tier.lower())
+        tier_info = PRICING_TIERS.get(tier_lower)
         if not tier_info:
+            logger.warning(f"Invalid tier requested: {checkout_request.tier}")
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail=f"Invalid tier: {checkout_request.tier}. Valid tiers are: pro, enterprise"
+            )
+        
+        # Don't allow free tier checkout (it's handled separately)
+        if tier_lower == "free":
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Free tier does not require payment. Use /api/keys/free endpoint instead."
             )
         
         if not tier_info.get("price_id"):
@@ -1074,10 +1086,11 @@ PRICING_PAGE_HTML = """<!DOCTYPE html>
                 <div class="tier-name">Free</div>
                 <div class="price"><span class="currency">$</span>0<span class="period">/month</span></div>
                 <ul class="features">
-                    <li>100 requests/month</li>
+                    <li>100 requests/month included</li>
                     <li>Full API access</li>
                     <li>Community support</li>
                     <li>All endpoints included</li>
+                    <li style="color: #999; font-size: 0.9rem;">Hard limit (no overage)</li>
                 </ul>
                 <button class="cta-button" data-action="free">Get Free API Key</button>
             </div>
@@ -1085,11 +1098,12 @@ PRICING_PAGE_HTML = """<!DOCTYPE html>
                 <div class="tier-name">Pro</div>
                 <div class="price"><span class="currency">$</span>9<span class="period">/month</span></div>
                 <ul class="features">
-                    <li>10,000 requests/month</li>
+                    <li>10,000 requests/month included</li>
                     <li>Full API access</li>
                     <li>Priority support</li>
                     <li>All endpoints included</li>
                     <li>Advanced analytics</li>
+                    <li style="color: #667eea; font-weight: bold;">$1 per 1,000 overage</li>
                 </ul>
                 <button class="cta-button" data-tier="pro" data-action="subscribe">Subscribe Now</button>
             </div>
@@ -1097,12 +1111,13 @@ PRICING_PAGE_HTML = """<!DOCTYPE html>
                 <div class="tier-name">Enterprise</div>
                 <div class="price"><span class="currency">$</span>49<span class="period">/month</span></div>
                 <ul class="features">
-                    <li>Unlimited requests</li>
+                    <li>1,000,000 requests/month included</li>
                     <li>Full API access</li>
                     <li>Priority support</li>
                     <li>All endpoints included</li>
                     <li>Advanced analytics</li>
                     <li>Custom integrations</li>
+                    <li style="color: #667eea; font-weight: bold;">$0.50 per 1,000 overage</li>
                 </ul>
                 <button class="cta-button secondary" data-tier="enterprise" data-action="subscribe">Subscribe Now</button>
             </div>
@@ -1111,6 +1126,7 @@ PRICING_PAGE_HTML = """<!DOCTYPE html>
     <script>
         const API_BASE_URL = window.location.origin;
         async function subscribe(tier, buttonElement) {
+            console.log('Subscribe function called with tier:', tier);
             try {
                 const email = prompt('Enter your email address:');
                 if (!email || !email.includes('@')) { 
@@ -1126,26 +1142,36 @@ PRICING_PAGE_HTML = """<!DOCTYPE html>
                     clickedButton.disabled = true;
                 }
                 
-                const response = await fetch(`${API_BASE_URL}/payment/checkout`, {
+                console.log('Creating checkout session for tier:', tier, 'email:', email);
+                const checkoutUrl = `${API_BASE_URL}/payment/checkout`;
+                console.log('POST to:', checkoutUrl);
+                
+                const response = await fetch(checkoutUrl, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email: email, tier: tier })
                 });
                 
+                console.log('Response status:', response.status, response.statusText);
+                
                 let data;
                 const contentType = response.headers.get('content-type');
                 if (contentType && contentType.includes('application/json')) {
                     data = await response.json();
+                    console.log('Response data:', data);
                 } else {
                     const text = await response.text();
+                    console.error('Non-JSON response:', text);
                     throw new Error(text || 'Invalid response from server');
                 }
                 
                 if (response.ok && data.checkout_url) {
+                    console.log('Redirecting to Stripe checkout:', data.checkout_url);
                     window.location.href = data.checkout_url;
                 } else {
                     // Show detailed error message
                     const errorMsg = data.detail || data.message || 'Error creating checkout session. Please try again.';
+                    console.error('Checkout error:', errorMsg);
                     alert(errorMsg + '\n\nIf this persists, please contact support.');
                     if (clickedButton) {
                         clickedButton.textContent = originalText;
@@ -1153,7 +1179,7 @@ PRICING_PAGE_HTML = """<!DOCTYPE html>
                     }
                 }
             } catch (error) {
-                console.error('Error:', error);
+                console.error('Error in subscribe function:', error);
                 alert('Network error: ' + error.message + '\n\nPlease check your connection and try again.\n\nIf this persists, please contact support.');
                 const clickedButton = buttonElement || document.querySelector(`button[data-tier="${tier}"]`);
                 if (clickedButton) {
@@ -1187,8 +1213,8 @@ PRICING_PAGE_HTML = """<!DOCTYPE html>
                 
                 if (response.ok && data.api_key) {
                     // Show API key in a nice dialog
-                    const message = `Your Free API Key:\n\n${data.api_key}\n\nRequests: ${data.requests_per_month}/month\n\nCopy this key - you won't see it again!`;
-                    if (confirm(message + '\n\nOpen documentation?')) {
+                    const message = 'Your Free API Key:\\n\\n' + data.api_key + '\\n\\nRequests: ' + data.requests_per_month + '/month\\n\\nCopy this key - you won\'t see it again!';
+                    if (confirm(message + '\\n\\nOpen documentation?')) {
                         window.open(API_BASE_URL + '/docs', '_blank');
                     }
                 } else {
@@ -1196,21 +1222,29 @@ PRICING_PAGE_HTML = """<!DOCTYPE html>
                 }
             } catch (error) {
                 console.error('Error:', error);
-                alert('Error generating API key: ' + error.message + '\n\nPlease visit the documentation to get started: ' + API_BASE_URL + '/docs');
+                alert('Error generating API key: ' + error.message + '\\n\\nPlease visit the documentation to get started: ' + API_BASE_URL + '/docs');
                 window.open(API_BASE_URL + '/docs', '_blank');
             }
         }
         
         // Set up event listeners for all buttons
         document.addEventListener('DOMContentLoaded', function() {
+            console.log('Setting up button event listeners...');
             // Subscribe buttons
-            document.querySelectorAll('button[data-action="subscribe"]').forEach(button => {
+            const subscribeButtons = document.querySelectorAll('button[data-action="subscribe"]');
+            console.log('Found subscribe buttons:', subscribeButtons.length);
+            subscribeButtons.forEach(button => {
+                const tier = button.getAttribute('data-tier');
+                console.log('Setting up listener for button with tier:', tier);
                 button.addEventListener('click', function(e) {
                     e.preventDefault();
                     e.stopPropagation();
-                    const tier = this.getAttribute('data-tier');
+                    console.log('Subscribe button clicked, tier:', tier);
                     if (tier) {
                         subscribe(tier, this);
+                    } else {
+                        console.error('No tier attribute found on button');
+                        alert('Error: Invalid button configuration. Please refresh the page.');
                     }
                 });
             });
@@ -1289,15 +1323,25 @@ async def get_pricing(request: Request):
             
             pricing = {}
             for tier, info in pricing_tiers.items():
+                features = [
+                    f"{info['requests_per_month']:,} requests/month included",
+                    "Full API access",
+                    "Priority support" if tier != "free" else "Community support"
+                ]
+                
+                # Add overage info for paid tiers
+                if tier != "free" and info.get("overage_per_1000"):
+                    overage_text = f"${info['overage_per_1000']/100:.2f} per 1,000 overage"
+                    features.append(overage_text)
+                elif tier == "free":
+                    features.append("Hard limit (no overage)")
+                
                 pricing[tier] = {
                     "name": info["name"],
                     "price": info["amount"] / 100,  # Convert cents to dollars
                     "requests_per_month": info["requests_per_month"],
-                    "features": [
-                        f"{info['requests_per_month']:,} requests/month",
-                        "Full API access",
-                        "Priority support" if tier != "free" else "Community support"
-                    ]
+                    "overage_per_1000": info.get("overage_per_1000", 0) / 100 if info.get("overage_per_1000") else None,
+                    "features": features
                 }
             
             return JSONResponse(content={
@@ -1352,6 +1396,50 @@ async def generate_free_api_key(request: FreeKeyRequest):
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Error generating API key: {str(e)}"
+        )
+
+
+@app.get("/api/usage", response_model=Dict[str, Any])
+async def get_usage(
+    request: Request,
+    api_info: Dict[str, Any] = Depends(verify_api_key)
+):
+    """
+    Get usage statistics and billing summary for current API key
+    
+    Returns:
+    - Usage statistics (total requests, included, overage)
+    - Billing summary (base price, overage charge, total)
+    """
+    try:
+        from api.api_key_manager import api_key_manager
+        from api.stripe_service import stripe_service
+        
+        # Get API key from header
+        api_key = request.headers.get("X-API-Key")
+        if not api_key:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="API key required"
+            )
+        
+        # Get usage statistics
+        usage_stats = api_key_manager.get_usage_stats(api_key)
+        
+        # Get billing summary
+        billing_summary = stripe_service.get_billing_summary(api_key, usage_stats)
+        
+        return {
+            "usage": usage_stats,
+            "billing": billing_summary
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error getting usage: {e}", exc_info=True)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error getting usage: {str(e)}"
         )
 
 
