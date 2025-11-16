@@ -781,35 +781,67 @@ PAYMENT_SUCCESS_HTML = """<!DOCTYPE html>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
-        .success-card { background: white; border-radius: 20px; padding: 40px; max-width: 600px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); text-align: center; }
-        .success-icon { font-size: 64px; margin-bottom: 20px; }
-        h1 { color: #4caf50; font-size: 2rem; margin-bottom: 10px; }
-        .api-key-box { background: #f8f9fa; border: 2px solid #667eea; border-radius: 10px; padding: 20px; margin: 20px 0; font-family: monospace; word-break: break-all; }
-        .api-key { font-size: 1.1rem; color: #333; font-weight: bold; }
-        .copy-button { background: #667eea; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin-top: 10px; font-weight: bold; }
-        .copy-button:hover { background: #5568d3; }
-        .info { color: #666; margin: 20px 0; line-height: 1.6; }
-        .cta-button { display: inline-block; background: #667eea; color: white; padding: 15px 30px; border-radius: 10px; text-decoration: none; margin-top: 20px; font-weight: bold; }
-        .cta-button:hover { background: #5568d3; }
+        .success-card { background: white; border-radius: 20px; padding: 40px; max-width: 700px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); text-align: center; }
+        .success-icon { font-size: 80px; margin-bottom: 20px; animation: scaleIn 0.5s ease; }
+        @keyframes scaleIn { from { transform: scale(0); } to { transform: scale(1); } }
+        h1 { color: #4caf50; font-size: 2.5rem; margin-bottom: 10px; }
+        .subtitle { color: #666; font-size: 1.1rem; margin-bottom: 30px; }
+        .api-key-box { background: #f8f9fa; border: 2px solid #667eea; border-radius: 10px; padding: 25px; margin: 25px 0; position: relative; }
+        .api-key { font-size: 1.2rem; color: #333; font-weight: bold; font-family: 'Courier New', monospace; word-break: break-all; margin-bottom: 15px; }
+        .copy-button { background: #667eea; color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 1rem; transition: all 0.3s; width: 100%; }
+        .copy-button:hover { background: #5568d3; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4); }
+        .copy-button.copied { background: #4caf50; }
+        .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 25px 0; text-align: left; }
+        .info-item { background: #f8f9fa; padding: 15px; border-radius: 8px; }
+        .info-item strong { display: block; color: #667eea; margin-bottom: 5px; font-size: 0.9rem; }
+        .info-item span { color: #333; font-size: 1.1rem; font-weight: 600; }
+        .cta-buttons { display: flex; gap: 15px; margin-top: 30px; flex-wrap: wrap; justify-content: center; }
+        .cta-button { display: inline-block; background: #667eea; color: white; padding: 15px 30px; border-radius: 10px; text-decoration: none; font-weight: bold; transition: all 0.3s; }
+        .cta-button:hover { background: #5568d3; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4); }
+        .cta-button.secondary { background: transparent; border: 2px solid #667eea; color: #667eea; }
+        .cta-button.secondary:hover { background: #667eea; color: white; }
+        .warning { background: #fff3cd; border: 1px solid #ffc107; border-radius: 8px; padding: 15px; margin-top: 20px; color: #856404; font-size: 0.9rem; }
+        .loading { color: #667eea; }
+        @media (max-width: 600px) {
+            .info-grid { grid-template-columns: 1fr; }
+            .cta-buttons { flex-direction: column; }
+            .cta-button { width: 100%; }
+        }
     </style>
 </head>
 <body>
     <div class="success-card">
         <div class="success-icon">✅</div>
         <h1>Payment Successful!</h1>
-        <p class="info">Your subscription is active. Here's your API key:</p>
+        <p class="subtitle">Your subscription is now active. Welcome aboard! 🚀</p>
+        
         <div class="api-key-box">
-            <div class="api-key" id="apiKey">LOADING...</div>
-            <button class="copy-button" onclick="copyApiKey()">Copy API Key</button>
+            <div style="text-align: left; margin-bottom: 10px; color: #666; font-size: 0.9rem;">
+                <strong>Your API Key:</strong>
+            </div>
+            <div class="api-key" id="apiKey">Loading your API key...</div>
+            <button class="copy-button" id="copyBtn" onclick="copyApiKey()">Copy API Key</button>
         </div>
-        <p class="info">
-            <strong>Tier:</strong> <span id="tier">-</span><br>
-            <strong>Requests/month:</strong> <span id="requests">-</span>
-        </p>
-        <a href="/docs" class="cta-button">View API Documentation</a>
-        <p style="margin-top: 20px; font-size: 0.9rem; color: #999;">
-            Save this API key securely. You won't be able to see it again.
-        </p>
+        
+        <div class="info-grid">
+            <div class="info-item">
+                <strong>Subscription Tier</strong>
+                <span id="tier">-</span>
+            </div>
+            <div class="info-item">
+                <strong>Monthly Requests</strong>
+                <span id="requests">-</span>
+            </div>
+        </div>
+        
+        <div class="cta-buttons">
+            <a href="/docs" class="cta-button">📚 View API Docs</a>
+            <a href="/pricing" class="cta-button secondary">💳 Manage Subscription</a>
+        </div>
+        
+        <div class="warning">
+            ⚠️ <strong>Important:</strong> Save this API key securely. You will not be able to see it again after leaving this page.
+        </div>
     </div>
     <script>
         // Get API key from URL or response
@@ -824,15 +856,38 @@ PAYMENT_SUCCESS_HTML = """<!DOCTYPE html>
                         document.getElementById('apiKey').textContent = data.api_key;
                         document.getElementById('tier').textContent = data.tier.toUpperCase();
                         document.getElementById('requests').textContent = data.requests_per_month.toLocaleString();
+                    } else {
+                        document.getElementById('apiKey').textContent = 'Error loading API key. Please contact support.';
+                        document.getElementById('apiKey').classList.add('loading');
                     }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    document.getElementById('apiKey').textContent = 'Error loading API key. Please contact support.';
                 });
+        } else {
+            document.getElementById('apiKey').textContent = 'No session ID found. Please check your email for your API key.';
         }
         
         function copyApiKey() {
             const key = document.getElementById('apiKey').textContent;
-            navigator.clipboard.writeText(key).then(() => {
-                alert('API key copied to clipboard!');
-            });
+            const copyBtn = document.getElementById('copyBtn');
+            
+            if (key && key !== 'Loading your API key...' && !key.includes('Error')) {
+                navigator.clipboard.writeText(key).then(() => {
+                    const originalText = copyBtn.textContent;
+                    copyBtn.textContent = '✓ Copied!';
+                    copyBtn.classList.add('copied');
+                    setTimeout(() => {
+                        copyBtn.textContent = originalText;
+                        copyBtn.classList.remove('copied');
+                    }, 2000);
+                }).catch(err => {
+                    alert('Failed to copy. Please select and copy manually.');
+                });
+            } else {
+                alert('API key not available yet. Please wait...');
+            }
         }
     </script>
 </body>
