@@ -1,0 +1,12 @@
+{
+  "deployment_status": "live",
+  "platform": "Railway",
+  "project_url": "https://railway.com/project/624953b0-2ed9-43b0-87c3-663235cb3860",
+  "service_url": "https://railway.com/project/624953b0-2ed9-43b0-87c3-663235cb3860/service/ee940128-06c8-4643-8344-af1a0c8af810",
+  "next_steps": [
+    "Get deployment URL from Railway Settings",
+    "Test health endpoint",
+    "Update marketing content with URL",
+    "Start posting on Reddit/Twitter/HN"
+  ]
+}
