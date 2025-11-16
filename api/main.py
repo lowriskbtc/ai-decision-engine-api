@@ -651,6 +651,23 @@ async def create_checkout_session(checkout_request: CheckoutRequest):
     Returns checkout session URL
     """
     try:
+        # Validate email format
+        if not checkout_request.email or '@' not in checkout_request.email:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Invalid email address format"
+            )
+        
+        # Normalize email
+        email = checkout_request.email.strip().lower()
+        
+        # Validate tier
+        tier = checkout_request.tier.lower().strip()
+        if tier not in ['pro', 'enterprise']:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=f"Invalid tier: {tier}. Valid tiers are: pro, enterprise"
+            )
         from api.stripe_service import stripe_service, STRIPE_AVAILABLE, PRICING_TIERS
         
         # Import stripe and check availability
@@ -678,24 +695,15 @@ async def create_checkout_session(checkout_request: CheckoutRequest):
         stripe.api_key = stripe_key
         logger.info(f"Stripe API key configured (length: {len(stripe_key)})")
         
-        # Validate tier
-        tier_lower = checkout_request.tier.lower()
-        logger.info(f"Creating checkout for tier: {tier_lower}")
+        logger.info(f"Creating checkout for tier: {tier}, email: {email}")
         
         # Check if price ID is configured for this tier
-        tier_info = PRICING_TIERS.get(tier_lower)
+        tier_info = PRICING_TIERS.get(tier)
         if not tier_info:
-            logger.warning(f"Invalid tier requested: {checkout_request.tier}")
+            logger.warning(f"Invalid tier requested: {tier}")
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
-                detail=f"Invalid tier: {checkout_request.tier}. Valid tiers are: pro, enterprise"
-            )
-        
-        # Don't allow free tier checkout (it's handled separately)
-        if tier_lower == "free":
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Free tier does not require payment. Use /api/keys/free endpoint instead."
+                detail=f"Invalid tier: {tier}. Valid tiers are: pro, enterprise"
             )
         
         if not tier_info.get("price_id"):
@@ -716,17 +724,17 @@ async def create_checkout_session(checkout_request: CheckoutRequest):
                 
                 # Update the price ID
                 tier_info["price_id"] = price.id
-                logger.info(f"Created Stripe product and price for {checkout_request.tier}: {price.id}")
+                logger.info(f"Created Stripe product and price for {tier}: {price.id}")
             except Exception as create_error:
                 logger.error(f"Error creating Stripe product/price: {create_error}")
                 raise HTTPException(
                     status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-                    detail=f"Payment setup incomplete for {checkout_request.tier} tier. Please contact support."
+                    detail=f"Payment setup incomplete for {tier} tier. Please contact support."
                 )
         
         session = stripe_service.create_checkout_session(
-            customer_email=checkout_request.email,
-            tier=checkout_request.tier
+            customer_email=email,
+            tier=tier
         )
         
         return {
@@ -749,7 +757,7 @@ async def create_checkout_session(checkout_request: CheckoutRequest):
         if "Price ID not configured" in error_msg:
             raise HTTPException(
                 status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-                detail=f"Payment setup incomplete. The {checkout_request.tier} tier is being configured. Please try again in a moment."
+                detail=f"Payment setup incomplete. The {tier} tier is being configured. Please try again in a moment."
             )
         elif "Stripe API key" in error_msg or "not configured" in error_msg:
             raise HTTPException(
@@ -1052,126 +1060,285 @@ PRICING_PAGE_HTML = """<!DOCTYPE html>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pricing - AI Decision Engine API</title>
     <script>
-        // Define functions IMMEDIATELY in head so they're available when buttons render
+        // Define API base URL immediately
         const API_BASE_URL = window.location.origin;
         
-        async function subscribe(tier, buttonElement) {
-                console.log('Subscribe function called with tier:', tier);
-                try {
-                    const email = prompt('Enter your email address:');
-                    if (!email || !email.includes('@')) { 
-                        alert('Please enter a valid email address'); 
-                        return; 
-                    }
-                    
-                    const clickedButton = buttonElement || document.querySelector('button[data-tier="' + tier + '"]');
-                    const originalText = clickedButton ? clickedButton.textContent : 'Subscribe Now';
-                    if (clickedButton) {
-                        clickedButton.textContent = 'Processing...';
-                        clickedButton.disabled = true;
-                    }
-                    
-                    console.log('Creating checkout session for tier:', tier, 'email:', email);
-                    const checkoutUrl = API_BASE_URL + '/payment/checkout';
-                    console.log('POST to:', checkoutUrl);
-                    
-                    const controller = new AbortController();
-                    const timeoutId = setTimeout(() => controller.abort(), 10000);
-                    
-                    try {
-                        const response = await fetch(checkoutUrl, {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ email: email, tier: tier }),
-                            signal: controller.signal
-                        });
-                        clearTimeout(timeoutId);
-                        
-                        console.log('Response status:', response.status, response.statusText);
-                        
-                        let data;
-                        const contentType = response.headers.get('content-type');
-                        if (contentType && contentType.includes('application/json')) {
-                            data = await response.json();
-                            console.log('Response data:', data);
-                        } else {
-                            const text = await response.text();
-                            console.error('Non-JSON response:', text);
-                            throw new Error(text || 'Invalid response from server');
-                        }
-                        
-                        if (response.ok && data.checkout_url) {
-                            console.log('Redirecting to Stripe checkout:', data.checkout_url);
-                            window.location.href = data.checkout_url;
-                        } else {
-                            const errorMsg = data.detail || data.message || 'Error creating checkout session. Please try again.';
-                            console.error('Checkout error:', errorMsg);
-                            alert(errorMsg + '\\n\\nIf this persists, please contact support.');
-                            if (clickedButton) {
-                                clickedButton.textContent = originalText;
-                                clickedButton.disabled = false;
-                            }
-                        }
-                    } catch (fetchError) {
-                        clearTimeout(timeoutId);
-                        if (fetchError.name === 'AbortError') {
-                            throw new Error('Request timed out. Please check your connection and try again.');
-                        }
-                        throw fetchError;
-                    }
-                } catch (error) {
-                    console.error('Error in subscribe function:', error);
-                    const errorMsg = error.message || 'Unknown error occurred';
-                    alert('Error: ' + errorMsg + '\\n\\nPlease check your connection and try again.\\n\\nIf this persists, please contact support.');
-                    const clickedButton = buttonElement || document.querySelector('button[data-tier="' + tier + '"]');
-                    if (clickedButton) {
-                        clickedButton.textContent = 'Subscribe Now';
-                        clickedButton.disabled = false;
-                    }
+        // Ensure functions are available immediately
+        (function() {
+            'use strict';
+            
+            // Subscribe function - handles Pro and Enterprise subscriptions
+            window.subscribe = async function subscribe(tier, buttonElement) {
+                console.log('[Subscribe] Function called with tier:', tier);
+                
+                // Get button reference
+                const clickedButton = buttonElement || document.querySelector('button[data-tier="' + tier + '"]');
+                const originalText = clickedButton ? clickedButton.textContent : 'Subscribe Now';
+                
+                // Validate tier
+                if (!tier || (tier !== 'pro' && tier !== 'enterprise')) {
+                    alert('Invalid subscription tier. Please select Pro or Enterprise.');
+                    return;
                 }
-        }
-        
-        async function getFreeKey() {
+                
                 try {
-                    const email = prompt('Enter your email address to get a free API key:');
-                    if (!email || !email.includes('@')) {
+                    // Get email from user
+                    const email = prompt('Enter your email address:');
+                    if (!email) {
+                        return; // User cancelled
+                    }
+                    
+                    // Validate email
+                    if (!email.includes('@') || email.length < 5) {
                         alert('Please enter a valid email address');
                         return;
                     }
                     
-                    const response = await fetch(API_BASE_URL + '/api/keys/free', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ email: email })
-                    });
-                    
-                    const contentType = response.headers.get('content-type');
-                    let data;
-                    if (contentType && contentType.includes('application/json')) {
-                        data = await response.json();
-                    } else {
-                        const text = await response.text();
-                        throw new Error(text || 'Invalid response from server');
+                    // Update button state
+                    if (clickedButton) {
+                        clickedButton.textContent = 'Processing...';
+                        clickedButton.disabled = true;
+                        clickedButton.style.opacity = '0.6';
                     }
                     
-                    if (response.ok && data.api_key) {
-                        const message = 'Your Free API Key:\\n\\n' + data.api_key + '\\n\\nRequests: ' + data.requests_per_month + '/month\\n\\nCopy this key - you won\'t see it again!';
-                        if (confirm(message + '\\n\\nOpen documentation?')) {
-                            window.open(API_BASE_URL + '/docs', '_blank');
+                    console.log('[Subscribe] Creating checkout session for tier:', tier, 'email:', email);
+                    
+                    // Make API call to create checkout session
+                    const checkoutUrl = API_BASE_URL + '/payment/checkout';
+                    const controller = new AbortController();
+                    const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
+                    
+                    try {
+                        const response = await fetch(checkoutUrl, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Accept': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                email: email.trim(),
+                                tier: tier.toLowerCase()
+                            }),
+                            signal: controller.signal
+                        });
+                        
+                        clearTimeout(timeoutId);
+                        
+                        console.log('[Subscribe] Response status:', response.status, response.statusText);
+                        
+                        // Parse response
+                        let data;
+                        const contentType = response.headers.get('content-type') || '';
+                        
+                        if (contentType.includes('application/json')) {
+                            data = await response.json();
+                            console.log('[Subscribe] Response data:', data);
+                        } else {
+                            const text = await response.text();
+                            console.error('[Subscribe] Non-JSON response:', text);
+                            throw new Error('Server returned invalid response format');
                         }
-                    } else {
-                        alert(data.detail || 'Error generating API key. Please try again.');
+                        
+                        // Handle response
+                        if (response.ok && data.checkout_url) {
+                            console.log('[Subscribe] Redirecting to Stripe checkout:', data.checkout_url);
+                            // Redirect to Stripe checkout
+                            window.location.href = data.checkout_url;
+                        } else {
+                            // Handle error response
+                            const errorMsg = data.detail || data.message || 'Error creating checkout session. Please try again.';
+                            console.error('[Subscribe] Checkout error:', errorMsg);
+                            alert('Error: ' + errorMsg + '\\n\\nIf this persists, please contact support.');
+                            
+                            // Reset button
+                            if (clickedButton) {
+                                clickedButton.textContent = originalText;
+                                clickedButton.disabled = false;
+                                clickedButton.style.opacity = '1';
+                            }
+                        }
+                    } catch (fetchError) {
+                        clearTimeout(timeoutId);
+                        console.error('[Subscribe] Fetch error:', fetchError);
+                        
+                        if (fetchError.name === 'AbortError') {
+                            throw new Error('Request timed out. Please check your connection and try again.');
+                        } else if (fetchError.message) {
+                            throw fetchError;
+                        } else {
+                            throw new Error('Network error. Please check your connection and try again.');
+                        }
                     }
                 } catch (error) {
-                    console.error('Error:', error);
-                    alert('Error generating API key: ' + error.message + '\\n\\nPlease visit the documentation to get started: ' + API_BASE_URL + '/docs');
-                    window.open(API_BASE_URL + '/docs', '_blank');
-            }
+                    console.error('[Subscribe] Error in subscribe function:', error);
+                    const errorMsg = error.message || 'Unknown error occurred';
+                    alert('Error: ' + errorMsg + '\\n\\nPlease check your connection and try again.\\n\\nIf this persists, please contact support.');
+                    
+                    // Reset button
+                    const resetButton = buttonElement || document.querySelector('button[data-tier="' + tier + '"]');
+                    if (resetButton) {
+                        resetButton.textContent = originalText;
+                        resetButton.disabled = false;
+                        resetButton.style.opacity = '1';
+                    }
+                }
+            };
+        
+            // Get free API key function
+            window.getFreeKey = async function getFreeKey() {
+                console.log('[FreeKey] Function called');
+                
+                try {
+                    // Get email from user
+                    const email = prompt('Enter your email address to get a free API key:');
+                    if (!email) {
+                        return; // User cancelled
+                    }
+                    
+                    // Validate email
+                    if (!email.includes('@') || email.length < 5) {
+                        alert('Please enter a valid email address');
+                        return;
+                    }
+                    
+                    console.log('[FreeKey] Requesting free API key for email:', email);
+                    
+                    // Make API call
+                    const freeKeyUrl = API_BASE_URL + '/api/keys/free';
+                    const controller = new AbortController();
+                    const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
+                    
+                    try {
+                        const response = await fetch(freeKeyUrl, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Accept': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                email: email.trim()
+                            }),
+                            signal: controller.signal
+                        });
+                        
+                        clearTimeout(timeoutId);
+                        
+                        console.log('[FreeKey] Response status:', response.status, response.statusText);
+                        
+                        // Parse response
+                        let data;
+                        const contentType = response.headers.get('content-type') || '';
+                        
+                        if (contentType.includes('application/json')) {
+                            data = await response.json();
+                            console.log('[FreeKey] Response data:', data);
+                        } else {
+                            const text = await response.text();
+                            console.error('[FreeKey] Non-JSON response:', text);
+                            throw new Error('Server returned invalid response format');
+                        }
+                        
+                        // Handle response
+                        if (response.ok && data.api_key) {
+                            const message = 'Your Free API Key:\\n\\n' + 
+                                          data.api_key + 
+                                          '\\n\\nRequests: ' + 
+                                          (data.requests_per_month || 100) + 
+                                          '/month\\n\\nCopy this key - you won\'t see it again!';
+                            
+                            // Show API key
+                            alert(message);
+                            
+                            // Ask if user wants to open documentation
+                            if (confirm('Would you like to open the API documentation?')) {
+                                window.open(API_BASE_URL + '/docs', '_blank');
+                            }
+                        } else {
+                            // Handle error response
+                            const errorMsg = data.detail || data.message || 'Error generating API key. Please try again.';
+                            console.error('[FreeKey] Error:', errorMsg);
+                            alert('Error: ' + errorMsg);
+                        }
+                    } catch (fetchError) {
+                        clearTimeout(timeoutId);
+                        console.error('[FreeKey] Fetch error:', fetchError);
+                        
+                        if (fetchError.name === 'AbortError') {
+                            throw new Error('Request timed out. Please check your connection and try again.');
+                        } else if (fetchError.message) {
+                            throw fetchError;
+                        } else {
+                            throw new Error('Network error. Please check your connection and try again.');
+                        }
+                    }
+                } catch (error) {
+                    console.error('[FreeKey] Error in getFreeKey function:', error);
+                    const errorMsg = error.message || 'Unknown error occurred';
+                    alert('Error generating API key: ' + errorMsg + '\\n\\nPlease visit the documentation to get started: ' + API_BASE_URL + '/docs');
+                    
+                    // Offer to open docs
+                    if (confirm('Would you like to open the API documentation?')) {
+                        window.open(API_BASE_URL + '/docs', '_blank');
+                    }
+                }
+            };
+        })();
+        
+        // Log that functions are loaded
+        console.log('[Pricing] Subscription functions loaded successfully');
+        console.log('[Pricing] subscribe function available:', typeof window.subscribe);
+        console.log('[Pricing] getFreeKey function available:', typeof window.getFreeKey);
+        
+        // Add event listeners when DOM is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', attachEventListeners);
+        } else {
+            // DOM already loaded
+            attachEventListeners();
         }
         
-        // Expose to window for explicit access
-        window.subscribe = subscribe;
-        window.getFreeKey = getFreeKey;
+        function attachEventListeners() {
+            console.log('[Pricing] Attaching event listeners');
+            
+            // Attach to free key button
+            const freeButton = document.querySelector('button[data-action="free"]');
+            if (freeButton) {
+                // Remove existing onclick and use event listener
+                freeButton.removeAttribute('onclick');
+                freeButton.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    console.log('[Pricing] Free button clicked');
+                    if (window.getFreeKey) {
+                        window.getFreeKey();
+                    } else {
+                        alert('Error: Function not loaded. Please refresh the page.');
+                    }
+                });
+                console.log('[Pricing] Free button listener attached');
+            } else {
+                console.warn('[Pricing] Free button not found');
+            }
+            
+            // Attach to subscribe buttons
+            const subscribeButtons = document.querySelectorAll('button[data-action="subscribe"]');
+            subscribeButtons.forEach(function(button) {
+                // Remove existing onclick and use event listener
+                button.removeAttribute('onclick');
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const tier = button.getAttribute('data-tier');
+                    console.log('[Pricing] Subscribe button clicked, tier:', tier);
+                    if (tier && window.subscribe) {
+                        window.subscribe(tier, button);
+                    } else {
+                        alert('Error: Function not loaded. Please refresh the page.');
+                    }
+                });
+            });
+            console.log('[Pricing] Subscribe button listeners attached:', subscribeButtons.length);
+        }
     </script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -1361,12 +1528,24 @@ async def generate_free_api_key(request: FreeKeyRequest):
     try:
         from api.api_key_manager import api_key_manager
         
+        # Validate email format
+        if not request.email or '@' not in request.email:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Invalid email address format"
+            )
+        
+        # Normalize email
+        email = request.email.strip().lower()
+        
+        logger.info(f"Generating free API key for email: {email}")
+        
         # Generate free tier API key
         api_key = api_key_manager.generate_api_key(tier="free", prefix="free")
         
         key_info = api_key_manager.get_key_info(api_key)
         
-        logger.info(f"Generated free API key for email: {request.email}")
+        logger.info(f"Successfully generated free API key for email: {email}")
         
         return {
             "success": True,
@@ -1377,6 +1556,8 @@ async def generate_free_api_key(request: FreeKeyRequest):
             "documentation": "/docs",
             "timestamp": datetime.now().isoformat()
         }
+    except HTTPException:
+        raise
     except Exception as e:
         logger.error(f"Error generating free API key: {e}", exc_info=True)
         raise HTTPException(
