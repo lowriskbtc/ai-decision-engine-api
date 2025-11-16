@@ -1053,10 +1053,9 @@ PRICING_PAGE_HTML = """<!DOCTYPE html>
     <title>Pricing - AI Decision Engine API</title>
     <script>
         // Define functions IMMEDIATELY in head so they're available when buttons render
-        (function() {
-            const API_BASE_URL = window.location.origin;
-            
-            window.subscribe = async function(tier, buttonElement) {
+        const API_BASE_URL = window.location.origin;
+        
+        async function subscribe(tier, buttonElement) {
                 console.log('Subscribe function called with tier:', tier);
                 try {
                     const email = prompt('Enter your email address:');
@@ -1130,9 +1129,9 @@ PRICING_PAGE_HTML = """<!DOCTYPE html>
                         clickedButton.disabled = false;
                     }
                 }
-            };
-            
-            window.getFreeKey = async function() {
+        }
+        
+        async function getFreeKey() {
                 try {
                     const email = prompt('Enter your email address to get a free API key:');
                     if (!email || !email.includes('@')) {
@@ -1167,13 +1166,12 @@ PRICING_PAGE_HTML = """<!DOCTYPE html>
                     console.error('Error:', error);
                     alert('Error generating API key: ' + error.message + '\\n\\nPlease visit the documentation to get started: ' + API_BASE_URL + '/docs');
                     window.open(API_BASE_URL + '/docs', '_blank');
-                }
-            };
-            
-            // Also expose as global functions (not just window properties) for maximum compatibility
-            subscribe = window.subscribe;
-            getFreeKey = window.getFreeKey;
-        })();
+            }
+        }
+        
+        // Expose to window for explicit access
+        window.subscribe = subscribe;
+        window.getFreeKey = getFreeKey;
     </script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
