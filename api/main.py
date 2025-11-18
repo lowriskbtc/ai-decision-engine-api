@@ -1593,7 +1593,7 @@ class FreeKeyRequest(BaseModel):
     email: str = Field(..., description="Email address for the free API key")
 
 @app.post("/api/keys/free", response_model=Dict[str, Any])
-async def generate_free_api_key(request: FreeKeyRequest):
+async def generate_free_api_key(request_body: FreeKeyRequest, http_request: Request):
     """
     Generate a free API key (public endpoint, no auth required)
     
@@ -1605,26 +1605,28 @@ async def generate_free_api_key(request: FreeKeyRequest):
         from api.api_key_manager import api_key_manager
         
         # Validate email format
-        if not request.email or '@' not in request.email:
+        if not request_body.email or '@' not in request_body.email:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="Invalid email address format"
             )
         
         # Normalize email
-        email = request.email.strip().lower()
+        email = request_body.email.strip().lower()
         
         logger.info(f"Generating free API key for email: {email}")
         
-        # Get UTM parameters from request (if available)
+        # Get UTM parameters from request URL (if available)
         utm_source = None
         utm_campaign = None
-        if hasattr(request, 'url'):
+        try:
             from urllib.parse import urlparse, parse_qs
-            parsed_url = urlparse(str(request.url))
+            parsed_url = urlparse(str(http_request.url))
             query_params = parse_qs(parsed_url.query)
             utm_source = query_params.get("utm_source", [None])[0]
             utm_campaign = query_params.get("utm_campaign", [None])[0]
+        except Exception as e:
+            logger.debug(f"Could not parse UTM parameters: {e}")
         
         # Generate free tier API key
         api_key = api_key_manager.generate_api_key(tier="free", prefix="free")
