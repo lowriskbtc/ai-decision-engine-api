@@ -33,18 +33,26 @@ You'll see:
 ## 🎯 Next Steps (Priority Order)
 
 ### 1. Build Reddit Credibility (CURRENT FOCUS!)
-**When:** Today/Tomorrow
+**When:** Daily for 1-2 weeks (until account is 1 month old + 20-50+ comments)
 **Time:** 15-30 minutes/day
-**Why:** Avoids spam filters, builds trust, makes future posts more successful
+**Why:** AutoModerator requires account to be 1 month old with "several comments" before posting
+
+**Requirements (from AutoModerator):**
+- ✅ Account must be at least 1 month old
+- ✅ Need 20-50+ comments before posting
+- ✅ Must participate in community first
 
 **Action Plan:**
-- Comment on 5-10 posts in r/fastapi (be helpful!)
-- Comment on 3-5 posts in r/SideProject (support others!)
+- Comment on 5-10 posts in r/fastapi daily (be helpful!)
+- Comment on 3-5 posts in r/SideProject daily (support others!)
 - Upvote quality content
 - Respond to comments on your r/SideProject post
 - **Don't mention your API yet** - just be helpful and genuine
+- **Track progress:** Aim for 20-50+ comments total
 
-**See:** `BUILDING_REDDIT_CREDIBILITY.md` for detailed guide
+**See:** 
+- `BUILDING_REDDIT_CREDIBILITY.md` - Detailed guide
+- `ACCOUNT_REQUIREMENTS.md` - AutoModerator requirements explained
 
 ### 2. Respond to Comments on r/SideProject
 **When:** Daily, as comments come in
