@@ -100,14 +100,16 @@ I've created a complete marketing automation package:
 **File:** `REDDIT_POSTS.md` (r/fastapi post)
 **Time:** 5 minutes
 **UTM Link:** `?utm_source=reddit&utm_medium=social&utm_campaign=launch`
+**Post Flair:** `Showcase` or `Project` (REQUIRED!)
 
 **Steps:**
 1. Wait 2-3 hours after r/SideProject post
 2. Open `REDDIT_POSTS.md`
 3. Copy r/fastapi post
 4. Go to https://www.reddit.com/r/fastapi
-5. Post with UTM link
-6. Monitor and respond
+5. **IMPORTANT:** Select post flair (`Showcase` or `Project`)
+6. Post with UTM link
+7. Monitor and respond
 
 **Expected:** 100-300 visitors, 10-25 signups
 

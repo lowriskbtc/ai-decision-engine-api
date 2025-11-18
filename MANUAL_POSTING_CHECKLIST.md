@@ -16,6 +16,7 @@
 
 #### 1. Reddit - r/SideProject
 **Status:** ⏳ Not posted
+**Post Flair:** `Showcase` or `Launch` (REQUIRED!)
 
 **Steps:**
 1. Go to https://www.reddit.com/r/SideProject
@@ -25,9 +26,10 @@
    ```
    https://web-production-62146.up.railway.app?utm_source=reddit&utm_medium=social&utm_campaign=launch
    ```
-5. Post it
-6. Monitor comments and respond to EVERY comment in first hour
-7. Run: `python scripts/track_marketing.py` to record it
+5. **CRITICAL:** Select post flair (`Showcase` or `Launch`) - Reddit will reject without it!
+6. Post it
+7. Monitor comments and respond to EVERY comment in first hour
+8. Run: `python scripts/track_marketing.py` to record it
 
 **Expected:** 50-200 visitors, 5-15 signups
 
@@ -74,15 +76,17 @@
 
 #### 4. Reddit - r/fastapi
 **Status:** ⏳ Not posted
+**Post Flair:** `Showcase` or `Project` (REQUIRED!)
 
 **Steps:**
 1. Wait 2-3 hours after r/SideProject post
 2. Go to https://www.reddit.com/r/fastapi
 3. Copy content from `REDDIT_POSTS.md` (r/fastapi post)
 4. Use UTM link (same as above)
-5. Post it
-6. Monitor and respond
-7. Run tracking script
+5. **CRITICAL:** Select post flair (`Showcase` or `Project`) - Reddit will reject without it!
+6. Post it
+7. Monitor and respond
+8. Run tracking script
 
 **Expected:** 100-300 visitors, 10-25 signups
 

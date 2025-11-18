@@ -6,6 +6,8 @@ Ready-to-use Reddit posts for maximum engagement.
 
 ## r/SideProject (BEST FOR FIRST POST)
 
+**Post Flair:** `Showcase` or `Launch` (choose one when posting)
+
 **Title:**
 ```
 Built an AI Decision Engine API - Free tier available, transparent pricing
@@ -54,6 +56,8 @@ Thanks! 🚀
 ---
 
 ## r/fastapi (TARGET AUDIENCE)
+
+**Post Flair:** `Showcase` or `Project` (choose one when posting)
 
 **Title:**
 ```
@@ -113,6 +117,8 @@ Thanks!
 
 ## r/startups (BUSINESS ANGLE)
 
+**Post Flair:** `Launch` or `Feedback` (choose one when posting)
+
 **Title:**
 ```
 Launched my first SaaS API - Lessons learned and free tier for feedback
@@ -164,6 +170,8 @@ Thanks! 🚀
 ---
 
 ## r/webdev (TECHNICAL FOCUS)
+
+**Post Flair:** `Showoff Saturday` or `Project` (choose one when posting)
 
 **Title:**
 ```
@@ -218,6 +226,8 @@ Thanks!
 ---
 
 ## r/entrepreneur (BUSINESS FOCUS)
+
+**Post Flair:** `Launch` or `Lessons Learned` (choose one when posting)
 
 **Title:**
 ```
@@ -278,6 +288,15 @@ Thanks! 🚀
 - **Best times:** 9-11 AM or 1-3 PM EST
 - **Space posts:** 2-3 hours apart
 
+### Post Flair (IMPORTANT!):
+- **r/SideProject:** `Showcase` or `Launch`
+- **r/fastapi:** `Showcase` or `Project`
+- **r/startups:** `Launch` or `Feedback`
+- **r/webdev:** `Showoff Saturday` or `Project`
+- **r/entrepreneur:** `Launch` or `Lessons Learned`
+
+**Note:** Reddit requires post flair. Choose the most appropriate one from the options above when posting. If the subreddit has different flairs available, pick the closest match.
+
 ### Engagement:
 1. **Respond to EVERY comment** (first hour is critical)
 2. **Be helpful** - Answer questions thoroughly
@@ -289,6 +308,7 @@ Thanks! 🚀
 - ❌ Ignoring comments
 - ❌ Being too promotional
 - ❌ Breaking subreddit rules (read them first!)
+- ❌ Forgetting to add post flair (Reddit will reject your post!)
 
 ---
 
