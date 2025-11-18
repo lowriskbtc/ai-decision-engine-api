@@ -6,11 +6,13 @@
    - Expected: 50-200 visitors, 5-15 signups
    - **Action needed:** Respond to comments when you wake up
 
-2. **r/webdev** - ✅ Posted!
-   - Expected: 80-250 visitors, 8-20 signups
-   - **Action needed:** Respond to comments when you wake up
+2. **r/webdev** - ⚠️ Post Removed
+   - **Status:** Post was removed (common, don't worry!)
+   - **Why:** Likely too promotional or broke subreddit rules
+   - **Solution:** See `POST_REMOVED_GUIDE.md` for help
+   - **Better option:** Post on r/fastapi instead (more targeted audience)
 
-**Total Expected:** 130-450 visitors, 13-35 signups from these two posts!
+**Total Expected:** 50-200 visitors, 5-15 signups from r/SideProject
 
 ---
 
@@ -40,12 +42,13 @@ You'll see:
 - Reply to EVERY comment
 - Be helpful and engaging
 
-### 2. Post on r/fastapi
+### 2. Post on r/fastapi (RECOMMENDED NEXT!)
 **When:** Tomorrow (wait 2-3 hours after your last post)
 **File:** `REDDIT_POSTS.md` (r/fastapi post)
 **Post Flair:** `Showcase` or `Project` (REQUIRED!)
 **UTM Link:** `?utm_source=reddit&utm_medium=social&utm_campaign=launch`
 **Expected:** 100-300 visitors, 10-25 signups
+**Why:** Better fit than r/webdev - more targeted audience, less strict rules
 
 ### 3. Post on HackerNews
 **When:** Tomorrow morning (Tuesday-Thursday, 9-11 AM PT is best)
