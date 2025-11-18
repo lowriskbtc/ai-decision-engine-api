@@ -1,7 +1,9 @@
 # Next Steps When You Wake Up 🌅
 
 ## ✅ What You've Done
-- Posted on r/webdev! Great job! 🎉
+- ✅ Posted on r/SideProject (already done!)
+- ✅ Posted on r/webdev (just now!)
+- Great progress! 🎉
 
 ---
 
@@ -24,29 +26,24 @@ You'll see:
 
 ## 🎯 What to Do Next
 
-### Priority 1: Today (30 minutes)
+### Priority 1: When You Wake Up (30 minutes)
 
-#### 1. Respond to r/webdev Comments
+#### 1. Respond to Comments on BOTH Posts
 - **Time:** 15-30 minutes
-- **Action:** Reply to every comment on your r/webdev post
+- **Action:** Reply to every comment on:
+  - Your r/SideProject post
+  - Your r/webdev post
 - **Why:** Engagement drives more visibility and signups
+- **Critical:** First hour after posting is most important!
 
-#### 2. Post on r/SideProject
-- **Time:** 5 minutes to post, 30 minutes to monitor
-- **File:** `REDDIT_POSTS.md` (first post)
-- **Post Flair:** `Showcase` or `Launch` (REQUIRED!)
-- **UTM Link:** `?utm_source=reddit&utm_medium=social&utm_campaign=launch`
-- **Expected:** 50-200 visitors, 5-15 signups
-
-**Steps:**
-1. Open `REDDIT_POSTS.md`
-2. Copy the FIRST post (r/SideProject)
-3. Go to https://www.reddit.com/r/SideProject
-4. Click "Create Post"
-5. Paste content, replace URL with UTM version
-6. **IMPORTANT:** Select post flair (`Showcase` or `Launch`)
-7. Post it
-8. Monitor and respond to comments
+#### 2. Check Your Analytics
+- **Time:** 2 minutes
+- **Action:** Visit: `https://web-production-62146.up.railway.app/api/marketing/stats`
+- **What to check:**
+  - How many visitors from r/SideProject
+  - How many visitors from r/webdev
+  - Total signups
+  - Which platform is performing better
 
 ---
 
@@ -85,10 +82,11 @@ https://web-production-62146.up.railway.app/api/marketing/stats
 
 ## 🎯 Goals
 
-### Today:
-- [ ] Respond to all r/webdev comments
-- [ ] Post on r/SideProject
-- [ ] Monitor and engage
+### When You Wake Up:
+- [x] Posted on r/SideProject ✅
+- [x] Posted on r/webdev ✅
+- [ ] Respond to all comments on both posts
+- [ ] Check analytics to see results
 
 ### This Week:
 - [ ] Post on HackerNews
