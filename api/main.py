@@ -1616,12 +1616,33 @@ async def generate_free_api_key(request: FreeKeyRequest):
         
         logger.info(f"Generating free API key for email: {email}")
         
+        # Get UTM parameters from request (if available)
+        utm_source = None
+        utm_campaign = None
+        if hasattr(request, 'url'):
+            from urllib.parse import urlparse, parse_qs
+            parsed_url = urlparse(str(request.url))
+            query_params = parse_qs(parsed_url.query)
+            utm_source = query_params.get("utm_source", [None])[0]
+            utm_campaign = query_params.get("utm_campaign", [None])[0]
+        
         # Generate free tier API key
         api_key = api_key_manager.generate_api_key(tier="free", prefix="free")
         
         key_info = api_key_manager.get_key_info(api_key)
         
-        logger.info(f"Successfully generated free API key for email: {email}")
+        # Track signup in marketing analytics
+        try:
+            from api.marketing_analytics import marketing_analytics
+            marketing_analytics.track_signup(
+                api_key=api_key,
+                utm_source=utm_source,
+                utm_campaign=utm_campaign
+            )
+        except Exception as e:
+            logger.error(f"Error tracking signup: {e}")
+        
+        logger.info(f"Successfully generated free API key for email: {email}, source: {utm_source}")
         
         return {
             "success": True,
@@ -1775,6 +1796,39 @@ async def get_billing(key_info: Dict[str, Any] = Depends(verify_api_key)):
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Error getting billing information"
+        )
+
+
+@app.get("/api/marketing/stats", response_model=Dict[str, Any])
+async def get_marketing_stats(days: int = 30):
+    """
+    Get marketing analytics and traffic source statistics
+    
+    Returns:
+    - Total visits and signups
+    - Traffic by source (Reddit, HN, Twitter, etc.)
+    - Conversion rates
+    - Daily statistics
+    
+    No authentication required (public stats)
+    """
+    try:
+        from api.marketing_analytics import marketing_analytics
+        
+        stats = marketing_analytics.get_marketing_stats(days=days)
+        top_sources = marketing_analytics.get_top_sources(limit=10)
+        
+        return {
+            "success": True,
+            "stats": stats,
+            "top_sources": top_sources,
+            "note": "Marketing analytics for tracking campaign performance"
+        }
+    except Exception as e:
+        logger.error(f"Error getting marketing stats: {e}", exc_info=True)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error getting marketing statistics: {str(e)}"
         )
 
 
