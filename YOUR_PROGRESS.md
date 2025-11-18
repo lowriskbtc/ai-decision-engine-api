@@ -32,13 +32,26 @@ You'll see:
 
 ## 🎯 Next Steps (Priority Order)
 
-### 1. Respond to Comments (CRITICAL!)
-**When:** As soon as you wake up
-**Time:** 15-30 minutes
+### 1. Build Reddit Credibility (CURRENT FOCUS!)
+**When:** Today/Tomorrow
+**Time:** 15-30 minutes/day
+**Why:** Avoids spam filters, builds trust, makes future posts more successful
+
+**Action Plan:**
+- Comment on 5-10 posts in r/fastapi (be helpful!)
+- Comment on 3-5 posts in r/SideProject (support others!)
+- Upvote quality content
+- Respond to comments on your r/SideProject post
+- **Don't mention your API yet** - just be helpful and genuine
+
+**See:** `BUILDING_REDDIT_CREDIBILITY.md` for detailed guide
+
+### 2. Respond to Comments on r/SideProject
+**When:** Daily, as comments come in
+**Time:** 5-10 minutes
 **Why:** Engagement drives more visibility and signups
 
 - Go to your r/SideProject post
-- Go to your r/webdev post
 - Reply to EVERY comment
 - Be helpful and engaging
 
@@ -96,8 +109,9 @@ You'll see:
 
 ### This Week:
 - [x] Post on r/SideProject ✅
-- [x] Post on r/webdev ✅
-- [ ] Post on r/fastapi
+- [x] Post on r/webdev (removed, but learned from it) ✅
+- [ ] Build Reddit credibility (2-3 days active commenting)
+- [ ] Post on r/fastapi (after building credibility)
 - [ ] Post on HackerNews
 - [ ] Post on r/startups
 - [ ] Post on r/entrepreneur
