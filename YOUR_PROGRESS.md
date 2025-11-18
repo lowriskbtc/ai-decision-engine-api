@@ -71,11 +71,13 @@ You'll see:
 **Expected:** 100-300 visitors, 10-25 signups
 **Why:** Better fit than r/webdev - more targeted audience, less strict rules
 
-### 3. Post on HackerNews
-**When:** Tomorrow morning (Tuesday-Thursday, 9-11 AM PT is best)
+### 3. Post on HackerNews (READY NOW!)
+**When:** Anytime (best: Tuesday-Thursday, 9-11 AM PT)
 **File:** `HACKERNEWS_POST.md`
+**Guide:** `HACKERNEWS_POSTING_GUIDE.md` (step-by-step instructions)
 **UTM Link:** `?utm_source=hackernews&utm_medium=social&utm_campaign=launch`
 **Expected:** 50-5000 visitors (depends on upvotes), 5-200 signups
+**Note:** No account age requirements - can post immediately!
 
 ### 4. Post on r/startups
 **When:** Tomorrow afternoon (wait 2-3 hours after r/fastapi)
