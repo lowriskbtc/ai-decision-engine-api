@@ -4,15 +4,20 @@
 
 1. **r/SideProject** - ✅ Posted!
    - Expected: 50-200 visitors, 5-15 signups
-   - **Action needed:** Respond to comments when you wake up
+   - **Action needed:** Respond to comments when you check back
 
-2. **r/webdev** - ⚠️ Post Removed
-   - **Status:** Post was removed (common, don't worry!)
-   - **Why:** Likely too promotional or broke subreddit rules
-   - **Solution:** See `POST_REMOVED_GUIDE.md` for help
-   - **Better option:** Post on r/fastapi instead (more targeted audience)
+2. **HackerNews** - ✅ Posted!
+   - Expected: 50-5000 visitors (depends on upvotes), 5-200 signups
+   - **Status:** Just posted, check when you wake up!
+   - **CRITICAL:** Respond to ALL comments when you check back
+   - **See:** `WHEN_YOU_WAKE_UP_HN.md` for checklist
 
-**Total Expected:** 50-200 visitors, 5-15 signups from r/SideProject
+3. **r/webdev** - ⚠️ Post Removed
+   - **Status:** Post was removed (account too new)
+   - **Why:** AutoModerator - account needs to be 1 month old with comment history
+   - **Solution:** Building credibility, will post on r/fastapi later
+
+**Total Expected:** 100-5200+ visitors, 10-215+ signups from completed posts!
 
 ---
 
@@ -119,10 +124,11 @@ You'll see:
 
 ### This Week:
 - [x] Post on r/SideProject ✅
+- [x] Post on HackerNews ✅
 - [x] Post on r/webdev (removed, but learned from it) ✅
+- [ ] Respond to HN comments when you wake up (CRITICAL!)
 - [ ] Build Reddit credibility (2-3 days active commenting)
 - [ ] Post on r/fastapi (after building credibility)
-- [ ] Post on HackerNews
 - [ ] Post on r/startups
 - [ ] Post on r/entrepreneur
 - [ ] Get first paying customer!
