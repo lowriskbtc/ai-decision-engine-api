@@ -45,6 +45,7 @@ I've created a complete marketing automation package:
 **File:** `REDDIT_POSTS.md` (first post)
 **Time:** 5 minutes to post, 30 minutes to monitor
 **UTM Link:** `https://web-production-62146.up.railway.app?utm_source=reddit&utm_medium=social&utm_campaign=launch`
+**Post Flair:** `Showcase` or `Launch` (REQUIRED - Reddit will reject without it!)
 
 **Steps:**
 1. Open `REDDIT_POSTS.md`
@@ -52,8 +53,9 @@ I've created a complete marketing automation package:
 3. Go to https://www.reddit.com/r/SideProject
 4. Click "Create Post"
 5. Paste content, replace URL with UTM version
-6. Post it
-7. **CRITICAL:** Monitor comments and respond to EVERY comment in first hour
+6. **IMPORTANT:** Select post flair (`Showcase` or `Launch`)
+7. Post it
+8. **CRITICAL:** Monitor comments and respond to EVERY comment in first hour
 
 **Expected:** 50-200 visitors, 5-15 signups
 
