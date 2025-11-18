@@ -113,8 +113,8 @@ Create a Google Sheet or use this format:
    - Use UTM link: `?utm_source=hackernews&utm_medium=social&utm_campaign=launch`
    - **Action:** Post, monitor closely, respond to comments
 
-4. **Reddit - r/API**
-   - File: `REDDIT_POSTS.md` (r/API post)
+4. **Reddit - r/fastapi**
+   - File: `REDDIT_POSTS.md` (r/fastapi post)
    - Wait 2-3 hours after r/SideProject
    - **Action:** Copy, paste, submit
 
@@ -171,7 +171,7 @@ See `MARKETING_PROGRESS_TRACKER.md` for details.
 
 **Tomorrow (1 hour):**
 - [ ] Post on HackerNews (use `HACKERNEWS_POST.md`)
-- [ ] Post on r/API (use `REDDIT_POSTS.md`)
+- [ ] Post on r/fastapi (use `REDDIT_POSTS.md`)
 - [ ] Monitor and respond
 
 **This Week (2-3 hours):**

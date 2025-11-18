@@ -19,7 +19,7 @@
 | Subreddit | Date Posted | Visitors | Signups | API Calls | Status |
 |-----------|-------------|----------|---------|-----------|--------|
 | r/SideProject | - | - | - | - | ⏳ Not posted |
-| r/API | - | - | - | - | ⏳ Not posted |
+| r/fastapi | - | - | - | - | ⏳ Not posted |
 | r/startups | - | - | - | - | ⏳ Not posted |
 | r/webdev | - | - | - | - | ⏳ Not posted |
 | r/entrepreneur | - | - | - | - | ⏳ Not posted |
@@ -142,7 +142,7 @@ Check your analytics for traffic by source:
 
 ### This Week
 1. [ ] Post on HackerNews
-2. [ ] Post on r/API
+2. [ ] Post on r/fastapi
 3. [ ] Launch on ProductHunt
 4. [ ] Post on IndieHackers
 

@@ -82,13 +82,13 @@
 
 ---
 
-#### Task 4: Reddit - r/API
+#### Task 4: Reddit - r/fastapi
 **Time:** 5 minutes
 
 **Steps:**
 1. Wait 2-3 hours after r/SideProject post
-2. Go to https://www.reddit.com/r/API
-3. Copy r/API post from `REDDIT_POSTS.md`
+2. Go to https://www.reddit.com/r/fastapi
+3. Copy r/fastapi post from `REDDIT_POSTS.md`
 4. Use UTM link
 5. Post and monitor
 
@@ -179,7 +179,7 @@ python scripts/track_marketing.py
 
 **Tomorrow (1 hour):**
 - [ ] Post on HackerNews (morning) ✅
-- [ ] Post on r/API (afternoon) ✅
+- [ ] Post on r/fastapi (afternoon) ✅
 - [ ] Monitor and respond ✅
 
 **This Week:**

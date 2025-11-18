@@ -39,7 +39,7 @@
    - Title: "Built an AI Decision Engine API - Free tier available, transparent pricing"
    - Focus: Build in public, show your journey
 
-2. **r/API** (Target audience)
+2. **r/fastapi** (Target audience)
    - Title: "New AI Decision Engine API - 100 free requests/month, usage-based pricing"
    - Focus: Technical details, API features
 
@@ -308,7 +308,7 @@ Try it: https://web-production-62146.up.railway.app
 
 ### Reddit:
 - **r/SideProject:** 50-200 visitors, 5-15 signups
-- **r/API:** 100-300 visitors, 10-25 signups
+- **r/fastapi:** 100-300 visitors, 10-25 signups
 - **r/startups:** 30-100 visitors, 3-10 signups
 - **Total:** 180-600 visitors, 18-50 signups
 
@@ -330,7 +330,7 @@ Try it: https://web-production-62146.up.railway.app
 ## ✅ Action Items (Do Today)
 
 1. **Post on r/SideProject** (highest priority)
-2. **Post on r/API** (2-3 hours later)
+2. **Post on r/fastapi** (2-3 hours later)
 3. **Post improved Twitter thread** (use thread version above)
 4. **Engage with all comments** (critical for success)
 5. **Prepare HackerNews post** (post tomorrow morning)

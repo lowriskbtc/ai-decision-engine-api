@@ -72,13 +72,13 @@
 
 ---
 
-#### 4. Reddit - r/API
+#### 4. Reddit - r/fastapi
 **Status:** ⏳ Not posted
 
 **Steps:**
 1. Wait 2-3 hours after r/SideProject post
-2. Go to https://www.reddit.com/r/API
-3. Copy content from `REDDIT_POSTS.md` (r/API post)
+2. Go to https://www.reddit.com/r/fastapi
+3. Copy content from `REDDIT_POSTS.md` (r/fastapi post)
 4. Use UTM link (same as above)
 5. Post it
 6. Monitor and respond
@@ -115,7 +115,7 @@
 **Status:** ⏳ Not posted
 
 **Subreddits to post:**
-- r/startups (wait 2-3 hours after r/API)
+- r/startups (wait 2-3 hours after r/fastapi)
 - r/webdev (wait 2-3 hours after r/startups)
 - r/entrepreneur (wait 2-3 hours after r/webdev)
 
@@ -233,7 +233,7 @@ Track these weekly:
 
 **Tomorrow:**
 - [ ] Post on HackerNews (morning)
-- [ ] Post on r/API (afternoon)
+- [ ] Post on r/fastapi (afternoon)
 - [ ] Record posts
 - [ ] Monitor and respond
 
