@@ -1360,6 +1360,131 @@ PRICING_PAGE_HTML = """<!DOCTYPE html>
             };
         })();
         
+        // Function to show API key in a copyable modal
+        function showApiKeyModal(apiKey, tier, requestsPerMonth) {
+            // Create modal overlay
+            const overlay = document.createElement('div');
+            overlay.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 10000; display: flex; align-items: center; justify-content: center;';
+            
+            // Create modal content
+            const modal = document.createElement('div');
+            modal.style.cssText = 'background: white; border-radius: 15px; padding: 30px; max-width: 500px; width: 90%; box-shadow: 0 20px 60px rgba(0,0,0,0.5); position: relative;';
+            
+            // Create close button
+            const closeBtn = document.createElement('button');
+            closeBtn.textContent = '×';
+            closeBtn.style.cssText = 'position: absolute; top: 10px; right: 15px; background: none; border: none; font-size: 30px; cursor: pointer; color: #666; line-height: 1;';
+            closeBtn.onclick = () => document.body.removeChild(overlay);
+            
+            // Create title
+            const title = document.createElement('h2');
+            title.textContent = '🎉 Your Free API Key';
+            title.style.cssText = 'margin: 0 0 20px 0; color: #667eea; font-size: 1.5rem;';
+            
+            // Create warning
+            const warning = document.createElement('p');
+            warning.textContent = '⚠️ Copy this key now - you will not see it again!';
+            warning.style.cssText = 'color: #e74c3c; font-weight: bold; margin: 0 0 15px 0; font-size: 0.9rem;';
+            
+            // Create API key container
+            const keyContainer = document.createElement('div');
+            keyContainer.style.cssText = 'background: #f5f5f5; border: 2px solid #667eea; border-radius: 8px; padding: 15px; margin: 15px 0; position: relative;';
+            
+            // Create API key text
+            const keyText = document.createElement('div');
+            keyText.textContent = apiKey;
+            keyText.style.cssText = 'font-family: monospace; font-size: 0.9rem; word-break: break-all; color: #333; margin-bottom: 10px; user-select: all;';
+            keyText.id = 'api-key-text';
+            
+            // Create copy button
+            const copyBtn = document.createElement('button');
+            copyBtn.textContent = '📋 Copy API Key';
+            copyBtn.style.cssText = 'width: 100%; padding: 12px; background: #667eea; color: white; border: none; border-radius: 8px; font-size: 1rem; font-weight: bold; cursor: pointer; margin-top: 10px; transition: background 0.3s;';
+            copyBtn.onmouseover = () => copyBtn.style.background = '#5568d3';
+            copyBtn.onmouseout = () => copyBtn.style.background = '#667eea';
+            
+            copyBtn.onclick = function() {
+                // Select the API key text
+                const range = document.createRange();
+                range.selectNode(keyText);
+                window.getSelection().removeAllRanges();
+                window.getSelection().addRange(range);
+                
+                try {
+                    // Copy to clipboard
+                    document.execCommand('copy');
+                    window.getSelection().removeAllRanges();
+                    
+                    // Update button text
+                    const originalText = copyBtn.textContent;
+                    copyBtn.textContent = '✓ Copied!';
+                    copyBtn.style.background = '#27ae60';
+                    
+                    // Also try modern clipboard API
+                    navigator.clipboard.writeText(apiKey).then(() => {
+                        console.log('API key copied to clipboard');
+                    }).catch(() => {
+                        console.log('Fallback copy method used');
+                    });
+                    
+                    // Reset button after 2 seconds
+                    setTimeout(() => {
+                        copyBtn.textContent = originalText;
+                        copyBtn.style.background = '#667eea';
+                    }, 2000);
+                } catch (err) {
+                    // Fallback: show alert with key
+                    alert('Please manually copy: ' + apiKey);
+                }
+            };
+            
+            // Create info section
+            const info = document.createElement('div');
+            info.style.cssText = 'margin-top: 15px; padding-top: 15px; border-top: 1px solid #eee; color: #666; font-size: 0.9rem;';
+            info.innerHTML = '<strong>Tier:</strong> ' + tier.charAt(0).toUpperCase() + tier.slice(1) + '<br>' +
+                           '<strong>Requests:</strong> ' + requestsPerMonth.toLocaleString() + '/month';
+            
+            // Create documentation button
+            const docsBtn = document.createElement('button');
+            docsBtn.textContent = '📚 Open API Documentation';
+            docsBtn.style.cssText = 'width: 100%; padding: 12px; background: #764ba2; color: white; border: none; border-radius: 8px; font-size: 1rem; font-weight: bold; cursor: pointer; margin-top: 15px; transition: background 0.3s;';
+            docsBtn.onmouseover = () => docsBtn.style.background = '#5a3a7a';
+            docsBtn.onmouseout = () => docsBtn.style.background = '#764ba2';
+            docsBtn.onclick = () => {
+                window.open(API_BASE_URL + '/docs', '_blank');
+            };
+            
+            // Assemble modal
+            keyContainer.appendChild(keyText);
+            keyContainer.appendChild(copyBtn);
+            modal.appendChild(closeBtn);
+            modal.appendChild(title);
+            modal.appendChild(warning);
+            modal.appendChild(keyContainer);
+            modal.appendChild(info);
+            modal.appendChild(docsBtn);
+            overlay.appendChild(modal);
+            
+            // Add to page
+            document.body.appendChild(overlay);
+            
+            // Close on overlay click (but not on modal click)
+            overlay.onclick = (e) => {
+                if (e.target === overlay) {
+                    document.body.removeChild(overlay);
+                }
+            };
+            
+            // Close on Escape key
+            const escapeHandler = (e) => {
+                if (e.key === 'Escape') {
+                    document.body.removeChild(overlay);
+                    document.removeEventListener('keydown', escapeHandler);
+                }
+            };
+            document.addEventListener('keydown', escapeHandler);
+        }
+        
         // Log that functions are loaded
         console.log('[Pricing] Subscription functions loaded successfully');
         console.log('[Pricing] subscribe function available:', typeof window.subscribe);
